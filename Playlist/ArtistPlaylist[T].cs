@@ -6,72 +6,43 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    class ArtistPlaylist<T> : IPlaylist<T>
+    public class ArtistPlaylist : PlaylistCollection<Track>
     {
-        List<AlbumPlaylist<T>> albums;
-        int index;
-        Artist artist;
+        private Artist artist;
+        private Dictionary<Album, AlbumPlaylist> playlists;
 
         public ArtistPlaylist(Artist artist)
         {
             this.artist = artist;
-            this.artist.Albums.a
-        }
+            playlists = new Dictionary<Album, AlbumPlaylist>();
 
-        public PlaylistEntry<T> CurrentEntry
-        {
-            get { return albums[index].CurrentEntry; }
-        }
-
-        public bool MoveNext()
-        {
-            if (index == -2)
+            foreach (var album in artist.Albums)
             {
-                return false;
+                AlbumPlaylist albumplaylist = new AlbumPlaylist(album);
+                playlists.Add(album, albumplaylist);
+                addPlaylist(albumplaylist);
             }
-            else if (index == -1)
+
+            this.artist.Albums.AlbumAdded += new AlbumEventHandler(Albums_AlbumAdded);
+            this.artist.Albums.AlbumRemoved += new AlbumEventHandler(Albums_AlbumRemoved);
+
+        }
+
+        void Albums_AlbumRemoved(Album.AlbumCollection collection, AlbumEventArgs e)
+        {
+            if (playlists.ContainsKey(e.Album))
             {
-                index++;
-                while (albums[index].MoveNext() == false)
-                {
-                    index++;
-                    if (index >= albums.Count)
-                    {
-                        index = -2;
-                        return false;
-                    }
-                }
-                return true;
+                removePlaylist(playlists[e.Album]);
+                playlists.Remove(e.Album);
             }
-            else if (index < albums.Count)
-            {
-                if (albums[index].MoveNext())
-                    return true;
-                else
-                {
-                    index++;
-                    albums[index].MoveNext();
-                    return true;
-                }
-            }
-            else return false;
+            else throw new InvalidOperationException("Playlist was not in the ArtistPlaylist and could not be removed");
         }
 
-        public bool MovePrevious()
+        void Albums_AlbumAdded(Album.AlbumCollection collection, AlbumEventArgs e)
         {
-            if (index == -2)
-                return false;
-            else if(index == -1)
-        }
-
-        public bool MoveRandom()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reset()
-        {
-            throw new NotImplementedException();
+            AlbumPlaylist albumplaylist = new AlbumPlaylist(e.Album);
+            playlists.Add(e.Album, albumplaylist);
+            addPlaylist(albumplaylist);
         }
     }
 }

@@ -6,14 +6,26 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    class AlbumPlaylist<T> : IPlaylist<T>
+    public class AlbumPlaylist : IPlaylist<Track>
+        
     {
-        List<PlaylistEntry<T>> entries;
-        int index;
+        private List<PlaylistEntry<Track>> entries;
+        private int index;
+        private Album album;
 
-        public PlaylistEntry<T> CurrentEntry
+        public AlbumPlaylist(Album album)
         {
-            get
+            this.album = album;
+            entries = new List<PlaylistEntry<Track>>();
+            foreach (var track in album.Tracks)
+            {
+                entries.Add(new PlaylistEntry<Track>(track));
+            }
+        }
+
+        public PlaylistEntry<Track> CurrentEntry
+        {
+            get 
             {
                 return index < 0 ? null : entries[index];
             }
@@ -56,18 +68,66 @@ namespace DeadDog.Audio
             {
                 Random r = new Random();
                 index = r.Next(entries.Count);
-                currentEntry = entries[index];
                 return true;
             }
-            else return false;
+            else
+            {
+                index = -2;
+                return false;
+            }
         }
 
         public void Reset()
         {
             index = -1;
-            currentEntry = null;
         }
 
+        public bool MoveToFirst()
+        {
+            if (entries.Count == 0)
+                return false;
+            else
+            {
+                index = 0;
+                return true;
+            }
 
+        }
+
+        public bool MoveToLast()
+        {
+            if (entries.Count == 0)
+            {
+                index = -2;
+                return false;
+            }
+            else
+            {
+                index = entries.Count;
+                return true;
+            }
+        }
+
+        public bool MoveToEntry(PlaylistEntry<Track> entry)
+        {
+            if (entries.Contains(entry))
+            {
+                index = entries.IndexOf(entry);
+                return true;
+            }
+            else
+            {
+                index = -2;
+                return false;
+            }
+
+        }
+
+        public bool Contains(PlaylistEntry<Track> entry)
+        {
+            if(entries.Contains(entry))
+                return true;
+            else return false;
+        }
     }
 }
