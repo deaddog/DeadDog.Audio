@@ -39,6 +39,7 @@ namespace DeadDog.Audio
         bool MoveToLast();
 
         bool MoveToEntry(PlaylistEntry<T> entry);
+        bool Contains(PlaylistEntry<T> entry);
 
         /// <summary>
         /// Resets the playlist.

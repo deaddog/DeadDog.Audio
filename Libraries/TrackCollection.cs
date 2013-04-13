@@ -34,10 +34,16 @@ namespace DeadDog.Audio.Libraries
                 else
                     tracks.Insert(~index, track);
 
+                if (TrackAdded != null)
+                    TrackAdded(this, new TrackEventArgs(track));
+
                 return track;
             }
             internal void RemoveTrack(Track track)
             {
+                if (TrackRemoved != null)
+                    TrackRemoved(this, new TrackEventArgs(track));
+
                 tracks.Remove(track);
             }
 
@@ -62,6 +68,8 @@ namespace DeadDog.Audio.Libraries
             {
                 return tracks.Contains(track);
             }
+
+            public event TrackEventHandler TrackAdded, TrackRemoved;
 
             IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
             {
