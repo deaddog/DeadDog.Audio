@@ -4,37 +4,11 @@ using System.Text;
 
 namespace DeadDog.Audio
 {
-    public class Playlist<T> : IList<PlaylistEntry<T>>
+    public class Playlist<T> : IPlaylist<T>, IList<PlaylistEntry<T>>
     {
-        /// <summary>
-        /// The full list of all entries in the actual playlist.
-        /// </summary>
         private List<PlaylistEntry<T>> entries;
-        /// <summary>
-        /// Contains the tracks that have been played already - used for the <see cref="MovePrevious"/> method.
-        /// </summary>
-        private ReverseList<T> reverselist;
-        /// <summary>
-        /// A list of the tracks that have not been played yet (in shuffle mode) - used to ensure that everything is played once before repeating.
-        /// </summary>
-        private List<PlaylistEntry<T>> shufflelist;
-
-        private IPlayQueue<T> queue;
         private PlaylistEntry<T> currentEntry = null;
-        private RepeatTypes repeat = RepeatTypes.Off;
-        private RestrictionTypes restriction = RestrictionTypes.None;
-        private ShuffleTypes shuffle = ShuffleTypes.Off;
-
-        public T Current
-        {
-            get
-            {
-                if (currentEntry == null)
-                    return default(T);
-                else
-                    return currentEntry.Track;
-            }
-        }
+        private int index = -1;
 
         public PlaylistEntry<T> CurrentEntry
         {
@@ -42,168 +16,70 @@ namespace DeadDog.Audio
         }
         public int CurrentIndex
         {
-            get { return entries.IndexOf(currentEntry); }
+            get { return index; }
         }
 
-        public IPlayQueue<T> Queue
+        public Playlist()
         {
-            get { return queue; }
-        }
-
-        public RepeatTypes Repeat
-        {
-            get { return repeat; }
-            set { this.repeat = value; }
-        }
-        public RestrictionTypes Restriction
-        {
-            get { return restriction; }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-        public ShuffleTypes Shuffle
-        {
-            get { return this.shuffle; }
-            set
-            {
-                if (this.shuffle == value)
-                    return;
-                this.shuffle = value;
-                if (this.shuffle == ShuffleTypes.Shuffle)
-                {
-                    shufflelist.Clear();
-                    shufflelist.AddRange(entries);
-                    shufflelist.Remove(currentEntry);
-                    reverselist.Clear();
-                }
-            }
-        }
-
-        public Playlist(IPlayQueue<T> queue)
-        {
-            this.queue = queue;
-            entries = new List<PlaylistEntry<T>>();
-            reverselist = new ReverseList<T>();
-            shufflelist = new List<PlaylistEntry<T>>();
-        }
-
-        private bool nextS()
-        {
-            if (shufflelist.Count == 0)
-            {
-                if (repeat == RepeatTypes.Repeat)
-                    shufflelist.AddRange(entries);
-                else
-                    return false;
-            }
-
-            Random rnd = new Random(DateTime.Now.Millisecond);
-            int i = rnd.Next(shufflelist.Count);
-            currentEntry = shufflelist[i];
-            shufflelist.RemoveAt(i);
-            return true;
-        }
-        private bool nextR()
-        {
-            int i = entries.IndexOf(currentEntry);
-            i = (i + 1) % entries.Count;
-            currentEntry = entries[i];
-            return true;
-        }
-        private bool next()
-        {
-            int i = entries.IndexOf(currentEntry) + 1;
-            if (i >= entries.Count)
-                return false;
-
-            currentEntry = entries[i];
-            return true;
+            this.entries = new List<PlaylistEntry<T>>();
         }
 
         public bool MoveNext()
         {
-            if (queue.Count > 0)
+            if (index == -2)
+                return false;
+
+            index++;
+            if (index >= entries.Count)
             {
-                PlaylistEntry<T> e = queue.Dequeue();
-                currentEntry = e;
-                if (shuffle == ShuffleTypes.Shuffle)
-                {
-                    reverselist.Add(e);
-                    shufflelist.Remove(e);
-                }
+                currentEntry = null;
+                index = -2;
+                return false;
+            }
+            else
+            {
+                currentEntry = entries[index];
                 return true;
             }
-
-            if (shuffle == ShuffleTypes.Shuffle)
-            {
-                if (reverselist.MoveNext())
-                {
-                    currentEntry = reverselist.Current;
-                    return true;
-                }
-                else
-                    reverselist.Add(currentEntry);
-            }
-
-            bool b;
-            if (shuffle == ShuffleTypes.Shuffle)
-                b = nextS();
-            else if (repeat == RepeatTypes.Repeat)
-                b = nextR();
-            else
-                b = next();
-
-            return b;
         }
         public bool MovePrevious()
         {
-            if (shuffle == ShuffleTypes.Shuffle)
+            if (index == -2)
+                return false;
+
+            index--;
+            if (index == -1)
             {
-                PlaylistEntry<T> e = currentEntry;
-                if (reverselist.Current == null)
-                {
-                    reverselist.Add(e);
-                    reverselist.MovePrevious();
-                    reverselist.CanRemoveTop = true;
-                }
-                if (reverselist.MovePrevious())
-                {
-                    currentEntry = reverselist.Current;
-                    return true;
-                }
-                else
-                    return false;
+                index = -2;
+                currentEntry = null;
+                return false;
             }
             else
             {
-                int i = entries.IndexOf(currentEntry) - 1;
-                if (i < 0 && repeat == RepeatTypes.Off)
-                    return false;
-                else if (i < 0)
-                {
-                    i = entries.Count - 1;
-                }
-                currentEntry = entries[i];
+                currentEntry = entries[index];
                 return true;
             }
         }
-        public bool MoveTo(PlaylistEntry<T> entry)
+
+        public bool MoveRandom()
         {
-            return MoveTo(entries.IndexOf(entry));
-        }
-        public bool MoveTo(int index)
-        {
-            if (index < 0 || index >= entries.Count)
+            if (entries.Count == 0)
+            {
+                index = -2;
+                currentEntry = null;
                 return false;
+            }
 
-            PlaylistEntry<T> e = entries[index];
-            currentEntry = e;
-            if (shuffle == ShuffleTypes.Shuffle)
-                reverselist.Add(e);
-
+            Random rnd = new Random();
+            index = rnd.Next(entries.Count);
+            currentEntry = entries[index];
             return true;
+        }
+
+        public void Reset()
+        {
+            this.index = -1;
+            this.currentEntry = null;
         }
 
         #region IList<PlaylistEntry<T>> Members
@@ -225,21 +101,25 @@ namespace DeadDog.Audio
         public void RemoveAt(int index)
         {
             PlaylistEntry<T> entry = entries[index];
-            reverselist.Remove(entry);
-            shufflelist.Remove(entry);
-            queue.Remove(entry);
             if (index == entries.IndexOf(currentEntry))
+            {
                 currentEntry = null;
+                this.index = -1;
+            }
+            else if (index > this.index)
+                this.index--;
             entries.Remove(entry);
+        }
+
+        PlaylistEntry<T> IList<PlaylistEntry<T>>.this[int index]
+        {
+            get { return this[index]; }
+            set { throw new InvalidOperationException("Property cannot be set."); }
         }
 
         public PlaylistEntry<T> this[int index]
         {
             get { return entries[index]; }
-            set
-            {
-                throw new InvalidOperationException("Property cannot be set.");
-            }
         }
 
         #endregion
@@ -249,17 +129,13 @@ namespace DeadDog.Audio
         public void Add(PlaylistEntry<T> item)
         {
             entries.Add(item);
-            if (shuffle == ShuffleTypes.Shuffle)
-                shufflelist.Add(item);
         }
 
         public void Clear()
         {
-            reverselist.Clear();
-            shufflelist.Clear();
-            queue.Clear();
             entries.Clear();
             currentEntry = null;
+            index = -1;
         }
 
         public bool Contains(PlaylistEntry<T> item)
@@ -267,7 +143,7 @@ namespace DeadDog.Audio
             return entries.Contains(item);
         }
 
-        public void CopyTo(PlaylistEntry<T>[] array, int arrayIndex)
+        void ICollection<PlaylistEntry<T>>.CopyTo(PlaylistEntry<T>[] array, int arrayIndex)
         {
             entries.CopyTo(array, arrayIndex);
         }
@@ -277,7 +153,7 @@ namespace DeadDog.Audio
             get { return entries.Count; }
         }
 
-        public bool IsReadOnly
+        bool ICollection<PlaylistEntry<T>>.IsReadOnly
         {
             get { return false; }
         }
@@ -298,7 +174,7 @@ namespace DeadDog.Audio
 
         #region IEnumerable<PlaylistEntry<T>> Members
 
-        public IEnumerator<PlaylistEntry<T>> GetEnumerator()
+        IEnumerator<PlaylistEntry<T>> IEnumerable<PlaylistEntry<T>>.GetEnumerator()
         {
             return entries.GetEnumerator();
         }
