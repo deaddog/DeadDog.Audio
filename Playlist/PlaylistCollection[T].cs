@@ -44,7 +44,7 @@ namespace DeadDog.Audio
                     return false;
                 }
                 playlists[index].Reset();
-                MoveNext();
+                return MoveNext();
             }
             return true;
         }
@@ -61,15 +61,15 @@ namespace DeadDog.Audio
 
             if (!playlists[index].MovePrevious())
             {
-                do
+                index--;
+                if (index < 0)
                 {
-                    index--;
-                    if (index < 0)
-                    {
-                        index = -2;
-                        return false;
-                    }
-                } while (!playlists[index].MoveToLast());
+                    index = -2;
+                    return false;
+                }
+                playlists[index].Reset();
+                if (!playlists[index].MoveToLast())
+                    return MovePrevious();
             }
             return true;
         }
@@ -78,25 +78,72 @@ namespace DeadDog.Audio
             Random rnd = new Random();
             List<IPlaylist<T>> temp = new List<IPlaylist<T>>(playlists);
 
-            int i = rnd.Next(temp.Count);
-            if (!temp[i].MoveRandom())
+            while (temp.Count > 0)
             {
-                temp.RemoveAt(i);
+                int i = rnd.Next(temp.Count);
+                if (temp[i].MoveRandom())
+                {
+                    index = i;
+                    return true;
+                }
+                else
+                    temp.RemoveAt(i);
             }
+            index = -2;
             return false;
         }
 
         public bool MoveToFirst()
         {
-            throw new NotImplementedException();
+            if (playlists.Count == 0)
+            {
+                index = -2;
+                return false;
+            }
+
+            index = 0;
+            while (!playlists[index].MoveToFirst())
+            {
+                index++;
+                if (index >= playlists.Count)
+                {
+                    index = -2;
+                    return false;
+                }
+            }
+            return true;
         }
         public bool MoveToLast()
         {
-            throw new NotImplementedException();
+            if (playlists.Count == 0)
+            {
+                index = -2;
+                return false;
+            }
+
+            index = playlists.Count - 1;
+            while (!playlists[index].MoveToLast())
+            {
+                index--;
+                if (index < 0)
+                {
+                    index = -2;
+                    return false;
+                }
+            }
+            return true;
         }
         public bool MoveToEntry(PlaylistEntry<T> entry)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < playlists.Count; i++)
+                if (playlists[i].MoveToEntry(entry))
+                {
+                    index = i;
+                    return true;
+                }
+
+            index = -2;
+            return false;
         }
 
         public bool Contains(PlaylistEntry<T> entry)
@@ -105,6 +152,16 @@ namespace DeadDog.Audio
         }
 
         public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected void addPlaylist(IPlaylist<T> playlist)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected void removePlaylist(IPlaylist<T> playlist)
         {
             throw new NotImplementedException();
         }
