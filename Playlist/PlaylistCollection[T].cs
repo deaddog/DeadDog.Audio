@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
@@ -10,9 +11,28 @@ namespace DeadDog.Audio
         private List<IPlaylist<T>> playlists;
         private int index = -1;
 
+        private bool isSorted = false;
+        private Comparison<IPlaylist<T>> sortMethod = null;
+
         public PlaylistCollection()
         {
             this.playlists = new List<IPlaylist<T>>();
+        }
+
+        protected void setSortMethod(Comparison<IPlaylist<T>> method)
+        {
+            if (method == null)
+                throw new ArgumentNullException("Sort method cannot be null.");
+            else
+            {
+                this.isSorted = true;
+                this.sortMethod = method;
+
+                IPlaylist<T> current = index >= 0 ? playlists[index] : null;
+                playlists.Sort(this.sortMethod);
+                if (current != null)
+                    index = playlists.IndexOf(current);
+            }
         }
 
         public PlaylistEntry<T> CurrentEntry
@@ -148,22 +168,36 @@ namespace DeadDog.Audio
 
         public bool Contains(PlaylistEntry<T> entry)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < playlists.Count; i++)
+                if (playlists[i].Contains(entry))
+                    return true;
+            return false;
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            index = -1;
         }
 
         protected void addPlaylist(IPlaylist<T> playlist)
         {
-            throw new NotImplementedException();
-        }
+            int i = playlists.BinarySearch(playlist, sortMethod);
+            if (i >= 0 && playlists[i] == playlist)
+                throw new ArgumentException("A playlist cannot contain the same playlist twice.");
+            else if (i < 0)
+                i = ~i;
 
+            this.playlists.Insert(i, playlist);
+            if (i <= index)
+                index++;
+        }
         protected void removePlaylist(IPlaylist<T> playlist)
         {
-            throw new NotImplementedException();
+            this.playlists.Remove(playlist);
+            if (index >= playlists.Count)
+                index = -2;
+            else
+                playlists[index].Reset();
         }
     }
 }
