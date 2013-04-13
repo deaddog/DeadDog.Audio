@@ -11,7 +11,7 @@ namespace DeadDog.Audio.Scan
     public partial class AudioScanner : IDisposable
     {
         private BackgroundWorker worker;
-        private ADataParser parser;
+        private IDataParser parser;
 
         private DirectoryInfo directory;
         private SearchOption searchoption;
@@ -63,29 +63,29 @@ namespace DeadDog.Audio.Scan
             set { removeDeadFiles = value; }
         }
 
-        public AudioScanner(ADataParser parser, string directory)
+        public AudioScanner(IDataParser parser, string directory)
             : this(parser, new DirectoryInfo(directory))
         {
         }
-        public AudioScanner(ADataParser parser, DirectoryInfo directory)
+        public AudioScanner(IDataParser parser, DirectoryInfo directory)
             : this(parser, directory, SearchOption.AllDirectories)
         {
         }
 
-        public AudioScanner(ADataParser parser, string directory, SearchOption searchoption)
+        public AudioScanner(IDataParser parser, string directory, SearchOption searchoption)
             : this(parser, new DirectoryInfo(directory), searchoption)
         {
         }
-        public AudioScanner(ADataParser parser, DirectoryInfo directory, SearchOption searchoption)
+        public AudioScanner(IDataParser parser, DirectoryInfo directory, SearchOption searchoption)
             : this(parser, directory, searchoption, ".mp3", ".wma")
         {
         }
 
-        public AudioScanner(ADataParser parser, string directory, SearchOption searchoption, params string[] extensions)
+        public AudioScanner(IDataParser parser, string directory, SearchOption searchoption, params string[] extensions)
             : this(parser, new DirectoryInfo(directory), searchoption, extensions)
         {
         }
-        public AudioScanner(ADataParser parser, DirectoryInfo directory, SearchOption searchoption, params string[] extensions)
+        public AudioScanner(IDataParser parser, DirectoryInfo directory, SearchOption searchoption, params string[] extensions)
         {
             if (parser == null)
                 throw new ArgumentNullException("parser");

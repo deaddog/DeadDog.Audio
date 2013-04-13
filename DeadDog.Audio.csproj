@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ADataParser.cs" />
+    <Compile Include="IDataParser.cs" />
     <Compile Include="Parsing\ID3\ID3Parser.cs" />
     <Compile Include="Parsing\ID3\ID3info.cs" />
     <Compile Include="Parsing\ID3\v1\ID3v1.cs" />
