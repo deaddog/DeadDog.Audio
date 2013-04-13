@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using DeadDog.Audio.ID3;
-
-namespace DeadDog.Audio.ID3
+namespace DeadDog.Audio.Parsing.ID3
 {
     public class ID3v2
     {

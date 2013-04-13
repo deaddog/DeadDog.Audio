@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace DeadDog.Audio.ID3
+namespace DeadDog.Audio.Parsing.ID3
 {
     public class FrameReader : IDisposable
     {

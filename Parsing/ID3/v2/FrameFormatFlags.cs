@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeadDog.Audio.ID3
+namespace DeadDog.Audio.Parsing.ID3
 {
     /// <summary>
     /// Defines constants ID3v2 frame format flagbyte.

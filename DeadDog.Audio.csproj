@@ -46,17 +46,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADataParser.cs" />
-    <Compile Include="ID3Parser.cs" />
-    <Compile Include="ID3\ID3info.cs" />
-    <Compile Include="ID3\v1\ID3v1.cs" />
-    <Compile Include="ID3\v2\BinaryConverter.cs" />
-    <Compile Include="ID3\v2\FrameFormatFlags.cs" />
-    <Compile Include="ID3\v2\FrameInfo.cs" />
-    <Compile Include="ID3\v2\FrameReader.cs" />
-    <Compile Include="ID3\v2\FrameStatusFlag.cs" />
-    <Compile Include="ID3\v2\ID3v2.cs" />
-    <Compile Include="ID3\v2\TagFlags.cs" />
-    <Compile Include="ID3\v2\TagHeader.cs" />
+    <Compile Include="Parsing\ID3\ID3Parser.cs" />
+    <Compile Include="Parsing\ID3\ID3info.cs" />
+    <Compile Include="Parsing\ID3\v1\ID3v1.cs" />
+    <Compile Include="Parsing\ID3\v2\BinaryConverter.cs" />
+    <Compile Include="Parsing\ID3\v2\FrameFormatFlags.cs" />
+    <Compile Include="Parsing\ID3\v2\FrameInfo.cs" />
+    <Compile Include="Parsing\ID3\v2\FrameReader.cs" />
+    <Compile Include="Parsing\ID3\v2\FrameStatusFlag.cs" />
+    <Compile Include="Parsing\ID3\v2\ID3v2.cs" />
+    <Compile Include="Parsing\ID3\v2\TagFlags.cs" />
+    <Compile Include="Parsing\ID3\v2\TagHeader.cs" />
     <Compile Include="IOAssistant.cs" />
     <Compile Include="Libraries\Album.cs" />
     <Compile Include="Libraries\AlbumCollection.cs" />
