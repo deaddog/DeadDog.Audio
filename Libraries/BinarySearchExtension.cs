@@ -65,5 +65,37 @@ namespace DeadDog.Audio.Libraries
             else
                 return ~i;
         }
+
+        public static int BinarySearch<TSource, TFind>(this IList<TSource> source, TFind item, Comparison<TFind> compare, Converter<TSource, TFind> convert)
+        {
+            return BinarySearch(source, 0, source.Count, item, compare, convert);
+        }
+        
+        public static int BinarySearch<TSource, TFind>(this IList<TSource> source, int index, int count, TFind item, Comparison<TFind> compare, Converter<TSource, TFind> convert)
+        {
+            if (count == 0)
+                return ~index;
+
+            // Implemented according to "Discrete Mathematics and Its Applications" page 172
+            int cmp;
+            int i = index;
+            int j = index + count - 1;
+            while (i < j)
+            {
+                int m = (i + j) / 2;
+                cmp = compare(item, convert(source[m]));
+                if (cmp > 0)
+                    i = m + 1;
+                else
+                    j = m;
+            }
+            cmp = compare(item, convert(source[i]));
+            if (cmp == 0)
+                return i;
+            else if (cmp > 0)
+                return ~(i + 1);
+            else
+                return ~i;
+        }
     }
 }
