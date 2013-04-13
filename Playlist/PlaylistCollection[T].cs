@@ -179,31 +179,61 @@ namespace DeadDog.Audio
             index = -1;
         }
 
+        protected int count
+        {
+            get { return playlists.Count; }
+        }
+
+        protected IPlaylist<T> getPlaylist(int index)
+        {
+            return playlists[index];
+        }
+        protected bool contains(IPlaylist<T> playlist)
+        {
+            return playlists.Contains(playlist);
+        }
+        protected bool move(IPlaylist<T> playlist, int index)
+        {
+            int i = playlists.IndexOf(playlist);
+
+            if (i == -1)
+                return false;
+
+            IPlaylist<T> selected = index < 0 ? null : playlists[this.index];
+
+            playlists.RemoveAt(i);
+            playlists.Insert(index, playlist);
+
+            if (selected != null)
+                this.index = playlists.IndexOf(selected);
+            return true;
+        }
+
         protected void addPlaylist(IPlaylist<T> playlist)
         {
-            int i = playlists.BinarySearch(playlist, sortMethod);
-            if (i >= 0 && playlists[i] == playlist)
-                throw new ArgumentException("A playlist cannot contain the same playlist twice.");
-            else if (i < 0)
-                i = ~i;
+            if (isSorted)
+            {
+                int i = playlists.BinarySearch(playlist, sortMethod);
+                if (i >= 0 && playlists[i] == playlist)
+                    throw new ArgumentException("A playlist cannot contain the same playlist twice.");
+                else if (i < 0)
+                    i = ~i;
 
-            this.playlists.Insert(i, playlist);
-            if (i <= index)
-                index++;
+                this.playlists.Insert(i, playlist);
+                if (i <= index)
+                    index++;
+            }
+            else
+                this.playlists.Add(playlist);
         }
-        protected void removePlaylist(IPlaylist<T> playlist)
+        protected bool removePlaylist(IPlaylist<T> playlist)
         {
-            this.playlists.Remove(playlist);
+            bool removed = this.playlists.Remove(playlist);
             if (index >= playlists.Count)
                 index = -2;
             else
                 playlists[index].Reset();
-        }
-
-        protected IEnumerable<IPlaylist<T>> getPlaylists()
-        {
-            foreach (var pl in playlists)
-                yield return pl;
+            return removed;
         }
     }
 }
