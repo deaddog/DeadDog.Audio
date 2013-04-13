@@ -15,7 +15,11 @@ namespace DeadDog.Audio.Parsing
             if (!int.TryParse(flac.TrackNumber, out trackNumber))
                 trackNumber = -1;
 
-            return new RawTrack(filepath, flac.Title, flac.Album, trackNumber, flac.Artist);
+            int year;
+            if (!int.TryParse(flac.Date, out year))
+                year = RawTrack.YearIfUnknown;
+
+            return new RawTrack(filepath, flac.Title, flac.Album, trackNumber, flac.Artist, year);
         }
     }
 }
