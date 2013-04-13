@@ -172,7 +172,9 @@ namespace DeadDog.Audio
             else
             {
                 this.sort = sort;
-
+                PlaylistEntry<Track> track = entries[index];
+                sortEntries();
+                index = entries.IndexOf(track);
             }
         }
 
