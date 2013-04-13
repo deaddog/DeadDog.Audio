@@ -17,7 +17,7 @@ namespace DeadDog.Audio
         /// <value>
         /// The currently selected <see cref="PlaylistEntry{T}"/>.
         /// </value>
-        PlaylistEntry<T> Current { get; }
+        PlaylistEntry<T> CurrentEntry { get; }
 
         /// <summary>
         /// Moves to the next item in the playlist.
