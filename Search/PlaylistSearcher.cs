@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using DeadDog.Audio.Library;
+using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
@@ -55,26 +55,20 @@ namespace DeadDog.Audio
             }
         }
 
-        public static bool ContainedInTitleArtistAlbum<T, L, R>(Track<T, L, R> track, string searchstring)
-            where T : Track<T, L, R>
-            where L : Album<T, L, R>
-            where R : Artist<T, L, R>
+        public static bool ContainedInTitleArtistAlbum(Track track, string searchstring)
         {
-            return track.Contains(searchstring) || track.Album.Contains(searchstring) || track.Album.Artist.Contains(searchstring);
+            return track.Title.ToLower().Contains(searchstring) || 
+                   track.AlbumTitle.ToLower().Contains(searchstring) || 
+                   track.ArtistName.ToLower().Contains(searchstring);
         }
-        public static bool ContainedInTitleArtist<T, L, R>(Track<T, L, R> track, string searchstring)
-            where T : Track<T, L, R>
-            where L : Album<T, L, R>
-            where R : Artist<T, L, R>
+        public static bool ContainedInTitleArtist(Track track, string searchstring)
         {
-            return track.Contains(searchstring) || track.Album.Artist.Contains(searchstring);
+            return track.Title.ToLower().Contains(searchstring) ||
+                   track.ArtistName.ToLower().Contains(searchstring);
         }
-        public static bool ContainedInTitle<T, L, R>(Track<T, L, R> track, string searchstring)
-            where T : Track<T, L, R>
-            where L : Album<T, L, R>
-            where R : Artist<T, L, R>
+        public static bool ContainedInTitle(Track track, string searchstring)
         {
-            return track.Contains(searchstring);
+            return track.Title.ToLower().Contains(searchstring);
         }
 
         public static bool ContainedInTitleArtistAlbum(RawTrack track, string searchstring)

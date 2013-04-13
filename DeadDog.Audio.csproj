@@ -56,15 +56,18 @@
     <Compile Include="ID3\v2\TagFlags.cs" />
     <Compile Include="ID3\v2\TagHeader.cs" />
     <Compile Include="IOAssistant.cs" />
-    <Compile Include="Library\AlbumCollection[T,L,R].cs" />
-    <Compile Include="Library\Album[T,L,R].cs" />
-    <Compile Include="Library\ArtistCollection[T,L,R].cs" />
-    <Compile Include="Library\Artist[T,L,R].cs" />
-    <Compile Include="Library\LibraryFactory[T,L,R].cs" />
-    <Compile Include="Library\LibraryItem[O].cs" />
-    <Compile Include="Library\Library[T,L,R].cs" />
-    <Compile Include="Library\TrackCollection[T,L,R].cs" />
-    <Compile Include="Library\Track[T,L,R].cs" />
+    <Compile Include="Libraries\Album.cs" />
+    <Compile Include="Libraries\AlbumCollection.cs" />
+    <Compile Include="Libraries\AlbumFactory.cs" />
+    <Compile Include="Libraries\Artist.cs" />
+    <Compile Include="Libraries\ArtistCollection.cs" />
+    <Compile Include="Libraries\ArtistFactory.cs" />
+    <Compile Include="Libraries\BinarySearchExtension.cs" />
+    <Compile Include="Libraries\ITracks.cs" />
+    <Compile Include="Libraries\Library.cs" />
+    <Compile Include="Libraries\Track.cs" />
+    <Compile Include="Libraries\TrackCollection.cs" />
+    <Compile Include="Libraries\TrackFactory.cs" />
     <Compile Include="mp3Control\AudioControl.cs" />
     <Compile Include="mp3Control\libZPlay.cs" />
     <Compile Include="mp3Control\mp3Control.cs" />
@@ -102,13 +105,13 @@
     <Compile Include="Search\PlaylistSearcher.cs" />
     <Compile Include="Search\PredicateString.cs" />
     <Compile Include="Search\SearchMethods.cs" />
-    <Compile Include="Search\SongSearcher[T,L,R].cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libzplay.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

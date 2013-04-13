@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using DeadDog.Audio.Library;
+using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio.Scan
 {
