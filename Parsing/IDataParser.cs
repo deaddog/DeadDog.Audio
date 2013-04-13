@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Parsing
 {
     /// <summary>
     /// Provides generic methods for parsing metadata from files to <see cref="RawTrack"/> items.

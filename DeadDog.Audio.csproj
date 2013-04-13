@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IDataParser.cs" />
+    <Compile Include="MediaParser.cs" />
+    <Compile Include="MediaTypes.cs" />
+    <Compile Include="Parsing\IDataParser.cs" />
     <Compile Include="Parsing\FlacParser.cs" />
     <Compile Include="Parsing\ID3\ID3Parser.cs" />
     <Compile Include="Parsing\ID3\ID3info.cs" />

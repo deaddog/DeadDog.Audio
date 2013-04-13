@@ -20,7 +20,7 @@ namespace DeadDog.Audio.Parsing.ID3
             if (!id3.ID3v1.TagFound && !id3.ID3v2.TagFound)
                 throw new Exception("No tags found.");
 
-            return new RawTrack(filepath, id3.Title, id3.Album, id3.TrackNumber, id3.Artist);
+            return new RawTrack(filepath, id3.Title, id3.Album, id3.TrackNumber, id3.Artist, id3.Year);
         }
     }
 }

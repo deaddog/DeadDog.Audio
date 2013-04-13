@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DeadDog.Audio.Parsing.ID3
 {
@@ -11,7 +12,8 @@ namespace DeadDog.Audio.Parsing.ID3
         private string title = null;
         private string artist = null;
         private string album = null;
-        private string year = null;
+        private string yearstring = null;
+        private int year = -1;
         private string trackstring = null;
         private int tracknumber = -1;
 
@@ -39,7 +41,17 @@ namespace DeadDog.Audio.Parsing.ID3
             this.title = reader.Read<string>("TIT2", ReadString, null);
             this.artist = reader.Read<string>("TPE1", ReadString, null);
             this.album = reader.Read<string>("TALB", ReadString, null);
-            this.year = reader.Read<string>("TYER", ReadString, null);
+            this.yearstring = reader.Read<string>("TYER", ReadString, null);
+            if (yearstring == null)
+                this.year = -1;
+            else
+            {
+                Match regex = Regex.Match(yearstring,"[0-9]{4,4}");
+                if (regex.Success)
+                    year = int.Parse(regex.Value);
+                else
+                    year = -1;
+            }
             this.trackstring = reader.Read<string>("TRCK", ReadString, null);
 
             if (trackstring == null)
@@ -90,7 +102,11 @@ namespace DeadDog.Audio.Parsing.ID3
         {
             get { return tracknumber; }
         }
-        public string Year
+        public string YearString
+        {
+            get { return yearstring; }
+        }
+        public int Year
         {
             get { return year; }
         }

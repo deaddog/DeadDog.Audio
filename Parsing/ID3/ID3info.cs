@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DeadDog.Audio.Parsing.ID3
 {
@@ -12,6 +13,7 @@ namespace DeadDog.Audio.Parsing.ID3
         private string title;
         private string trackstring;
         private int tracknumber;
+        private int year;
 
         private string searchstring;
 
@@ -41,6 +43,7 @@ namespace DeadDog.Audio.Parsing.ID3
             this.title = null;
             this.trackstring = null;
             this.tracknumber = -1;
+            this.year = -1;
             this.file = null;
             this.v1Info = null;
             this.v2Info = null;
@@ -64,6 +67,7 @@ namespace DeadDog.Audio.Parsing.ID3
                 this.title = null;
                 this.trackstring = null;
                 this.tracknumber = -1;
+                this.year = -1;
                 this.v1Info = null;
                 this.v2Info = null;
 
@@ -92,6 +96,17 @@ namespace DeadDog.Audio.Parsing.ID3
                 tracknumber = ID3v2.TrackNumber;
             else
                 tracknumber = ID3v1.TrackNumber;
+
+            if (ID3v2.Year >= 0)
+                year = ID3v2.Year;
+            else
+            {
+                Match mYear = Regex.Match(ID3v1.Year, "[0-9]{4,4}");
+                if (mYear.Success)
+                    year = int.Parse(mYear.Value);
+                else
+                    year = -1;
+            }
 
             searchstring = (artist + " " + album + " " + title + file.Name.Substring(0, file.Name.LastIndexOf('.'))).ToLower();
             while (searchstring.Contains("  "))
@@ -210,6 +225,10 @@ namespace DeadDog.Audio.Parsing.ID3
         public int TrackNumber
         {
             get { return tracknumber; }
+        }
+        public int Year
+        {
+            get { return year; }
         }
 
         public string FullFilename

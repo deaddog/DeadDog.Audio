@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-using DeadDog.Audio.Libraries;
+using DeadDog.Audio.Parsing;
 
 namespace DeadDog.Audio.Scan
 {
