@@ -35,6 +35,11 @@ namespace DeadDog.Audio
         /// <returns>true, if the move was successful; otherwise false.</returns>
         bool MoveRandom();
 
+        bool MoveToFirst();
+        bool MoveToLast();
+
+        bool MoveToEntry(PlaylistEntry<T> entry);
+
         /// <summary>
         /// Resets the playlist.
         /// </summary>
