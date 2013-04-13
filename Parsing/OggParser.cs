@@ -13,9 +13,13 @@ namespace DeadDog.Audio.Parsing
             OggTagger ogg = new OggTagger(filepath);
             int trackNumber;
             if(!int.TryParse(ogg.TrackNumber, out trackNumber))
-                trackNumber = -1;
+                trackNumber = RawTrack.TrackNumberIfUnknown;
 
-            return new RawTrack(filepath, ogg.Title, ogg.Album, trackNumber, ogg.Artist);
+            int year;
+            if(!int.TryParse(ogg.Date, out year))
+                year = RawTrack.YearIfUnknown;
+
+            return new RawTrack(filepath, ogg.Title, ogg.Album, trackNumber, ogg.Artist, year);
         }
     }
 }
