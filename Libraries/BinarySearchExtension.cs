@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DeadDog.Audio.Libraries
 {
-    public static class BinarySearchExtension
+    internal static class BinarySearchExtension
     {
         /// <summary>
         /// Searches the entire sorted <see cref="IList{T}"/> for an element using the specified comparer and returns the zero-based index of the element.
@@ -20,7 +20,7 @@ namespace DeadDog.Audio.Libraries
         /// <returns>The zero-based index of item in the sorted <see cref="IList{T}"/>, if item is found; 
         /// otherwise, a negative number that is the bitwise complement of the index of the next element that is larger than item or, 
         /// if there is no larger element, the bitwise complement of <see cref="IList{T}"/>.Count.</returns>
-        public static int BinarySearch<TSource>(this IList<TSource> source, TSource item, Func<TSource, TSource, int> compare)
+        public static int BinarySearch<TSource>(this IList<TSource> source, TSource item, Comparison<TSource> compare)
         {
             return BinarySearch(source, 0, source.Count, item, compare);
         }
@@ -39,7 +39,7 @@ namespace DeadDog.Audio.Libraries
         /// <returns>The zero-based index of item in the sorted <see cref="IList{T}"/>, if item is found; 
         /// otherwise, a negative number that is the bitwise complement of the index of the next element that is larger than item or, 
         /// if there is no larger element, the bitwise complement of <see cref="IList{T}"/>.Count.</returns>
-        public static int BinarySearch<TSource>(this IList<TSource> source, int index, int count, TSource item, Func<TSource, TSource, int> compare)
+        public static int BinarySearch<TSource>(this IList<TSource> source, int index, int count, TSource item, Comparison<TSource> compare)
         {
             if (count == 0)
                 return ~index;
