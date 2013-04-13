@@ -83,7 +83,8 @@ namespace DeadDog.Audio
 
         public IEnumerator<IPlaylist<T>> GetEnumerator()
         {
-            throw new NotImplementedException();
+            foreach (var pl in getPlaylists())
+                yield return pl;
         }
 
         #endregion
@@ -92,7 +93,8 @@ namespace DeadDog.Audio
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            foreach (var pl in getPlaylists())
+                yield return pl;
         }
 
         #endregion

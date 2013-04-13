@@ -199,5 +199,11 @@ namespace DeadDog.Audio
             else
                 playlists[index].Reset();
         }
+
+        protected IEnumerable<IPlaylist<T>> getPlaylists()
+        {
+            foreach (var pl in playlists)
+                yield return pl;
+        }
     }
 }
