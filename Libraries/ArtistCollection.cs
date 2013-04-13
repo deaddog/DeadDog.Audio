@@ -31,10 +31,16 @@ namespace DeadDog.Audio.Libraries
                 else
                     artists.Insert(~index, artist);
 
+                if (ArtistAdded != null)
+                    ArtistAdded(this, new ArtistEventArgs(artist));
+
                 return artist;
             }
             internal void RemoveArtist(Artist artist)
             {
+                if (ArtistRemoved != null)
+                    ArtistRemoved(this, new ArtistEventArgs(artist));
+
                 artists.Remove(artist);
             }
 
@@ -77,6 +83,8 @@ namespace DeadDog.Audio.Libraries
                     foreach (Track t in a.Albums.GetTracks())
                         yield return t;
             }
+
+            public event ArtistEventHandler ArtistAdded, ArtistRemoved;
 
             IEnumerator<Artist> IEnumerable<Artist>.GetEnumerator()
             {
