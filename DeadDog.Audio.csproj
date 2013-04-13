@@ -87,7 +87,9 @@
     <Compile Include="Playlist\Interfaces\IPlayQueue[T].cs" />
     <Compile Include="Playlist\Interfaces\IQueueList[T].cs" />
     <Compile Include="Playlist\Interfaces\IQueuePeekable[T].cs" />
+    <Compile Include="Playlist\PlaylistCollection[T].cs" />
     <Compile Include="Playlist\PlaylistEntry[T].cs" />
+    <Compile Include="Playlist\PlaylistList[T].cs" />
     <Compile Include="Playlist\Playlist[T].cs" />
     <Compile Include="Playlist\PlayQueue[T, Q].cs" />
     <Compile Include="Playlist\PlayQueue[T].cs" />
