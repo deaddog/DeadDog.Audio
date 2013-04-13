@@ -31,10 +31,16 @@ namespace DeadDog.Audio.Libraries
                 else
                     albums.Insert(~index, album);
 
+                if (AlbumAdded != null)
+                    AlbumAdded(this, new AlbumEventArgs(album));
+
                 return album;
             }
             internal void RemoveAlbum(Album album)
             {
+                if (AlbumRemoved != null)
+                    AlbumRemoved(this, new AlbumEventArgs(album));
+
                 albums.Remove(album);
             }
 
@@ -70,6 +76,8 @@ namespace DeadDog.Audio.Libraries
             {
                 return albums.Contains(album);
             }
+
+            public event AlbumEventHandler AlbumAdded, AlbumRemoved;
 
             IEnumerator<Album> IEnumerable<Album>.GetEnumerator()
             {

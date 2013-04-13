@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DeadDog.Audio.Libraries.Events
+namespace DeadDog.Audio.Libraries
 {
     /// <summary>
     /// Provides data for the <see cref="DeadDog.Audio.Libraries.Album.AlbumCollection.AlbumAdded"/> and the <see cref="DeadDog.Audio.Libraries.Album.AlbumCollection.AlbumRemoved"/> events.
