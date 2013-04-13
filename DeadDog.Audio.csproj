@@ -34,6 +34,9 @@
     <DocumentationFile>bin\Release\DeadDog.Audio.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Luminescence.Xiph">
+      <HintPath>.\Luminescence.Xiph.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -46,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDataParser.cs" />
+    <Compile Include="Parsing\FlacParser.cs" />
     <Compile Include="Parsing\ID3\ID3Parser.cs" />
     <Compile Include="Parsing\ID3\ID3info.cs" />
     <Compile Include="Parsing\ID3\v1\ID3v1.cs" />
@@ -81,6 +85,7 @@
     <Compile Include="mp3Control\mp3Control.cs" />
     <Compile Include="mp3Control\PlayerSeekOrigin.cs" />
     <Compile Include="mp3Control\PlayerStatus.cs" />
+    <Compile Include="Parsing\OggParser.cs" />
     <Compile Include="Playlist\AlbumPlaylist[T].cs" />
     <Compile Include="Playlist\ArtistPlaylist[T].cs" />
     <Compile Include="Playlist\Interfaces\IPlaylist[T].cs" />
