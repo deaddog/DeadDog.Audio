@@ -62,7 +62,7 @@ namespace DeadDog.Audio
                 throw new ArgumentException("Input stream must support reading", "input");
 
             IOAssistant io = new IOAssistant(input);
-            return new RawTrack(io.ReadString(), io.ReadString(), io.ReadString(), io.ReadInt32(), io.ReadString());
+            return new RawTrack(io.ReadString(), io.ReadString(), io.ReadString(), io.ReadInt32(), io.ReadString(), io.ReadInt32());
         }
         /// <summary>
         /// Saves this <see cref="RawTrack"/> to the specified <see cref="Stream"/>. Advances the position within the stream by the number of bytes written.
@@ -81,11 +81,12 @@ namespace DeadDog.Audio
             io.Write(this.album);
             io.Write(this.number);
             io.Write(this.artist);
+            io.Write(this.year);
         }
 
         private System.IO.FileInfo file;
         private string track, album, artist, searchstring;
-        private int number;
+        private int number, year;
 
         /// <summary>
         /// Should only be used in the static type constructor.
@@ -97,6 +98,7 @@ namespace DeadDog.Audio
             this.track = null;
             this.album = "Unknown";
             this.number = TrackNumberIfUnknown;
+            this.year = YearIfUnknown;
 
             this.artist = "Unknown";
 
@@ -111,7 +113,7 @@ namespace DeadDog.Audio
         /// <param name="albumtitle">The album name of the track. Should be set to null if unknown.</param>
         /// <param name="tracknumber">The tracknumber of the track on the album. Should be set to -1 if unknown.</param>
         /// <param name="artistname">The artistname for the track. Should be set to null if unknown.</param>
-        public RawTrack(string filepath, string tracktitle, string albumtitle, int tracknumber, string artistname)
+        public RawTrack(string filepath, string tracktitle, string albumtitle, int tracknumber, string artistname, int year)
         {
             if (filepath == null)
                 throw new ArgumentNullException("filepath", "filepath cannot equal null");
@@ -141,10 +143,15 @@ namespace DeadDog.Audio
             else
                 artist = artistname.Trim();
 
+            this.year = year;
+
             searchstring = "";
             searchstring += " " + artist;
             searchstring += " " + album;
-            searchstring += " " + track;
+            if (!TrackNumberUnknown)
+                searchstring += " " + track;
+            if (!YearUnknown)
+                searchstring += " " + year;
             while (searchstring.Contains("  "))
                 searchstring = searchstring.Replace("  ", " ");
             searchstring = searchstring.ToLower().Trim();
@@ -185,11 +192,20 @@ namespace DeadDog.Audio
         {
             get { return artist; }
         }
+        public int Year
+        {
+            get { return year; }
+        }
+        public bool YearUnknown
+        {
+            get { return number == YearIfUnknown; }
+        }
 
         /// <summary>
         /// Gets the value tracknumber should equal if it is unknown (-1).
         /// </summary>
         public const int TrackNumberIfUnknown = -1;
+        public const int YearIfUnknown = -1;
 
         internal System.IO.FileInfo File
         {
