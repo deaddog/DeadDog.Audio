@@ -21,7 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\DeadDog.Audio.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -74,6 +75,8 @@
     <Compile Include="mp3Control\mp3Control.cs" />
     <Compile Include="mp3Control\PlayerSeekOrigin.cs" />
     <Compile Include="mp3Control\PlayerStatus.cs" />
+    <Compile Include="Playlist\AlbumPlaylist[T].cs" />
+    <Compile Include="Playlist\ArtistPlaylist[T].cs" />
     <Compile Include="Playlist\Interfaces\IPlaylist[T].cs" />
     <Compile Include="Playlist\Interfaces\IPlayQueue[T].cs" />
     <Compile Include="Playlist\Interfaces\IQueueList[T].cs" />
