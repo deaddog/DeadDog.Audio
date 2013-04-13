@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A393FD81-A89C-4761-AF87-2E5DE2B95B61}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeadDog.Audio</RootNamespace>
+    <AssemblyName>DeadDog.Audio</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\DeadDog.Audio.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ADataParser.cs" />
+    <Compile Include="ID3Parser.cs" />
+    <Compile Include="ID3\ID3info.cs" />
+    <Compile Include="ID3\v1\ID3v1.cs" />
+    <Compile Include="ID3\v2\BinaryConverter.cs" />
+    <Compile Include="ID3\v2\FrameFormatFlags.cs" />
+    <Compile Include="ID3\v2\FrameInfo.cs" />
+    <Compile Include="ID3\v2\FrameReader.cs" />
+    <Compile Include="ID3\v2\FrameStatusFlag.cs" />
+    <Compile Include="ID3\v2\ID3v2.cs" />
+    <Compile Include="ID3\v2\TagFlags.cs" />
+    <Compile Include="ID3\v2\TagHeader.cs" />
+    <Compile Include="IOAssistant.cs" />
+    <Compile Include="Library\AlbumCollection[T,L,R].cs" />
+    <Compile Include="Library\Album[T,L,R].cs" />
+    <Compile Include="Library\ArtistCollection[T,L,R].cs" />
+    <Compile Include="Library\Artist[T,L,R].cs" />
+    <Compile Include="Library\LibraryFactory[T,L,R].cs" />
+    <Compile Include="Library\LibraryItem[O].cs" />
+    <Compile Include="Library\Library[T,L,R].cs" />
+    <Compile Include="Library\TrackCollection[T,L,R].cs" />
+    <Compile Include="Library\Track[T,L,R].cs" />
+    <Compile Include="mp3Control\AudioControl.cs" />
+    <Compile Include="mp3Control\libZPlay.cs" />
+    <Compile Include="mp3Control\mp3Control.cs" />
+    <Compile Include="mp3Control\PlayerSeekOrigin.cs" />
+    <Compile Include="mp3Control\PlayerStatus.cs" />
+    <Compile Include="Playlist\Interfaces\IPlayQueue[T].cs" />
+    <Compile Include="Playlist\Interfaces\IQueueList[T].cs" />
+    <Compile Include="Playlist\Interfaces\IQueuePeekable[T].cs" />
+    <Compile Include="Playlist\PlaylistEntry[T].cs" />
+    <Compile Include="Playlist\Playlist[T].cs" />
+    <Compile Include="Playlist\PlayQueue[T, Q].cs" />
+    <Compile Include="Playlist\PlayQueue[T].cs" />
+    <Compile Include="Playlist\QueueEntry[T, Q].cs" />
+    <Compile Include="Playlist\QueueEntry[T].cs" />
+    <Compile Include="Playlist\QueueFactory[T, Q].cs" />
+    <Compile Include="Playlist\RepeatTypes.cs" />
+    <Compile Include="Playlist\RestrictionTypes.cs" />
+    <Compile Include="Playlist\ReverseList[T].cs" />
+    <Compile Include="Playlist\ShuffleTypes.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawTrack.cs" />
+    <Compile Include="Scan\AudioScanner\AudioScanner.cs" />
+    <Compile Include="Scan\AudioScanner\AudioScanner.static.cs" />
+    <Compile Include="Scan\AudioScanner\ExistingFilesCollection.cs" />
+    <Compile Include="Scan\AudioScanner\ExtensionList.cs" />
+    <Compile Include="Scan\AudioScanner\ScannerArgument.cs" />
+    <Compile Include="Scan\ScanCompletedEventArgs.cs" />
+    <Compile Include="Scan\ScanCompletedEventHandler.cs" />
+    <Compile Include="Scan\ScannerProgress.cs" />
+    <Compile Include="Scan\ScannerState.cs" />
+    <Compile Include="Scan\ScannerTracer.cs" />
+    <Compile Include="Scan\ScanProgressChangedEventArgs.cs" />
+    <Compile Include="Scan\ScanProgressChangedEventHandler.cs" />
+    <Compile Include="Search\LibrarySearcher.cs" />
+    <Compile Include="Search\PlaylistSearcher.cs" />
+    <Compile Include="Search\PredicateString.cs" />
+    <Compile Include="Search\SearchMethods.cs" />
+    <Compile Include="Search\SongSearcher[T,L,R].cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libzplay.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
