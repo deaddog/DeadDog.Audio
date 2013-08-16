@@ -99,7 +99,7 @@ namespace DeadDog.Audio.Parsing.ID3
 
             if (ID3v2.Year >= 0)
                 year = ID3v2.Year;
-            else
+            else if (ID3v1.Year != null)
             {
                 Match mYear = Regex.Match(ID3v1.Year, "[0-9]{4,4}");
                 if (mYear.Success)
@@ -107,8 +107,10 @@ namespace DeadDog.Audio.Parsing.ID3
                 else
                     year = -1;
             }
+            else
+                year = -1;
 
-            searchstring = (artist + " " + album + " " + title + file.Name.Substring(0, file.Name.LastIndexOf('.'))).ToLower();
+            searchstring = (artist + " " + album + " " + title).ToLower();
             while (searchstring.Contains("  "))
                 searchstring = searchstring.Replace("  ", " ");
             searchstring = searchstring.Trim();
@@ -260,7 +262,7 @@ namespace DeadDog.Audio.Parsing.ID3
         /// <returns>false if one or more search strings were not found; true if all were.</returns>
         public bool MatchAll(params string[] search)
         {
-            if(search.Length==0)
+            if (search.Length == 0)
                 return false;
             for (int i = 0; i < search.Length; i++)
                 if (!this.searchstring.Contains(search[i]))
