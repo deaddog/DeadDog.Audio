@@ -65,7 +65,6 @@ namespace DeadDog.Audio.Scan
             ac.ParseAdd = (flagbyte1 & FlagByte1.ParseAdd) == FlagByte1.ParseAdd;
             ac.ParseUpdate = (flagbyte1 & FlagByte1.ParseUpdate) == FlagByte1.ParseUpdate;
             ac.RemoveDeadFiles = (flagbyte1 & FlagByte1.RemoveDeadFiles) == FlagByte1.RemoveDeadFiles;
-            ac.ScannerReportsProgress = (flagbyte1 & FlagByte1.ReportsProgress) == FlagByte1.ReportsProgress;
 
             int existCount = io.ReadInt32();
             for (int i = 0; i < existCount; i++)
@@ -96,8 +95,6 @@ namespace DeadDog.Audio.Scan
                 fb1 = fb1 | FlagByte1.ParseUpdate;
             if (ac.RemoveDeadFiles)
                 fb1 = fb1 | FlagByte1.RemoveDeadFiles;
-            if (ac.ScannerReportsProgress)
-                fb1 = fb1 | FlagByte1.ReportsProgress;
             output.WriteByte((byte)fb1);
 
             io.Write(ac.existingFiles.Count);
@@ -117,12 +114,7 @@ namespace DeadDog.Audio.Scan
             AllDirectories = 1,
             ParseAdd = 2,
             ParseUpdate = 4,
-            RemoveDeadFiles = 8,
-            ReportsProgress = 16,
-            /// <summary>
-            /// If set another flagbyte should be read.
-            /// </summary>
-            AdditionalData = 128
+            RemoveDeadFiles = 8
         }
     }
 }
