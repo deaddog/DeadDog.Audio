@@ -8,9 +8,8 @@ using DeadDog.Audio.Parsing;
 
 namespace DeadDog.Audio.Scan
 {
-    public partial class AudioScanner : IDisposable
+    public partial class AudioScanner
     {
-        private BackgroundWorker worker;
         private IDataParser parser;
 
         private DirectoryInfo directory;
@@ -98,11 +97,6 @@ namespace DeadDog.Audio.Scan
 
             extensionList = new ExtensionList(extensions);
             existingFiles = new ExistingFilesCollection();
-
-            worker = new BackgroundWorker();
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
         }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
@@ -239,46 +233,18 @@ namespace DeadDog.Audio.Scan
 
             isrunning = false;
         }
-        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (ProgressChanged != null)
-                ProgressChanged(this, e.UserState as ScanProgressChangedEventArgs);
-        }
-        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (RunScannerCompleted != null)
-                RunScannerCompleted(this, e.Result as ScanCompletedEventArgs);
-        }
 
-        public bool ScannerReportsProgress
-        {
-            get { return worker.WorkerReportsProgress; }
-            set { worker.WorkerReportsProgress = value; }
-        }
         public SearchOption SearchOption
         {
             get { return searchoption; }
             set { searchoption = value; }
         }
 
-        public ScannerTracer RunScannerAsync()
+        public AudioScan RunScannerAsync()
         {
-            if (!directory.Exists)
-                throw new ArgumentException("Directory must exist.", "directory");
-
-            if (IsRunning)
-                throw new InvalidOperationException("RunScannerAsync is already running.");
-
-            isrunning = true;
-
-            ScannerArgument arg = new ScannerArgument(directory, searchoption,
-                parseAdd, parseUpdate, removeDeadFiles,
-                extensionList.ToArray(), existingFiles.ToArray());
-
-            worker.RunWorkerAsync(arg);
-            return arg.Tracer;
+            return RunScannerAsync(new string[] { });
         }
-        public ScannerTracer RunScannerAsync(params string[] ignoreFiles)
+        public AudioScan RunScannerAsync(params string[] ignoreFiles)
         {
             if (!directory.Exists)
                 throw new ArgumentException("Directory must exist.", "directory");
@@ -288,12 +254,12 @@ namespace DeadDog.Audio.Scan
 
             isrunning = true;
 
-            ScannerArgument arg = new ScannerArgument(directory, searchoption,
-                parseAdd, parseUpdate, removeDeadFiles,
-                extensionList.ToArray(), existingFiles.ToArray(), ignoreFiles);
+            string[] ig = new string[ignoreFiles.Length];
+            ignoreFiles.CopyTo(ig, 0);
 
-            worker.RunWorkerAsync(arg);
-            return arg.Tracer;
+            return new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles,
+                extensionList.ToArray(), existingFiles.ToArray(), ig,
+                FileAdded, FileUpdated, FileError, FileRemoved, ScanDone);
         }
 
         private bool isrunning = false;
@@ -331,8 +297,11 @@ namespace DeadDog.Audio.Scan
             return searchFiles;
         }
 
-        public event ScanCompletedEventHandler RunScannerCompleted;
-        public event ScanProgressChangedEventHandler ProgressChanged;
+        public event ScanCompletedEventHandler ScanDone;
+        public event ScanFileEventHandler FileAdded;
+        public event ScanFileEventHandler FileUpdated;
+        public event ScanFileEventHandler FileError;
+        public event ScanFileEventHandler FileRemoved;
 
         #region Path comparison
 
@@ -370,10 +339,5 @@ namespace DeadDog.Audio.Scan
 
 
         #endregion
-
-        public void Dispose()
-        {
-            worker.Dispose();
-        }
     }
 }

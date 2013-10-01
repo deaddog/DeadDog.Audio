@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace DeadDog.Audio.Scan
 {
     public class AudioScan
     {
+        private Thread thread;
+
         private DirectoryInfo directory;
         private SearchOption searchoption;
 
@@ -35,6 +38,8 @@ namespace DeadDog.Audio.Scan
             ScanFileEventHandler add, ScanFileEventHandler update, ScanFileEventHandler error, ScanFileEventHandler remove,
             ScanCompletedEventHandler done)
         {
+            this.thread = new Thread(Run);
+
             this.directory = directory;
             this.searchoption = searchoption;
 
@@ -59,6 +64,8 @@ namespace DeadDog.Audio.Scan
             this.parseProgress = new ProgressState();
 
             this.removed = 0;
+
+            thread.Start();
         }
 
         public DirectoryInfo Directory
@@ -108,6 +115,17 @@ namespace DeadDog.Audio.Scan
         public int Removed
         {
             get { return removed; }
+        }
+
+        private bool isrunning = false;
+        public bool IsRunning
+        {
+            get { return isrunning; }
+        }
+
+        private void Run()
+        {
+            isrunning = true;
         }
 
         public struct ProgressState
