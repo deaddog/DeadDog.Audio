@@ -139,13 +139,13 @@ namespace DeadDog.Audio.Scan
 
             List<FileInfo> addFiles = GetFiles();
             List<FileInfo> updateFiles = new List<FileInfo>();
-            List<FileInfo> removeFiles = new List<FileInfo>(from rt in existingFiles select new FileInfo(rt.FullFilename));
+            List<RawTrack> removeFiles = new List<RawTrack>(existingFiles);
 
             for (int i = 0; i < ignoredFiles.Length; i++)
             {
                 FileInfo file = new FileInfo(ignoredFiles[i]);
                 int a = addFiles.RemoveAll(f => f.FullName.Equals(file.FullName));
-                int r = removeFiles.RemoveAll(f => f.FullName.Equals(file.FullName));
+                int r = removeFiles.RemoveAll(f => f.FullFilename.Equals(file.FullName));
             }
 
             addFiles.Sort(ComparePath);
@@ -184,8 +184,8 @@ namespace DeadDog.Audio.Scan
                 removeFiles.Clear();
 
             if (removeFiles.Count > 0)
-                foreach (FileInfo file in removeFiles)
-                    FileParsed(file.FullName, FileState.Removed);
+                foreach (RawTrack track in removeFiles)
+                    FileParsed(track.FullFilename, track, FileState.Removed);
 
             //Scanning complete, setting values of tracer.Progress
             //Setting how many files were removed from existingFiles (if any)
@@ -209,13 +209,13 @@ namespace DeadDog.Audio.Scan
                     {
                         updateData.Add(rt);
                         updateProgress.Succes++;
-                        FileParsed(updateFiles[i].FullName, FileState.Updated);
+                        FileParsed(updateFiles[i].FullName, rt, FileState.Updated);
                     }
                     else
                     {
                         errorFiles.Add(updateFiles[i]);
                         updateProgress.Error++;
-                        FileParsed(updateFiles[i].FullName, FileState.UpdateError);
+                        FileParsed(updateFiles[i].FullName, null, FileState.UpdateError);
                     }
                 }
 
@@ -229,13 +229,13 @@ namespace DeadDog.Audio.Scan
                         /* The following is meant to update the existingFiles list in AudioScanner. */
                         existingFiles.Add(rt);
                         addProgress.Succes++;
-                        FileParsed(updateFiles[i].FullName, FileState.Added);
+                        FileParsed(updateFiles[i].FullName, rt, FileState.Added);
                     }
                     else
                     {
                         errorFiles.Add(addFiles[i]);
                         addProgress.Error++;
-                        FileParsed(updateFiles[i].FullName, FileState.AddError);
+                        FileParsed(updateFiles[i].FullName, null, FileState.AddError);
                     }
                 }
 
@@ -272,10 +272,10 @@ namespace DeadDog.Audio.Scan
             return searchFiles;
         }
 
-        private void FileParsed(string filepath, FileState state)
+        private void FileParsed(string filepath, RawTrack track, FileState state)
         {
             if (parsed != null)
-                parsed(this, new ScanFileEventArgs(filepath, state));
+                parsed(this, new ScanFileEventArgs(filepath, track, state));
         }
 
         #region Path comparison
@@ -288,6 +288,15 @@ namespace DeadDog.Audio.Scan
         {
             return x.FullName.CompareTo(y.FullName);
         }
+        private int ComparePath(RawTrack x, FileInfo y)
+        {
+            return x.FullFilename.CompareTo(y.FullName);
+        }
+        private int ComparePath(FileInfo x, RawTrack y)
+        {
+            return x.FullName.CompareTo(y.FullFilename);
+        }
+
         private bool PathEqual(RawTrack x, RawTrack y)
         {
             return x.FullFilename.Equals(y.FullFilename);
@@ -295,6 +304,14 @@ namespace DeadDog.Audio.Scan
         private bool PathEqual(FileInfo x, FileInfo y)
         {
             return x.FullName.Equals(y.FullName);
+        }
+        private bool PathEqual(RawTrack x, FileInfo y)
+        {
+            return x.FullFilename.Equals(y.FullName);
+        }
+        private bool PathEqual(FileInfo x, RawTrack y)
+        {
+            return x.FullName.Equals(y.FullFilename);
         }
 
         #endregion
