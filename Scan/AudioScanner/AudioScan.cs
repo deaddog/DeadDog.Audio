@@ -68,6 +68,8 @@ namespace DeadDog.Audio.Scan
             thread.Start();
         }
 
+        #region Properties
+
         public DirectoryInfo Directory
         {
             get { return directory; }
@@ -123,10 +125,41 @@ namespace DeadDog.Audio.Scan
             get { return isrunning; }
         }
 
+        #endregion
+
         private void Run()
         {
             isrunning = true;
         }
+        private List<FileInfo> GetFiles()
+        {
+            List<FileInfo> searchFiles = new List<FileInfo>();
+            foreach (string ext in extensions)
+            {
+                FileInfo[] files = directory.GetFiles("*" + ext, searchoption);
+                searchFiles.AddRange(files);
+            }
+
+            //Windows medtager "minsang.mp3-missing" uden følgende tjek...
+            for (int i = 0; i < searchFiles.Count; i++)
+            {
+                bool ok = false;
+                foreach (string ext in extensions)
+                    if (searchFiles[i].Extension.ToLower() == ext)
+                    {
+                        ok = true;
+                        break;
+                    }
+                if (!ok)
+                {
+                    searchFiles.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return searchFiles;
+        }
+
 
         public struct ProgressState
         {
