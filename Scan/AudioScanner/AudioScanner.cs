@@ -124,7 +124,7 @@ namespace DeadDog.Audio.Scan
 
             return new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles,
                 parser, extensionList.ToArray(), existingFiles.ToArray(), ig,
-                FileAdded, FileUpdated, FileError, FileRemoved, ScanDone);
+                FileParsed, ScanDone);
         }
 
         public bool IsRunning
@@ -133,9 +133,6 @@ namespace DeadDog.Audio.Scan
         }
 
         public event ScanCompletedEventHandler ScanDone;
-        public event ScanFileEventHandler FileAdded;
-        public event ScanFileEventHandler FileUpdated;
-        public event ScanFileEventHandler FileError;
-        public event ScanFileEventHandler FileRemoved;
+        public event ScanFileEventHandler FileParsed;
     }
 }

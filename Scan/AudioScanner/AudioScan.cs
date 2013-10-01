@@ -26,7 +26,7 @@ namespace DeadDog.Audio.Scan
 
         private string[] ignoredFiles;
 
-        private event ScanFileEventHandler add, update, error, remove;
+        private event ScanFileEventHandler parsed;
         private event ScanCompletedEventHandler done;
 
         private ScannerState state;
@@ -39,7 +39,7 @@ namespace DeadDog.Audio.Scan
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
             bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser,
             string[] extensions, RawTrack[] existingFiles, string[] ignoredFiles,
-            ScanFileEventHandler add, ScanFileEventHandler update, ScanFileEventHandler error, ScanFileEventHandler remove,
+            ScanFileEventHandler parsed,
             ScanCompletedEventHandler done)
         {
             this.thread = new Thread(Run);
@@ -58,10 +58,8 @@ namespace DeadDog.Audio.Scan
 
             this.ignoredFiles = ignoredFiles;
 
-            this.add = add;
-            this.update = update;
-            this.error = error;
-            this.remove = remove;
+            this.parsed = parsed;
+            this.done = done;
 
             this.state = ScannerState.NotRunning;
 
@@ -185,9 +183,9 @@ namespace DeadDog.Audio.Scan
             if (!removeDeadFiles)
                 removeFiles.Clear();
 
-            if (removeFiles.Count > 0 && remove != null)
+            if (removeFiles.Count > 0)
                 foreach (FileInfo file in removeFiles)
-                    remove(this, new ScanFileEventArgs(file.FullName, FileState.Removed));
+                    FileParsed(file.FullName, FileState.Removed);
 
             //Scanning complete, setting values of tracer.Progress
             //Setting how many files were removed from existingFiles (if any)
@@ -211,13 +209,13 @@ namespace DeadDog.Audio.Scan
                     {
                         updateData.Add(rt);
                         updateProgress.Succes++;
-                        update(this, new ScanFileEventArgs(updateFiles[i].FullName, FileState.Updated));
+                        FileParsed(updateFiles[i].FullName, FileState.Updated);
                     }
                     else
                     {
                         errorFiles.Add(updateFiles[i]);
                         updateProgress.Error++;
-                        update(this, new ScanFileEventArgs(updateFiles[i].FullName, FileState.UpdateError));
+                        FileParsed(updateFiles[i].FullName, FileState.UpdateError);
                     }
                 }
 
@@ -231,13 +229,13 @@ namespace DeadDog.Audio.Scan
                         /* The following is meant to update the existingFiles list in AudioScanner. */
                         existingFiles.Add(rt);
                         addProgress.Succes++;
-                        add(this, new ScanFileEventArgs(updateFiles[i].FullName, FileState.Added));
+                        FileParsed(updateFiles[i].FullName, FileState.Added);
                     }
                     else
                     {
                         errorFiles.Add(addFiles[i]);
                         addProgress.Error++;
-                        add(this, new ScanFileEventArgs(updateFiles[i].FullName, FileState.AddError));
+                        FileParsed(updateFiles[i].FullName, FileState.AddError);
                     }
                 }
 
@@ -272,6 +270,12 @@ namespace DeadDog.Audio.Scan
             }
 
             return searchFiles;
+        }
+
+        private void FileParsed(string filepath, FileState state)
+        {
+            if (parsed != null)
+                parsed(this, new ScanFileEventArgs(filepath, state));
         }
 
         #region Path comparison
