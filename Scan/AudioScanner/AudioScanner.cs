@@ -123,7 +123,7 @@ namespace DeadDog.Audio.Scan
             ignoreFiles.CopyTo(ig, 0);
 
             return new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles,
-                extensionList.ToArray(), existingFiles.ToArray(), ig,
+                parser, extensionList.ToArray(), existingFiles.ToArray(), ig,
                 FileAdded, FileUpdated, FileError, FileRemoved, ScanDone);
         }
 
@@ -137,42 +137,5 @@ namespace DeadDog.Audio.Scan
         public event ScanFileEventHandler FileUpdated;
         public event ScanFileEventHandler FileError;
         public event ScanFileEventHandler FileRemoved;
-
-        #region Path comparison
-
-        private int ComparePath(RawTrack x, RawTrack y)
-        {
-            return x.FullFilename.CompareTo(y.FullFilename);
-        }
-        private int ComparePath(FileInfo x, FileInfo y)
-        {
-            return x.FullName.CompareTo(y.FullName);
-        }
-        private bool PathEqual(RawTrack x, RawTrack y)
-        {
-            return x.FullFilename.Equals(y.FullFilename);
-        }
-        private bool PathEqual(FileInfo x, FileInfo y)
-        {
-            return x.FullName.Equals(y.FullName);
-        }
-
-        private class FileLocater
-        {
-            private FileInfo file;
-
-            public FileLocater(FileInfo file)
-            {
-                this.file = file;
-            }
-
-            public bool Match(FileInfo file)
-            {
-                return file.FullName.Equals(this.file.FullName);
-            }
-        }
-
-
-        #endregion
     }
 }
