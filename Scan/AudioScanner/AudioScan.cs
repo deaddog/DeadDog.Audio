@@ -227,19 +227,21 @@ namespace DeadDog.Audio.Scan
                     {
                         addData.Add(rt);
                         addProgress.Succes++;
-                        FileParsed(updateFiles[i].FullName, rt, FileState.Added);
+                        FileParsed(addFiles[i].FullName, rt, FileState.Added);
                     }
                     else
                     {
                         errorFiles.Add(addFiles[i]);
                         addProgress.Error++;
-                        FileParsed(updateFiles[i].FullName, null, FileState.AddError);
+                        FileParsed(addFiles[i].FullName, null, FileState.AddError);
                     }
                 }
 
             state = ScannerState.Completed;
 
-            isrunning = false;
+            isrunning = true;
+            if (done != null)
+                done(this, new ScanCompletedEventArgs());
         }
         private List<FileInfo> GetFiles()
         {
