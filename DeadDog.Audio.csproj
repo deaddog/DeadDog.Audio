@@ -112,13 +112,11 @@
     <Compile Include="Scan\AudioScanner\AudioScanner.static.cs" />
     <Compile Include="Scan\AudioScanner\ExistingFilesCollection.cs" />
     <Compile Include="Scan\AudioScanner\ExtensionList.cs" />
-    <Compile Include="Scan\AudioScanner\ScannerArgument.cs" />
     <Compile Include="Scan\FileState.cs" />
     <Compile Include="Scan\ScanCompletedEventArgs.cs" />
     <Compile Include="Scan\ScanCompletedEventHandler.cs" />
     <Compile Include="Scan\ScanFileEventArgs.cs" />
     <Compile Include="Scan\ScanFileEventHandler.cs" />
-    <Compile Include="Scan\ScannerProgress.cs" />
     <Compile Include="Scan\ScannerState.cs" />
     <Compile Include="Scan\ScannerTracer.cs" />
     <Compile Include="Scan\ScanProgressChangedEventArgs.cs" />
@@ -126,6 +124,10 @@
     <Compile Include="Playlist\Searching.cs" />
     <Compile Include="PredicateString.cs" />
     <Compile Include="SearchMethods.cs" />
+    <Compile Include="Search\LibrarySearcher.cs" />
+    <Compile Include="Search\PlaylistSearcher.cs" />
+    <Compile Include="Search\PredicateString.cs" />
+    <Compile Include="Search\SearchMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libzplay.dll">
