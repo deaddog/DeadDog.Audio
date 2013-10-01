@@ -122,9 +122,32 @@ namespace DeadDog.Audio.Scan
             string[] ig = new string[ignoreFiles.Length];
             ignoreFiles.CopyTo(ig, 0);
 
+            ScanFileEventHandler parsed = FileParsed;
+            parsed += AudioScanner_FileParsed;
+
             return new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles,
                 parser, extensionList.ToArray(), existingFiles.ToArray(), ig,
-                FileParsed, ScanDone);
+                parsed, ScanDone);
+        }
+
+        private void AudioScanner_FileParsed(AudioScan sender, ScanFileEventArgs e)
+        {
+            switch (e.State)
+            {
+                case FileState.Added:
+                    existingFiles.Add(e.Track);
+                    break;
+                case FileState.Updated:
+                    existingFiles.Remove(e.Path);
+                    existingFiles.Add(e.Track);
+                    break;
+                case FileState.UpdateError:
+                    existingFiles.Remove(e.Path);
+                    break;
+                case FileState.Removed:
+                    existingFiles.Remove(e.Path);
+                    break;
+            }
         }
 
         public bool IsRunning

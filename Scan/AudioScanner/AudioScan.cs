@@ -226,8 +226,6 @@ namespace DeadDog.Audio.Scan
                     if (parser.TryParseTrack(addFiles[i].FullName, out rt))
                     {
                         addData.Add(rt);
-                        /* The following is meant to update the existingFiles list in AudioScanner. */
-                        existingFiles.Add(rt);
                         addProgress.Succes++;
                         FileParsed(updateFiles[i].FullName, rt, FileState.Added);
                     }
