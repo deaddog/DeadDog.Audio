@@ -19,6 +19,9 @@ namespace DeadDog.Audio.Scan
 
         private string[] ignoredFiles;
 
+        private event ScanFileEventHandler add, update, error, remove;
+        private event ScanCompletedEventHandler done;
+
         private ScannerState state;
         private ProgressState addProgress;
         private ProgressState updateProgress;
@@ -28,7 +31,9 @@ namespace DeadDog.Audio.Scan
 
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
                 bool parseAdd, bool parseUpdate, bool removeDeadFiles,
-                string[] extensions, RawTrack[] existingFiles, string[] ignoredFiles)
+                string[] extensions, RawTrack[] existingFiles, string[] ignoredFiles,
+            ScanFileEventHandler add, ScanFileEventHandler update, ScanFileEventHandler error, ScanFileEventHandler remove,
+            ScanCompletedEventHandler done)
         {
             this.directory = directory;
             this.searchoption = searchoption;
@@ -41,6 +46,11 @@ namespace DeadDog.Audio.Scan
             this.existingFiles = existingFiles;
 
             this.ignoredFiles = ignoredFiles;
+
+            this.add = add;
+            this.update = update;
+            this.error = error;
+            this.remove = remove;
 
             this.state = ScannerState.NotRunning;
 

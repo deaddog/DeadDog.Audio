@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeadDog.Audio.Scan
+﻿namespace DeadDog.Audio.Scan
 {
-    public delegate void ScanCompletedEventHandler(object sender, ScanCompletedEventArgs e);
+    public delegate void ScanCompletedEventHandler(AudioScan sender, ScanCompletedEventArgs e);
 }
