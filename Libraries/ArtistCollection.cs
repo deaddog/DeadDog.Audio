@@ -7,41 +7,15 @@ namespace DeadDog.Audio.Libraries
 {
     public partial class Artist
     {
-        public class ArtistCollection : IEnumerable<Artist>, ITracks
+        public class ArtistCollection : IEnumerable<Artist>
         {
-            private Library library;
-
-            private Artist unknownArtist;
             private List<Artist> artists;
+            private Artist unknownArtist;
 
-            public ArtistCollection(Library library, Artist unknownArtist)
+            internal ArtistCollection()
             {
-                this.library = library;
-                this.unknownArtist = unknownArtist;
+                this.unknownArtist = new Artist(null);
                 this.artists = new List<Artist>();
-            }
-
-            internal Artist CreateArtist(RawTrack trackinfo, ArtistFactory artistFactory)
-            {
-                Artist artist = artistFactory.CreateArtist(trackinfo, this.library);
-
-                int index = artists.BinarySearch(artist, (x, y) => x.name.CompareTo(y.name));
-                if (~index < 0)
-                    artists.Add(artist);
-                else
-                    artists.Insert(~index, artist);
-
-                if (ArtistAdded != null)
-                    ArtistAdded(this, new ArtistEventArgs(artist));
-
-                return artist;
-            }
-            internal void RemoveArtist(Artist artist)
-            {
-                if (ArtistRemoved != null)
-                    ArtistRemoved(this, new ArtistEventArgs(artist));
-
-                artists.Remove(artist);
             }
 
             public Artist UnknownArtist
@@ -75,13 +49,6 @@ namespace DeadDog.Audio.Libraries
             public bool Contains(Artist artist)
             {
                 return artists.Contains(artist);
-            }
-
-            public IEnumerable<Track> GetTracks()
-            {
-                foreach (Artist a in this)
-                    foreach (Track t in a.Albums.GetTracks())
-                        yield return t;
             }
 
             public event ArtistEventHandler ArtistAdded, ArtistRemoved;

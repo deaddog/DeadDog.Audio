@@ -7,41 +7,15 @@ namespace DeadDog.Audio.Libraries
 {
     public partial class Album
     {
-        public class AlbumCollection : IEnumerable<Album>, ITracks
+        public class AlbumCollection : IEnumerable<Album>
         {
-            private Artist artist;
-            private Album unknownAlbum;
             private List<Album> albums;
+            private Album unknownAlbum;
 
-            internal AlbumCollection(Artist artist, Album unknownAlbum)
+            internal AlbumCollection()
             {
-                this.artist = artist;
-
-                this.unknownAlbum = unknownAlbum;
+                this.unknownAlbum = new Album(null);
                 albums = new List<Album>();
-            }
-
-            internal Album CreateAlbum(RawTrack trackinfo, AlbumFactory albumFactory)
-            {
-                Album album = albumFactory.CreateAlbum(trackinfo, this.artist);
-
-                int index = albums.BinarySearch(album, (x, y) => x.title.CompareTo(y.title));
-                if (~index < 0)
-                    albums.Add(album);
-                else
-                    albums.Insert(~index, album);
-
-                if (AlbumAdded != null)
-                    AlbumAdded(this, new AlbumEventArgs(album));
-
-                return album;
-            }
-            internal void RemoveAlbum(Album album)
-            {
-                if (AlbumRemoved != null)
-                    AlbumRemoved(this, new AlbumEventArgs(album));
-
-                albums.Remove(album);
             }
 
             public Album UnknownAlbum
@@ -90,13 +64,6 @@ namespace DeadDog.Audio.Libraries
                 yield return unknownAlbum;
                 foreach (Album a in albums)
                     yield return a;
-            }
-
-            public IEnumerable<Track> GetTracks()
-            {
-                foreach (Album a in this)
-                    foreach (Track t in a.Tracks)
-                        yield return t;
             }
         }
     }

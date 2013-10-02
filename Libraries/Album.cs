@@ -5,19 +5,16 @@ using System.Text;
 
 namespace DeadDog.Audio.Libraries
 {
-    public partial class Album : IDisposable
+    public partial class Album
     {
+        #region Properties
+
         private bool isunknown;
         public bool IsUnknown
         {
             get { return isunknown; }
         }
 
-        private string artistname;
-        public string ArtistName
-        {
-            get { return artistname; }
-        }
         private string title;
         public string Title
         {
@@ -29,53 +26,28 @@ namespace DeadDog.Audio.Libraries
         {
             get { return tracks; }
         }
-        private Artist artist;
+
+        // This is correct! - Artist should NOT be a constructor argument.
+        private Artist artist = null;
         public Artist Artist
         {
             get { return artist; }
+            internal set { artist = value; }
         }
 
-        public Album(RawTrack trackinfo, Artist artist)
+        public bool HasArtist
         {
-            this.isunknown = trackinfo.IsUnknown;
-            this.tracks = new Track.TrackCollection(this);
-
-            this.title = trackinfo.AlbumTitle;
-
-            this.artistname = trackinfo.ArtistName;
-            this.artist = artist;
+            get { return artist != null; }
         }
 
-        /// <summary>
-        /// Removes the <see cref="Album"/> from the associated library and releases resources.
-        /// </summary>
-        public void Remove()
-        {
-            if (this.IsUnknown)
-                throw new InvalidOperationException("Cannot remove unknown album.");
+        #endregion
 
-            while (tracks.Count > 0)
-                tracks[0].Remove();
-        }
-
-        /// <summary>
-        /// Called from <see cref="Track"/> - indicates that the track should be removed from the library.
-        /// </summary>
-        internal void RemoveTrack(Track track)
+        public Album(string album)
         {
-            tracks.RemoveTrack(track);
-            (track as IDisposable).Dispose();
+            this.isunknown = album == null;
+            this.tracks = new Track.TrackCollection();
 
-            if (tracks.Count == 0)
-                this.artist.RemoveAlbum(this);
-        }
-
-        protected virtual void Dispose()
-        {
-        }
-        void IDisposable.Dispose()
-        {
-            this.Dispose();
+            this.title = album ?? string.Empty;
         }
     }
 }
