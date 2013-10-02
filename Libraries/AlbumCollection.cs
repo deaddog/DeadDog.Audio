@@ -7,63 +7,43 @@ namespace DeadDog.Audio.Libraries
 {
     public partial class Album
     {
-        public class AlbumCollection : IEnumerable<Album>
+        public class AlbumCollection : LibraryCollectionBase<Album>
         {
-            private List<Album> albums;
             private Album unknownAlbum;
 
             internal AlbumCollection()
             {
                 this.unknownAlbum = new Album(null);
-                albums = new List<Album>();
             }
 
             public Album UnknownAlbum
             {
                 get { return unknownAlbum; }
             }
-
-            public int Count
+            internal override Album _unknownElement
             {
-                get { return albums.Count; }
-            }
-            public Album this[int index]
-            {
-                get { return albums[index]; }
-            }
-            public Album this[string albumtitle]
-            {
-                get
-                {
-                    if (albumtitle == null || albumtitle.Length == 0)
-                        return unknownAlbum;
-                    else
-                        return albums.FirstOrDefault(album => album.title == albumtitle);
-                }
-            }
-
-            public bool Contains(Album album)
-            {
-                return albums.Contains(album);
-            }
-            public bool Contains(string albumname)
-            {
-                return albums.BinarySearch(albumname, (x, y) => x.CompareTo(y), album => album.title) >= 0;
+                get { return unknownAlbum; }
             }
 
             public event AlbumEventHandler AlbumAdded, AlbumRemoved;
-
-            IEnumerator<Album> IEnumerable<Album>.GetEnumerator()
+            protected override void OnAdded(Album element)
             {
-                yield return unknownAlbum;
-                foreach (Album a in albums)
-                    yield return a;
+                if (AlbumAdded != null)
+                    AlbumAdded(this, new AlbumEventArgs(element));
             }
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            protected override void OnRemoved(Album element)
             {
-                yield return unknownAlbum;
-                foreach (Album a in albums)
-                    yield return a;
+                if (AlbumRemoved != null)
+                    AlbumRemoved(this, new AlbumEventArgs(element));
+            }
+
+            protected override string GetName(Album element)
+            {
+                return element.title;
+            }
+            protected override int Compare(Album element1, Album element2)
+            {
+                return element1.title.CompareTo(element2.title);
             }
         }
     }

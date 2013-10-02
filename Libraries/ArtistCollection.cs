@@ -7,63 +7,43 @@ namespace DeadDog.Audio.Libraries
 {
     public partial class Artist
     {
-        public class ArtistCollection : IEnumerable<Artist>
+        public class ArtistCollection : LibraryCollectionBase<Artist>
         {
-            private List<Artist> artists;
             private Artist unknownArtist;
 
             internal ArtistCollection()
             {
                 this.unknownArtist = new Artist(null);
-                this.artists = new List<Artist>();
             }
 
             public Artist UnknownArtist
             {
                 get { return unknownArtist; }
             }
-
-            public int Count
+            internal override Artist _unknownElement
             {
-                get { return artists.Count; }
-            }
-            public Artist this[int index]
-            {
-                get { return artists[index]; }
-            }
-            public Artist this[string artistname]
-            {
-                get
-                {
-                    if (artistname == null || artistname.Length == 0)
-                        return unknownArtist;
-                    else
-                        return artists.FirstOrDefault(artist => artist.name == artistname);
-                }
-            }
-
-            public bool Contains(Artist artist)
-            {
-                return artists.Contains(artist);
-            }
-            public bool Contains(string artistname)
-            {
-                return artists.BinarySearch(artistname, (x, y) => x.CompareTo(y), artist => artist.name) >= 0;
+                get { return unknownArtist; }
             }
 
             public event ArtistEventHandler ArtistAdded, ArtistRemoved;
-
-            IEnumerator<Artist> IEnumerable<Artist>.GetEnumerator()
+            protected override void OnAdded(Artist element)
             {
-                yield return unknownArtist;
-                foreach (Artist a in artists)
-                    yield return a;
+                if (ArtistAdded != null)
+                    ArtistAdded(this, new ArtistEventArgs(element));
             }
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            protected override void OnRemoved(Artist element)
             {
-                yield return unknownArtist;
-                foreach (Artist a in artists)
-                    yield return a;
+                if (ArtistRemoved != null)
+                    ArtistRemoved(this, new ArtistEventArgs(element));
+            }
+
+            protected override string GetName(Artist element)
+            {
+                return element.name;
+            }
+            protected override int Compare(Artist element1, Artist element2)
+            {
+                return element1.name.CompareTo(element2.name);
             }
         }
     }

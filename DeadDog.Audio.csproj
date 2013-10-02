@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Libraries\LibraryCollectionBase.cs" />
     <Compile Include="MediaParser.cs" />
     <Compile Include="MediaTypes.cs" />
     <Compile Include="Parsing\IDataParser.cs" />

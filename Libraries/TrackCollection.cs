@@ -7,46 +7,40 @@ namespace DeadDog.Audio.Libraries
 {
     public partial class Track
     {
-        public class TrackCollection : IEnumerable<Track>
+        public class TrackCollection : LibraryCollectionBase<Track>
         {
-            private List<Track> tracks;
-
             internal TrackCollection()
             {
-                this.tracks = new List<Track>();
             }
 
-            public int Count
+            internal override Track _unknownElement
             {
-                get { return tracks.Count; }
-            }
-            public Track this[int index]
-            {
-                get { return tracks[index]; }
-            }
-            public Track this[string tracktitle]
-            {
-                get { return tracks.FirstOrDefault(track => track.title == tracktitle); }
-            }
-
-            public bool Contains(Track track)
-            {
-                return tracks.Contains(track);
-            }
-            public bool Contains(string tracktitle)
-            {
-                return tracks.BinarySearch(tracktitle, (x, y) => x.CompareTo(y), track => track.title) >= 0;
+                get { return null; }
             }
 
             public event TrackEventHandler TrackAdded, TrackRemoved;
-
-            IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
+            protected override void OnAdded(Track element)
             {
-                return tracks.GetEnumerator();
+                if (TrackAdded != null)
+                    TrackAdded(this, new TrackEventArgs(element));
             }
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            protected override void OnRemoved(Track element)
             {
-                return tracks.GetEnumerator();
+                if (TrackRemoved != null)
+                    TrackRemoved(this, new TrackEventArgs(element));
+            }
+
+            protected override string GetName(Track element)
+            {
+                return element.title;
+            }
+            protected override int Compare(Track element1, Track element2)
+            {
+                int? v1 = element1.tracknumber, v2 = element2.tracknumber;
+                if (v1.HasValue)
+                    return v2.HasValue ? v1.Value.CompareTo(v2.Value) : 1;
+                else
+                    return v2.HasValue ? -1 : 0;
             }
         }
     }
