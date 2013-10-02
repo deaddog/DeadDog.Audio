@@ -31,5 +31,22 @@ namespace DeadDog.Audio.Libraries
             this.albums = new Album.AlbumCollection(null);
             this.tracks = new Track.TrackCollection();
         }
+
+        public Track AddTrack(RawTrack track)
+        {
+            Artist artist = artists[track.ArtistName] ?? CreateArtist(track.ArtistName);
+            Album album = albums[track.AlbumTitle] ?? CreateAlbum(track.AlbumTitle);
+
+            throw new NotImplementedException();
+        }
+
+        private Artist CreateArtist(string artistname)
+        {
+            throw new NotImplementedException();
+        }
+        private Album CreateAlbum(string albumname)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
