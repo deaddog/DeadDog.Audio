@@ -41,14 +41,14 @@ namespace DeadDog.Audio.Libraries
                         return artists.FirstOrDefault(artist => artist.name == artistname);
                 }
             }
-            public Artist this[RawTrack trackinfo]
-            {
-                get { return this[trackinfo.ArtistName]; }
-            }
 
             public bool Contains(Artist artist)
             {
                 return artists.Contains(artist);
+            }
+            public bool Contains(string artistname)
+            {
+                return artists.BinarySearch(artistname, (x, y) => x.CompareTo(y), artist => artist.name) >= 0;
             }
 
             public event ArtistEventHandler ArtistAdded, ArtistRemoved;

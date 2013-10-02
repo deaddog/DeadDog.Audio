@@ -28,14 +28,14 @@ namespace DeadDog.Audio.Libraries
             {
                 get { return tracks.FirstOrDefault(track => track.title == tracktitle); }
             }
-            public Track this[RawTrack trackinfo]
-            {
-                get { return this[trackinfo.TrackTitle]; }
-            }
 
             public bool Contains(Track track)
             {
                 return tracks.Contains(track);
+            }
+            public bool Contains(string tracktitle)
+            {
+                return tracks.BinarySearch(tracktitle, (x, y) => x.CompareTo(y), track => track.title) >= 0;
             }
 
             public event TrackEventHandler TrackAdded, TrackRemoved;
