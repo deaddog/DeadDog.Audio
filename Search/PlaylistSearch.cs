@@ -7,20 +7,13 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public class PlaylistSearch<T>
+    public static class PlaylistSearch
     {
-        private Playlist<T> playlist;
-
-        public PlaylistSearch(Playlist<T> playlist)
+        public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, SearchMethods method, PredicateString<T> predicate, string searchstring)
         {
-            this.playlist = playlist;
+            return Search(playlist, method, predicate, searchstring.Trim().Split(' '));
         }
-
-        public IEnumerable<PlaylistEntry<T>> Search(SearchMethods method, PredicateString<T> predicate, string searchstring)
-        {
-            return Search(method, predicate, searchstring.Trim().Split(' '));
-        }
-        public IEnumerable<PlaylistEntry<T>> Search(SearchMethods method, PredicateString<T> predicate, params string[] searchstring)
+        public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, SearchMethods method, PredicateString<T> predicate, params string[] searchstring)
         {
             string[] search = searchstring;
             for (int i = 0; i < search.Length; i++)
@@ -28,30 +21,34 @@ namespace DeadDog.Audio
 
             if (search.Length == 0)
             {
-                foreach (PlaylistEntry<T> e in playlist)
-                    yield return e;
+                foreach (PlaylistEntry<T> track in playlist)
+                    yield return track;
             }
-
-            for (int i = 0; i < playlist.Count; i++)
-                if (test(playlist[i].Track, method, search, predicate))
-                    yield return playlist[i];
+            else
+            {
+                foreach(PlaylistEntry<T> track in playlist)
+                    if (test(track.Track, method, search, predicate))
+                        yield return track;
+            }
         }
 
-        private static bool test(T track, SearchMethods method, string[] searchstring, PredicateString<T> pre)
+        private static bool test<T>(T track, SearchMethods method, string[] searchstring, PredicateString<T> pre)
         {
-            if (method == SearchMethods.ContainsAll)
+            switch (method)
             {
-                for (int i = 0; i < searchstring.Length; i++)
-                    if (!pre(track, searchstring[i]))
-                        return false;
-                return true;
-            }
-            else // method == SearchMethod.ContainsAny
-            {
-                for (int i = 0; i < searchstring.Length; i++)
-                    if (pre(track, searchstring[i]))
-                        return true;
-                return false;
+                case SearchMethods.ContainsAny:
+                    for (int i = 0; i < searchstring.Length; i++)
+                        if (pre(track, searchstring[i]))
+                            return true;
+                    return false;
+                case SearchMethods.ContainsAll:
+                    for (int i = 0; i < searchstring.Length; i++)
+                        if (!pre(track, searchstring[i]))
+                            return false;
+                    return true;
+
+                default:
+                    throw new InvalidOperationException("Unknown search method.");
             }
         }
 
