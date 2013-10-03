@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DeadDog.Audio.Libraries
+namespace DeadDog.Audio
 {
     internal static class BinarySearchExtension
     {

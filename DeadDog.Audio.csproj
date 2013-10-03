@@ -69,7 +69,7 @@
     <Compile Include="Libraries\AlbumCollection.cs" />
     <Compile Include="Libraries\Artist.cs" />
     <Compile Include="Libraries\ArtistCollection.cs" />
-    <Compile Include="Libraries\BinarySearchExtension.cs" />
+    <Compile Include="BinarySearchExtension.cs" />
     <Compile Include="Libraries\Events\AlbumEventArgs.cs" />
     <Compile Include="Libraries\Events\AlbumEventHandler.cs" />
     <Compile Include="Libraries\Events\ArtistEventArgs.cs" />
