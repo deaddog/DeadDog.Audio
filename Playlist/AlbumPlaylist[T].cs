@@ -187,5 +187,23 @@ namespace DeadDog.Audio
         {
             get { return (x, y) => x.Tracknumber.CompareTo(y.Tracknumber); }
         }
+
+        #region IEnumerable<PlaylistEntry<Track>> Members
+
+        IEnumerator<PlaylistEntry<Track>> IEnumerable<PlaylistEntry<Track>>.GetEnumerator()
+        {
+            return entries.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return entries.GetEnumerator();
+        }
+
+        #endregion
     }
 }
