@@ -7,11 +7,11 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public class PlaylistSearcher<T>
+    public class PlaylistSearch<T>
     {
         private Playlist<T> playlist;
 
-        public PlaylistSearcher(Playlist<T> playlist)
+        public PlaylistSearch(Playlist<T> playlist)
         {
             this.playlist = playlist;
         }
