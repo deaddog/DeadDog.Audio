@@ -50,7 +50,7 @@ namespace DeadDog.Audio.Libraries
         internal void Add(T element)
         {
             int index = list.BinarySearch(element, Compare);
-            if (index <= 0) index = ~index;
+            if (index < 0) index = ~index;
             list.Insert(index, element);
 
             OnAdded(element);
