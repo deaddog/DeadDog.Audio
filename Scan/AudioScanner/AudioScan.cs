@@ -197,17 +197,12 @@ namespace DeadDog.Audio.Scan
             //Change scanner state and report progress
             state = ScannerState.Parsing;
 
-            List<FileInfo> errorFiles = new List<FileInfo>();
-            List<RawTrack> addData = new List<RawTrack>(addFiles.Count);
-            List<RawTrack> updateData = new List<RawTrack>(updateFiles.Count);
-
             if (parseUpdate)
                 for (int i = 0; i < updateFiles.Count; i++)
                 {
                     RawTrack rt;
                     if (parser.TryParseTrack(updateFiles[i].FullName, out rt))
                     {
-                        updateData.Add(rt);
                         updateProgress.Succes++;
                         int index = existingFiles.BinarySearch(rt, ComparePath);
                         if (index < 0)
@@ -220,7 +215,6 @@ namespace DeadDog.Audio.Scan
                     }
                     else
                     {
-                        errorFiles.Add(updateFiles[i]);
                         updateProgress.Error++;
                         FileParsed(updateFiles[i].FullName, null, FileState.UpdateError);
                     }
@@ -232,13 +226,11 @@ namespace DeadDog.Audio.Scan
                     RawTrack rt;
                     if (parser.TryParseTrack(addFiles[i].FullName, out rt))
                     {
-                        addData.Add(rt);
                         addProgress.Succes++;
                         FileParsed(addFiles[i].FullName, rt, FileState.Added);
                     }
                     else
                     {
-                        errorFiles.Add(addFiles[i]);
                         addProgress.Error++;
                         FileParsed(addFiles[i].FullName, null, FileState.AddError);
                     }
