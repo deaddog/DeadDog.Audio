@@ -28,7 +28,7 @@ namespace DeadDog.Audio.Libraries
         public Library()
         {
             this.artists = new Artist.ArtistCollection();
-            this.albums = new Album.AlbumCollection(null);
+            this.albums = new Album.AlbumCollection();
             this.tracks = new Track.TrackCollection();
         }
 
@@ -37,16 +37,28 @@ namespace DeadDog.Audio.Libraries
             Artist artist = artists[track.ArtistName] ?? CreateArtist(track.ArtistName);
             Album album = albums[track.AlbumTitle] ?? CreateAlbum(track.AlbumTitle);
 
-            throw new NotImplementedException();
+            Track t = new Track(track, album, artist);
+            tracks.Add(t);
+            album.Tracks.Add(t);
+            return t;
         }
-
         private Artist CreateArtist(string artistname)
         {
-            throw new NotImplementedException();
+            Artist artist = new Artist(artistname);
+            artists.Add(artist);
+            return artist;
         }
         private Album CreateAlbum(string albumname)
         {
-            throw new NotImplementedException();
+            Album album = new Album(albumname);
+            albums.Add(album);
+            return album;
+        }
+
+        public void RemoveTrack(Track track)
+        {
+            tracks.Remove(track);
+            track.Album.Tracks.Remove(track);
         }
     }
 }
