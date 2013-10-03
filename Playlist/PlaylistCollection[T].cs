@@ -235,5 +235,27 @@ namespace DeadDog.Audio
                 playlists[index].Reset();
             return removed;
         }
+
+        #region IEnumerable<T> Members
+
+        IEnumerator<PlaylistEntry<T>> IEnumerable<PlaylistEntry<T>>.GetEnumerator()
+        {
+            foreach (IPlaylist<T> playlist in playlists)
+                foreach (PlaylistEntry<T> t in playlist)
+                    yield return t;
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            foreach (IPlaylist<T> playlist in playlists)
+                foreach (PlaylistEntry<T> t in playlist)
+                    yield return t;
+        }
+
+        #endregion
     }
 }
