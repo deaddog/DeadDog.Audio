@@ -121,10 +121,9 @@
     <Compile Include="Scan\ScannerTracer.cs" />
     <Compile Include="Scan\ScanProgressChangedEventArgs.cs" />
     <Compile Include="Scan\ScanProgressChangedEventHandler.cs" />
-    <Compile Include="Search\LibrarySearcher.cs" />
-    <Compile Include="Search\PlaylistSearch.cs" />
-    <Compile Include="Search\PredicateString.cs" />
-    <Compile Include="Search\SearchMethods.cs" />
+    <Compile Include="Playlist\Searching.cs" />
+    <Compile Include="PredicateString.cs" />
+    <Compile Include="SearchMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libzplay.dll">

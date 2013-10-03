@@ -18,9 +18,5 @@ namespace DeadDog.Audio
     /// <param name="obj">The object to compare against the criteria defined within the method represented by this delegate.</param>
     /// <param name="searchstring">The string to compare againts the object.</param>
     /// <returns>true if <paramref name="obj"/> contains <paramref name="searchstring"/>; otherwise, false</returns>
-#if VERSION2
-    public delegate bool PredicateString<T>(T obj, string searchstring);
-#else
     public delegate bool PredicateString<in T>(T obj, string searchstring);
-#endif
 }

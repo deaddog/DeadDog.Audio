@@ -7,7 +7,7 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public static class PlaylistSearch
+    public static class Searching
     {
         public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, SearchMethods method, PredicateString<T> predicate, string searchstring)
         {
