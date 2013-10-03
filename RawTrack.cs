@@ -8,7 +8,7 @@ namespace DeadDog.Audio
     /// <summary>
     /// Stores title, album, tracknumber and artist info for a track
     /// </summary>
-    public class RawTrack : ICloneable
+    public class RawTrack : ICloneable, IEquatable<RawTrack>
     {
         private static RawTrack unknown;
         internal static RawTrack Unknown
@@ -44,7 +44,6 @@ namespace DeadDog.Audio
             rt.artist = this.artist;
             rt.file = this.file;
             rt.number = this.number;
-            rt.searchstring = this.searchstring;
             rt.track = this.track;
             return rt;
         }
@@ -85,7 +84,7 @@ namespace DeadDog.Audio
         }
 
         private System.IO.FileInfo file;
-        private string track, album, artist, searchstring;
+        private string track, album, artist;
         private int number, year;
 
         /// <summary>
@@ -101,8 +100,6 @@ namespace DeadDog.Audio
             this.year = YearIfUnknown;
 
             this.artist = "Unknown";
-
-            searchstring = "";
         }
 
         /// <summary>
@@ -144,17 +141,6 @@ namespace DeadDog.Audio
                 artist = artistname.Trim();
 
             this.year = year;
-
-            searchstring = "";
-            searchstring += " " + artist;
-            searchstring += " " + album;
-            if (!TrackNumberUnknown)
-                searchstring += " " + track;
-            if (!YearUnknown)
-                searchstring += " " + year;
-            while (searchstring.Contains("  "))
-                searchstring = searchstring.Replace("  ", " ");
-            searchstring = searchstring.ToLower().Trim();
         }
 
         /// <summary>
@@ -226,11 +212,6 @@ namespace DeadDog.Audio
             get { return file.FullName; }
         }
 
-        internal string SearchString
-        {
-            get { return searchstring; }
-        }
-
         /// <summary>
         /// Creates a human-readable string that represents this <see cref="RawTrack"/>.
         /// </summary>
@@ -247,5 +228,29 @@ namespace DeadDog.Audio
             else
                 return file.FullName;
         }
+
+        #region IEquatable<RawTrack> Members
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            else if (obj is RawTrack)
+                return this.Equals(obj as RawTrack);
+            else
+                return false;
+        }
+
+        public bool Equals(RawTrack other)
+        {
+            return this.file.FullName == other.file.FullName &&
+                this.artist == other.artist &&
+                this.album == other.album &&
+                this.track == other.track &&
+                this.number == other.number &&
+                this.year == other.year;
+        }
+
+        #endregion
     }
 }
