@@ -31,7 +31,7 @@ namespace DeadDog.Audio.Libraries
 
         public Artist(string name)
         {
-            this.isunknown = name != null;
+            this.isunknown = name == null;
             this.albums = new Album.AlbumCollection();
 
             this.name = name ?? string.Empty;
