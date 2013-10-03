@@ -32,6 +32,15 @@ namespace DeadDog.Audio
             }
         }
 
+        public static IEnumerable<PlaylistEntry<Track>> Search(this IPlaylist<Track> playlist, SearchMethods method, string searchstring)
+        {
+            return Search(playlist, method, ContainedInTitleArtistAlbum, searchstring);
+        }
+        public static IEnumerable<PlaylistEntry<Track>> Search(this IPlaylist<Track> playlist, SearchMethods method, params string[] searchstring)
+        {
+            return Search(playlist, method, ContainedInTitleArtistAlbum, searchstring);
+        }
+
         private static bool test<T>(T track, SearchMethods method, string[] searchstring, PredicateString<T> pre)
         {
             switch (method)
