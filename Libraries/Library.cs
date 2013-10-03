@@ -57,8 +57,22 @@ namespace DeadDog.Audio.Libraries
 
         public void RemoveTrack(Track track)
         {
+            Album album = track.Album;
+            Artist artist = track.Artist;
+
             tracks.Remove(track);
-            track.Album.Tracks.Remove(track);
+            if (album != null)
+            {
+                album.Tracks.Remove(track);
+                if (album.Tracks.Count == 0 && !album.IsUnknown)
+                    albums.Remove(album);
+            }
+
+            if (artist != null)
+            {
+                if (artist.Albums.Count == 0 && artist.Albums.UnknownAlbum.Tracks.Count == 0)
+                    artists.Remove(artist);
+            }
         }
     }
 }
