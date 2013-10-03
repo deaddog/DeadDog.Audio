@@ -63,29 +63,30 @@ namespace DeadDog.Audio
 
         public static bool ContainedInTitleArtistAlbum(Track track, string searchstring)
         {
-            return track.Title.ToLower().Contains(searchstring) || 
-                   track.AlbumTitle.ToLower().Contains(searchstring) || 
-                   track.ArtistName.ToLower().Contains(searchstring);
-        }
-        public static bool ContainedInTitleArtist(Track track, string searchstring)
-        {
-            return track.Title.ToLower().Contains(searchstring) ||
-                   track.ArtistName.ToLower().Contains(searchstring);
+            return Match(track.Artist, searchstring) || Match(track.Album, searchstring) || Match(track, searchstring);
         }
         public static bool ContainedInTitle(Track track, string searchstring)
         {
-            return track.Title.ToLower().Contains(searchstring);
+            return Match(track, searchstring);
+        }
+
+        public static bool Match(Artist artist, string searchstring)
+        {
+            return artist.Name != null ? artist.Name.ToLower().Contains(searchstring) : false;
+        }
+        public static bool Match(Album album, string searchstring)
+        {
+            return album.Title != null ? album.Title.ToLower().Contains(searchstring) : false;
+        }
+        public static bool Match(Track track, string searchstring)
+        {
+            return track.Title != null ? track.Title.ToLower().Contains(searchstring) : false;
         }
 
         public static bool ContainedInTitleArtistAlbum(RawTrack track, string searchstring)
         {
             return (track.TrackTitle == null ? false : track.TrackTitle.ToLower().Contains(searchstring))
                 || (track.AlbumTitle == null ? false : track.AlbumTitle.ToLower().Contains(searchstring))
-                || (track.ArtistName == null ? false : track.ArtistName.ToLower().Contains(searchstring));
-        }
-        public static bool ContainedInTitleArtist(RawTrack track, string searchstring)
-        {
-            return (track.TrackTitle == null ? false : track.TrackTitle.ToLower().Contains(searchstring))
                 || (track.ArtistName == null ? false : track.ArtistName.ToLower().Contains(searchstring));
         }
         public static bool ContainedInTitle(RawTrack track, string searchstring)
