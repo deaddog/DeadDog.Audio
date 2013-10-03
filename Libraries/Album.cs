@@ -45,9 +45,24 @@ namespace DeadDog.Audio.Libraries
         public Album(string album)
         {
             this.isunknown = album == null;
-            this.tracks = new Track.TrackCollection();
+            this.tracks = new Track.TrackCollection(trackAdded, trackRemoved);
 
             this.title = album ?? string.Empty;
+        }
+
+        private void trackAdded(Track.TrackCollection collection, TrackEventArgs e)
+        {
+            if (collection != tracks)
+                throw new InvalidOperationException("Album attempted to alter wrong trackcollection.");
+
+            if (collection.Count == 1)
+                this.artist = e.Track.Artist;
+            else if (e.Track.Artist != null && e.Track.Artist != this.artist)
+                this.artist = null;
+        }
+        private void trackRemoved(Track.TrackCollection collection, TrackEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
