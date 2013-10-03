@@ -185,7 +185,16 @@ namespace DeadDog.Audio
 
         public static Comparison<Track> DefaultSort
         {
-            get { return (x, y) => x.Tracknumber.CompareTo(y.Tracknumber); }
+            get { return Compare; }
+        }
+
+        private static int Compare(Track element1, Track element2)
+        {
+            int? v1 = element1.Tracknumber, v2 = element2.Tracknumber;
+            if (v1.HasValue)
+                return v2.HasValue ? v1.Value.CompareTo(v2.Value) : 1;
+            else
+                return v2.HasValue ? -1 : 0;
         }
 
         #region IEnumerable<PlaylistEntry<Track>> Members
