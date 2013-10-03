@@ -12,6 +12,7 @@ namespace DeadDog.Audio.Scan
         Error = 0x04,
         AddError = 0x0C,
         UpdateError = 0x14,
-        Removed = 0x20
+        Removed = 0x20,
+        Skipped = 0x40
     }
 }

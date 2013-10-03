@@ -209,7 +209,14 @@ namespace DeadDog.Audio.Scan
                     {
                         updateData.Add(rt);
                         updateProgress.Succes++;
-                        FileParsed(updateFiles[i].FullName, rt, FileState.Updated);
+                        int index = existingFiles.BinarySearch(rt, ComparePath);
+                        if (index < 0)
+                            throw new InvalidOperationException("Updated non-existing file.");
+
+                        if (existingFiles[index].Equals(rt))
+                            FileParsed(updateFiles[i].FullName, rt, FileState.Skipped);
+                        else
+                            FileParsed(updateFiles[i].FullName, rt, FileState.Updated);
                     }
                     else
                     {
