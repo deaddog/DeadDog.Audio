@@ -62,7 +62,21 @@ namespace DeadDog.Audio.Libraries
         }
         private void trackRemoved(Track.TrackCollection collection, TrackEventArgs e)
         {
-            throw new NotImplementedException();
+            if (collection != tracks)
+                throw new InvalidOperationException("Album attempted to alter wrong trackcollection.");
+
+            Artist temp = collection[0].Artist;
+            for (int i = 1; i < collection.Count; i++)
+                if (temp == null)
+                    temp = collection[i].Artist;
+                else if (collection[i].Artist != null && collection[i].Artist != temp)
+                {
+                    this.artist = null;
+                    return;
+                }
+
+            // All track artist are the same (or null)
+            this.artist = temp;
         }
     }
 }
