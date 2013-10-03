@@ -17,7 +17,7 @@ namespace DeadDog.Audio.Libraries
             }
             internal TrackCollection(TrackEventHandler addHandler, TrackEventHandler removeHandler)
             {
-                if (addHandler == null || removeHandler == null && addHandler != removeHandler)
+                if ((addHandler == null || removeHandler == null) && addHandler != removeHandler)
                     throw new ArgumentException("Both addHandler and removeHandler must be specified.");
 
                 this.addHandler = addHandler;
