@@ -133,7 +133,7 @@ namespace DeadDog.Audio.Scan
 
         private void Run()
         {
-            List<FileInfo> addFiles = GetFiles();
+            List<FileInfo> addFiles = ScanForFiles();
             List<FileInfo> updateFiles = new List<FileInfo>();
             List<RawTrack> removeFiles = new List<RawTrack>(existingFiles);
 
@@ -245,7 +245,7 @@ namespace DeadDog.Audio.Scan
                 int r = removeFiles.RemoveAll(f => f.FullFilename.Equals(file.FullName));
             }
         }
-        private List<FileInfo> GetFiles()
+        private IEnumerable<FileInfo> ScanForFiles()
         {
             List<FileInfo> searchFiles = new List<FileInfo>();
             foreach (string ext in extensions)
@@ -254,7 +254,7 @@ namespace DeadDog.Audio.Scan
                 searchFiles.AddRange(files);
             }
 
-            //Windows medtager "minsang.mp3-missing" uden følgende tjek...
+            //Windows includes "filename.mp3-missing" without the following...
             for (int i = 0; i < searchFiles.Count; i++)
             {
                 bool ok = false;
@@ -264,16 +264,9 @@ namespace DeadDog.Audio.Scan
                         ok = true;
                         break;
                     }
-                if (!ok)
-                {
-                    searchFiles.RemoveAt(i);
-                    i--;
-                }
+                if (ok)
+                    yield return searchFiles[i];
             }
-
-            searchFiles.Sort(ComparePath);
-
-            return searchFiles;
         }
 
         private void FileParsed(string filepath, RawTrack track, FileState state)
