@@ -153,60 +153,66 @@ namespace DeadDog.Audio.Scan
                 foreach (RawTrack track in removeFiles)
                     FileParsed(track.FullFilename, track, FileState.Removed);
 
-            //Scanning complete, setting values of tracer.Progress
-            //Setting how many files were removed from existingFiles (if any)
+            //Update scan progress
             removed = removeFiles.Count;
-
             addProgress.Total = parseAdd ? addFiles.Count : 0;
             updateProgress.Total = parseUpdate ? updateFiles.Count : 0;
-
-            //Change scanner state and report progress
+            //Update scan state
             state = ScannerState.Parsing;
 
             if (parseUpdate)
-                for (int i = 0; i < updateFiles.Count; i++)
-                {
-                    RawTrack rt;
-                    if (parser.TryParseTrack(updateFiles[i].FullName, out rt))
-                    {
-                        updateProgress.Succes++;
-                        int index = existingFiles.BinarySearch(rt, ComparePath);
-                        if (index < 0)
-                            throw new InvalidOperationException("Updated non-existing file.");
-
-                        if (existingFiles[index].Equals(rt))
-                            FileParsed(updateFiles[i].FullName, rt, FileState.Skipped);
-                        else
-                            FileParsed(updateFiles[i].FullName, rt, FileState.Updated);
-                    }
-                    else
-                    {
-                        updateProgress.Error++;
-                        FileParsed(updateFiles[i].FullName, null, FileState.UpdateError);
-                    }
-                }
+                ParseUpdateFiles(updateFiles);
 
             if (parseAdd)
-                for (int i = 0; i < addFiles.Count; i++)
-                {
-                    RawTrack rt;
-                    if (parser.TryParseTrack(addFiles[i].FullName, out rt))
-                    {
-                        addProgress.Succes++;
-                        FileParsed(addFiles[i].FullName, rt, FileState.Added);
-                    }
-                    else
-                    {
-                        addProgress.Error++;
-                        FileParsed(addFiles[i].FullName, null, FileState.AddError);
-                    }
-                }
+                ParseAddFiles(addFiles);
 
             state = ScannerState.Completed;
 
-            isrunning = true;
+            isrunning = false;
             if (done != null)
                 done(this, new ScanCompletedEventArgs());
+        }
+
+        private void ParseUpdateFiles(List<FileInfo> updateFiles)
+        {
+            for (int i = 0; i < updateFiles.Count; i++)
+            {
+                RawTrack rt;
+                if (parser.TryParseTrack(updateFiles[i].FullName, out rt))
+                {
+                    updateProgress.Succes++;
+                    int index = existingFiles.BinarySearch(rt, ComparePath);
+                    if (index < 0)
+                        throw new InvalidOperationException("Updated non-existing file.");
+
+                    if (existingFiles[index].Equals(rt))
+                        FileParsed(updateFiles[i].FullName, rt, FileState.Skipped);
+                    else
+                        FileParsed(updateFiles[i].FullName, rt, FileState.Updated);
+                }
+                else
+                {
+                    updateProgress.Error++;
+                    FileParsed(updateFiles[i].FullName, null, FileState.UpdateError);
+                }
+            }
+        }
+        private void ParseAddFiles(List<FileInfo> addFiles)
+        {
+            for (int i = 0; i < addFiles.Count; i++)
+            {
+                RawTrack rt;
+                if (parser.TryParseTrack(addFiles[i].FullName, out rt))
+                {
+                    addProgress.Succes++;
+                    FileParsed(addFiles[i].FullName, rt, FileState.Added);
+                }
+                else
+                {
+                    addProgress.Error++;
+                    FileParsed(addFiles[i].FullName, null, FileState.AddError);
+                }
+            }
         }
 
         private IEnumerable<FileInfo> FindUpdateFiles(List<FileInfo> addFiles, List<RawTrack> removeFiles)
