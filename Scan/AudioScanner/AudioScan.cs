@@ -208,7 +208,7 @@ namespace DeadDog.Audio.Scan
                     dictionary.Add(exist[e++], Action.Remove);
                 else if (compare == 0 && parseUpdate)
                 {
-                    dictionary.Add(scan[s], Action.Update);
+                    dictionary.Add(exist[e], Action.Update);
                     s++; e++;
                 }
             }
