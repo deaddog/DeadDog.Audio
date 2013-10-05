@@ -69,6 +69,7 @@ namespace DeadDog.Audio.Scan
 
             this.removed = 0;
 
+            state = ScannerState.Scanning;
             thread.Start();
         }
 
@@ -123,20 +124,15 @@ namespace DeadDog.Audio.Scan
             get { return removed; }
         }
 
-        private bool isrunning = false;
         public bool IsRunning
         {
-            get { return isrunning; }
+            get { return state != ScannerState.Completed && state != ScannerState.NotRunning; }
         }
 
         #endregion
 
         private void Run()
         {
-            isrunning = true;
-
-            state = ScannerState.Scanning;
-
             List<FileInfo> addFiles = GetFiles();
             List<FileInfo> updateFiles = new List<FileInfo>();
             List<RawTrack> removeFiles = new List<RawTrack>(existingFiles);
@@ -167,8 +163,6 @@ namespace DeadDog.Audio.Scan
                 ParseAddFiles(addFiles);
 
             state = ScannerState.Completed;
-
-            isrunning = false;
             if (done != null)
                 done(this, new ScanCompletedEventArgs());
         }
