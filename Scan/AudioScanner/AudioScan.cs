@@ -141,12 +141,7 @@ namespace DeadDog.Audio.Scan
             List<FileInfo> updateFiles = new List<FileInfo>();
             List<RawTrack> removeFiles = new List<RawTrack>(existingFiles);
 
-            for (int i = 0; i < ignoredFiles.Length; i++)
-            {
-                FileInfo file = new FileInfo(ignoredFiles[i]);
-                int a = addFiles.RemoveAll(f => f.FullName.Equals(file.FullName));
-                int r = removeFiles.RemoveAll(f => f.FullFilename.Equals(file.FullName));
-            }
+            RemoveIgnoredFiles(addFiles, removeFiles);
 
             addFiles.Sort(ComparePath);
 
@@ -241,6 +236,16 @@ namespace DeadDog.Audio.Scan
             isrunning = true;
             if (done != null)
                 done(this, new ScanCompletedEventArgs());
+        }
+
+        private void RemoveIgnoredFiles(List<FileInfo> addFiles, List<RawTrack> removeFiles)
+        {
+            for (int i = 0; i < ignoredFiles.Length; i++)
+            {
+                FileInfo file = new FileInfo(ignoredFiles[i]);
+                int a = addFiles.RemoveAll(f => f.FullName.Equals(file.FullName));
+                int r = removeFiles.RemoveAll(f => f.FullFilename.Equals(file.FullName));
+            }
         }
         private List<FileInfo> GetFiles()
         {
