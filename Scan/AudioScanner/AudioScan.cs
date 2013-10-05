@@ -143,8 +143,6 @@ namespace DeadDog.Audio.Scan
 
             RemoveIgnoredFiles(addFiles, removeFiles);
 
-            addFiles.Sort(ComparePath);
-
             if (removeFiles.Count > 0)
             {
                 int t = 0; //removeFiles index
@@ -272,6 +270,8 @@ namespace DeadDog.Audio.Scan
                     i--;
                 }
             }
+
+            searchFiles.Sort(ComparePath);
 
             return searchFiles;
         }
