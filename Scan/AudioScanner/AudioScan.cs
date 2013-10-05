@@ -144,34 +144,7 @@ namespace DeadDog.Audio.Scan
             RemoveIgnoredFiles(addFiles, removeFiles);
 
             if (removeFiles.Count > 0)
-            {
-                int t = 0; //removeFiles index
-                for (int i = 0; i < addFiles.Count; i++)
-                {
-                    int comp = ComparePath(addFiles[i], removeFiles[t]);
-                    while (comp > 0)
-                    {
-                        t++;
-                        if (t >= removeFiles.Count)
-                            break;
-                        comp = ComparePath(addFiles[i], removeFiles[t]);
-                    }
-
-                    if (comp == 0)
-                    {
-                        updateFiles.Add(addFiles[i]);
-                        addFiles.RemoveAt(i);
-                        removeFiles.RemoveAt(t);
-                        i--;
-                    }
-
-                    if (t >= removeFiles.Count)
-                        break;
-
-                    if (removeFiles.Count == 0)
-                        break;
-                }
-            }
+                updateFiles.AddRange(FindUpdateFiles(addFiles, removeFiles));
 
             if (!removeDeadFiles)
                 removeFiles.Clear();
@@ -234,6 +207,33 @@ namespace DeadDog.Audio.Scan
             isrunning = true;
             if (done != null)
                 done(this, new ScanCompletedEventArgs());
+        }
+
+        private IEnumerable<FileInfo> FindUpdateFiles(List<FileInfo> addFiles, List<RawTrack> removeFiles)
+        {
+            int r = -1; //removeFiles index
+            for (int a = 0; a < addFiles.Count; a++)
+            {
+                int compare = 1;
+                while (compare > 0)
+                {
+                    r++;
+                    if (r >= removeFiles.Count)
+                        break;
+                    compare = ComparePath(addFiles[a], removeFiles[r]);
+                }
+
+                if (compare == 0)
+                {
+                    yield return addFiles[a];
+                    addFiles.RemoveAt(a);
+                    removeFiles.RemoveAt(r);
+                    a--;
+                }
+
+                if (r >= removeFiles.Count || removeFiles.Count == 0)
+                    break;
+            }
         }
 
         private void RemoveIgnoredFiles(List<FileInfo> addFiles, List<RawTrack> removeFiles)
