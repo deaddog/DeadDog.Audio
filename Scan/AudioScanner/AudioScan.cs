@@ -22,19 +22,21 @@ namespace DeadDog.Audio.Scan
         private IDataParser parser;
 
         private string[] extensions;
-        private RawTrack[] existingFiles;
+        private Dictionary<FileInfo, RawTrack> existingFiles;
 
-        private string[] ignoredFiles;
+        private FileInfo[] ignoredFiles;
 
         private event ScanFileEventHandler parsed;
         private event ScanCompletedEventHandler done;
 
         private ScannerState state;
-        private ProgressState addProgress;
-        private ProgressState updateProgress;
-        private ProgressState parseProgress;
 
+        private int added;
+        private int updated;
+        private int skipped;
+        private int error;
         private int removed;
+        private int total;
 
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
             bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser,
@@ -54,22 +56,17 @@ namespace DeadDog.Audio.Scan
             this.parser = parser;
 
             this.extensions = extensions;
-            this.existingFiles = existingFiles;
+            this.existingFiles = existingFiles.ToDictionary(rt => rt.File);
 
-            this.ignoredFiles = ignoredFiles;
+            this.ignoredFiles = (from s in ignoredFiles select new FileInfo(s)).ToArray();
 
             this.parsed = parsed;
             this.done = done;
 
             this.state = ScannerState.NotRunning;
 
-            this.addProgress = new ProgressState();
-            this.updateProgress = new ProgressState();
-            this.parseProgress = new ProgressState();
+            this.added = updated = skipped = error = removed = total = 0;
 
-            this.removed = 0;
-
-            state = ScannerState.Scanning;
             thread.Start();
         }
 
@@ -106,22 +103,30 @@ namespace DeadDog.Audio.Scan
         {
             get { return state; }
         }
-        public ProgressState Added
-        {
-            get { return addProgress; }
-        }
-        public ProgressState Updated
-        {
-            get { return updateProgress; }
-        }
-        public ProgressState Parsed
-        {
-            get { return parseProgress; }
-        }
 
+        public int Added
+        {
+            get { return added; }
+        }
+        public int Updated
+        {
+            get { return updated; }
+        }
+        public int Skipped
+        {
+            get { return skipped; }
+        }
+        public int Errors
+        {
+            get { return error; }
+        }
         public int Removed
         {
             get { return removed; }
+        }
+        public int Total
+        {
+            get { return total; }
         }
 
         public bool IsRunning
@@ -133,120 +138,27 @@ namespace DeadDog.Audio.Scan
 
         private void Run()
         {
-            List<FileInfo> addFiles = ScanForFiles();
-            List<FileInfo> updateFiles = new List<FileInfo>();
-            List<RawTrack> removeFiles = new List<RawTrack>(existingFiles);
+            state = ScannerState.Scanning;
 
-            RemoveIgnoredFiles(addFiles, removeFiles);
+            var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
+            foreach (FileInfo file in ignoredFiles)
+                actions[file] = Action.Skip;
 
-            if (removeFiles.Count > 0)
-                updateFiles.AddRange(FindUpdateFiles(addFiles, removeFiles));
+            total = actions.Count;
 
-            if (!removeDeadFiles)
-                removeFiles.Clear();
-
-            if (removeFiles.Count > 0)
-                foreach (RawTrack track in removeFiles)
-                    FileParsed(track.FullFilename, track, FileState.Removed);
-
-            //Update scan progress
-            removed = removeFiles.Count;
-            addProgress.Total = parseAdd ? addFiles.Count : 0;
-            updateProgress.Total = parseUpdate ? updateFiles.Count : 0;
-            //Update scan state
             state = ScannerState.Parsing;
 
-            if (parseUpdate)
-                ParseUpdateFiles(updateFiles);
-
-            if (parseAdd)
-                ParseAddFiles(addFiles);
+            foreach (var file in actions)
+                ParseFile(file.Key, file.Value);
 
             state = ScannerState.Completed;
             if (done != null)
                 done(this, new ScanCompletedEventArgs());
         }
 
-        private void ParseUpdateFiles(List<FileInfo> updateFiles)
-        {
-            for (int i = 0; i < updateFiles.Count; i++)
-            {
-                RawTrack rt;
-                if (parser.TryParseTrack(updateFiles[i].FullName, out rt))
-                {
-                    updateProgress.Succes++;
-                    int index = existingFiles.BinarySearch(rt, ComparePath);
-                    if (index < 0)
-                        throw new InvalidOperationException("Updated non-existing file.");
-
-                    if (existingFiles[index].Equals(rt))
-                        FileParsed(updateFiles[i].FullName, rt, FileState.Skipped);
-                    else
-                        FileParsed(updateFiles[i].FullName, rt, FileState.Updated);
-                }
-                else
-                {
-                    updateProgress.Error++;
-                    FileParsed(updateFiles[i].FullName, null, FileState.UpdateError);
-                }
-            }
-        }
-        private void ParseAddFiles(List<FileInfo> addFiles)
-        {
-            for (int i = 0; i < addFiles.Count; i++)
-            {
-                RawTrack rt;
-                if (parser.TryParseTrack(addFiles[i].FullName, out rt))
-                {
-                    addProgress.Succes++;
-                    FileParsed(addFiles[i].FullName, rt, FileState.Added);
-                }
-                else
-                {
-                    addProgress.Error++;
-                    FileParsed(addFiles[i].FullName, null, FileState.AddError);
-                }
-            }
-        }
-
-        private IEnumerable<FileInfo> FindUpdateFiles(List<FileInfo> addFiles, List<RawTrack> removeFiles)
-        {
-            int r = -1; //removeFiles index
-            for (int a = 0; a < addFiles.Count; a++)
-            {
-                int compare = 1;
-                while (compare > 0)
-                {
-                    r++;
-                    if (r >= removeFiles.Count)
-                        break;
-                    compare = ComparePath(addFiles[a], removeFiles[r]);
-                }
-
-                if (compare == 0)
-                {
-                    yield return addFiles[a];
-                    addFiles.RemoveAt(a);
-                    removeFiles.RemoveAt(r);
-                    a--;
-                }
-
-                if (r >= removeFiles.Count || removeFiles.Count == 0)
-                    break;
-            }
-        }
-
-        private void RemoveIgnoredFiles(List<FileInfo> addFiles, List<RawTrack> removeFiles)
-        {
-            for (int i = 0; i < ignoredFiles.Length; i++)
-            {
-                FileInfo file = new FileInfo(ignoredFiles[i]);
-                int a = addFiles.RemoveAll(f => f.FullName.Equals(file.FullName));
-                int r = removeFiles.RemoveAll(f => f.FullFilename.Equals(file.FullName));
-            }
-        }
         private IEnumerable<FileInfo> ScanForFiles()
         {
+            //Get all files in directory
             List<FileInfo> searchFiles = new List<FileInfo>();
             foreach (string ext in extensions)
             {
@@ -254,25 +166,138 @@ namespace DeadDog.Audio.Scan
                 searchFiles.AddRange(files);
             }
 
-            //Windows includes "filename.mp3-missing" without the following...
-            for (int i = 0; i < searchFiles.Count; i++)
+            searchFiles = new List<FileInfo>(TrimForExtensions(searchFiles));
+
+            foreach (var file in searchFiles)
+                yield return file;
+        }
+        private IEnumerable<FileInfo> TrimForExtensions(IEnumerable<FileInfo> files)
+        {
+            foreach (var file in files)
             {
                 bool ok = false;
                 foreach (string ext in extensions)
-                    if (searchFiles[i].Extension.ToLower() == ext)
+                    if (file.Extension.ToLower() == ext)
                     {
                         ok = true;
                         break;
                     }
                 if (ok)
-                    yield return searchFiles[i];
+                    yield return file;
             }
         }
 
-        private void FileParsed(string filepath, RawTrack track, FileState state)
+        private Dictionary<FileInfo, Action> BuildActionDictionary(IEnumerable<FileInfo> scanFiles, IEnumerable<FileInfo> existingFiles)
         {
+            Dictionary<FileInfo, Action> dictionary = new Dictionary<FileInfo, Action>();
+
+            List<FileInfo> scan = new List<FileInfo>(scanFiles);
+            scan.Sort(ComparePath);
+
+            List<FileInfo> exist = new List<FileInfo>(existingFiles);
+            exist.Sort(ComparePath);
+
+            int s = 0;
+            int e = 0;
+            while (s < scan.Count || s < exist.Count)
+            {
+                int compare = s == scan.Count ? 1 : e == exist.Count ? -1 : ComparePath(scan[s], exist[e]);
+                if (compare < 0 && parseAdd)
+                    dictionary.Add(scan[s++], Action.Add);
+                else if (compare > 0 && removeDeadFiles)
+                    dictionary.Add(exist[e++], Action.Remove);
+                else if (compare == 0 && parseUpdate)
+                {
+                    dictionary.Add(scan[s], Action.Update);
+                    s++; e++;
+                }
+            }
+
+            return dictionary;
+        }
+
+        private void ParseFile(FileInfo file, Action action)
+        {
+            switch (action)
+            {
+                case Action.Add:
+                case Action.Update:
+                    RawTrack rt;
+                    if (parser.TryParseTrack(file.FullName, out rt))
+                    {
+                        if (action == Action.Add)
+                            FileParsed(file, rt, FileState.Added);
+                        else if (existingFiles[file].Equals(rt))
+                            FileParsed(file, FileState.Skipped);
+                        else
+                            FileParsed(file, rt, FileState.Updated);
+                    }
+                    else if (IsFileLocked(file))
+                        FileParsed(file, FileState.Skipped);
+                    else
+                        FileParsed(file, action == Action.Add ? FileState.AddError : FileState.UpdateError);
+                    break;
+                case Action.Skip:
+                    FileParsed(file, FileState.Skipped);
+                    break;
+                case Action.Remove:
+                    FileParsed(file, FileState.Removed);
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown file action.");
+            }
+        }
+
+        private void FileParsed(FileInfo filepath, FileState state)
+        {
+            RawTrack track = null;
+            existingFiles.TryGetValue(filepath, out track);
+            FileParsed(filepath, track, state);
+        }
+        private void FileParsed(FileInfo filepath, RawTrack track, FileState state)
+        {
+            switch (state)
+            {
+                case FileState.Added: added++; break;
+                case FileState.Updated: updated++; break;
+                case FileState.Error: error++; break;
+                case FileState.Removed: removed++; break;
+                case FileState.Skipped: skipped++; break;
+                default: throw new InvalidOperationException("Unknown filestate.");
+            }
+
             if (parsed != null)
-                parsed(this, new ScanFileEventArgs(filepath, track, state));
+                parsed(this, new ScanFileEventArgs(filepath.FullName, track, state));
+        }
+
+        private bool IsFileLocked(FileInfo file)
+        {
+            file.Refresh();
+            if (!file.Exists)
+                return false;
+
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
         }
 
         #region Path comparison
@@ -313,31 +338,12 @@ namespace DeadDog.Audio.Scan
 
         #endregion
 
-        public struct ProgressState
+        private enum Action
         {
-            private int total;
-            private int succes;
-            private int error;
-
-            public int Total
-            {
-                get { return total; }
-                set { total = value; }
-            }
-            public int Succes
-            {
-                get { return succes; }
-                set { succes = value; }
-            }
-            public int Error
-            {
-                get { return error; }
-                set { error = value; }
-            }
-            public int Progress
-            {
-                get { return succes + error; }
-            }
+            Add,
+            Update,
+            Skip,
+            Remove
         }
     }
 }
