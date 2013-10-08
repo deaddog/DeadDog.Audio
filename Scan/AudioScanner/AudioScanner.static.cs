@@ -86,35 +86,60 @@ namespace DeadDog.Audio.Scan
             for (int i = 0; i < ac.extensionList.Count; i++)
                 io.Write(ac.extensionList[i]);
 
-            FlagByte1 fb1 = FlagByte1.NoFlags;
-            if (ac.searchoption == SearchOption.AllDirectories)
-                fb1 = fb1 | FlagByte1.AllDirectories;
-            if (ac.ParseAdd)
-                fb1 = fb1 | FlagByte1.ParseAdd;
-            if (ac.ParseUpdate)
-                fb1 = fb1 | FlagByte1.ParseUpdate;
-            if (ac.RemoveDeadFiles)
-                fb1 = fb1 | FlagByte1.RemoveDeadFiles;
+            FlagByte1 fb1 = ConstructFlag1(ac);
             output.WriteByte((byte)fb1);
 
             io.Write(ac.existingFiles.Count);
             foreach (RawTrack rt in ac.existingFiles)
-            {
                 rt.Save(output);
-            }
         }
 
+        private static FlagByte1 ConstructFlag1(AudioScanner scanner)
+        {
+            FlagByte1 b = FlagByte1.NoFlags;
+
+            if (scanner.searchoption == SearchOption.AllDirectories)
+                b |= FlagByte1.AllDirectories;
+            if (scanner.ParseAdd)
+                b |= FlagByte1.ParseAdd;
+            if (scanner.ParseUpdate)
+                b |= FlagByte1.ParseUpdate;
+            if (scanner.RemoveDeadFiles)
+                b |= FlagByte1.RemoveDeadFiles;
+
+            return b;
+        }
+
+        /// <summary>
+        /// Defines constants for the first AudioScanner flag byte
+        /// </summary>
         [Flags]
         private enum FlagByte1
         {
-            NoFlags = 0,
+            /// <summary>
+            /// No flags, see other flags for details.
+            /// </summary>
+            NoFlags = 0x00,
             /// <summary>
             /// If set, SearchOption is set to AllDirectories. If not set, SearchOption is set to TopDirectoryOnly
             /// </summary>
-            AllDirectories = 1,
-            ParseAdd = 2,
-            ParseUpdate = 4,
-            RemoveDeadFiles = 8
+            AllDirectories = 0x01,
+            /// <summary>
+            /// If set, ParseAdd in the AudioScanner is set to true.
+            /// </summary>
+            ParseAdd = 0x02,
+            /// <summary>
+            /// If set, ParseUpdate in the AudioScanner is set to true.
+            /// </summary>
+            ParseUpdate = 0x04,
+            /// <summary>
+            /// If set, RemoveDeadFiles in the AudioScanner is set to true.
+            /// </summary>
+            RemoveDeadFiles = 8,
+            /// <summary>
+            /// If set, there is an additional flag byte.
+            /// </summary>
+            AdditionalByte = 0x80
         }
     }
 }
