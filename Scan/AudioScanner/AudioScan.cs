@@ -202,13 +202,26 @@ namespace DeadDog.Audio.Scan
             while (s < scan.Count || s < exist.Count)
             {
                 int compare = s == scan.Count ? 1 : e == exist.Count ? -1 : ComparePath(scan[s], exist[e]);
-                if (compare < 0 && parseAdd)
-                    dictionary.Add(scan[s++], Action.Add);
-                else if (compare > 0 && removeDeadFiles)
-                    dictionary.Add(exist[e++], Action.Remove);
-                else if (compare == 0 && parseUpdate)
+                if (compare < 0)
                 {
-                    dictionary.Add(exist[e], Action.Update);
+                    if (parseAdd)
+                        dictionary.Add(scan[s], Action.Add);
+                    s++;
+                }
+                else if (compare > 0)
+                {
+                    if (removeDeadFiles)
+                        dictionary.Add(exist[e], Action.Remove);
+                    else
+                        dictionary.Add(exist[e], Action.Skip);
+                    e++;
+                }
+                else if (compare == 0)
+                {
+                    if (parseUpdate)
+                        dictionary.Add(exist[e], Action.Update);
+                    else
+                        dictionary.Add(exist[e], Action.Skip);
                     s++; e++;
                 }
             }
@@ -232,7 +245,7 @@ namespace DeadDog.Audio.Scan
                         else
                             FileParsed(file, rt, FileState.Updated);
                     }
-                    else if (IsFileLocked(file))
+                    else if (action == Action.Update && IsFileLocked(file))
                         FileParsed(file, FileState.Skipped);
                     else
                         FileParsed(file, action == Action.Add ? FileState.AddError : FileState.UpdateError);
