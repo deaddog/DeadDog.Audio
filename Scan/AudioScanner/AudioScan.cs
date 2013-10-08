@@ -191,6 +191,9 @@ namespace DeadDog.Audio.Scan
         {
             Dictionary<FileInfo, Action> dictionary = new Dictionary<FileInfo, Action>();
 
+            if (!parseAdd && !parseUpdate && !removeDeadFiles)
+                return existingFiles.ToDictionary(x => x, x => Action.Skip);
+
             List<FileInfo> scan = new List<FileInfo>(scanFiles);
             scan.Sort(ComparePath);
 
