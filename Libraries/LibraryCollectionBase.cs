@@ -62,6 +62,15 @@ namespace DeadDog.Audio.Libraries
             OnRemoved(element);
         }
 
+        internal void Reposition(T element)
+        {
+            list.Remove(element);
+
+            int index = list.BinarySearch(element, Compare);
+            if (index < 0) index = ~index;
+            list.Insert(index, element);
+        }
+
         protected abstract void OnAdded(T element);
         protected abstract void OnRemoved(T element);
 
