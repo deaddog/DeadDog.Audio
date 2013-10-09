@@ -36,5 +36,10 @@ namespace DeadDog.Audio.Libraries
 
             this.name = name ?? string.Empty;
         }
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }

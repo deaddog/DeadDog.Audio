@@ -79,5 +79,10 @@ namespace DeadDog.Audio.Libraries
             foreach (T t in list)
                 yield return t;
         }
+
+        public override string ToString()
+        {
+            return "Count {" + list.Count + "}";
+        }
     }
 }

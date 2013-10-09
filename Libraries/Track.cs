@@ -57,5 +57,10 @@ namespace DeadDog.Audio.Libraries
             this.title = trackinfo.TrackTitle;
             this.tracknumber = trackinfo.TrackNumberUnknown ? (int?)null : trackinfo.TrackNumber;
         }
+
+        public override string ToString()
+        {
+            return (tracknumber == null ? "" : "#" + tracknumber + " ") + title;
+        }
     }
 }

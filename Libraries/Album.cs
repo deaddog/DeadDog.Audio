@@ -50,6 +50,11 @@ namespace DeadDog.Audio.Libraries
             this.title = album ?? string.Empty;
         }
 
+        public override string ToString()
+        {
+            return title;
+        }
+
         private void trackAdded(Track.TrackCollection collection, TrackEventArgs e)
         {
             if (collection != tracks)
