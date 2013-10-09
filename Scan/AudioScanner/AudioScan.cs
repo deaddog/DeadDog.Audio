@@ -276,6 +276,8 @@ namespace DeadDog.Audio.Scan
             {
                 case FileState.Added: added++; break;
                 case FileState.Updated: updated++; break;
+                case FileState.AddError:
+                case FileState.UpdateError:
                 case FileState.Error: error++; break;
                 case FileState.Removed: removed++; break;
                 case FileState.Skipped: skipped++; break;
