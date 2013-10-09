@@ -23,24 +23,28 @@ namespace DeadDog.Audio.Libraries
         public string Title
         {
             get { return title; }
+            internal set { title = value; }
         }
 
         private int? tracknumber;
         public int? Tracknumber
         {
             get { return tracknumber; }
+            internal set { tracknumber = value; }
         }
 
         private Album album;
         public Album Album
         {
             get { return album; }
+            internal set { album = value; }
         }
 
         private Artist artist;
         public Artist Artist
         {
             get { return artist; }
+            internal set { artist = value; }
         }
 
         #endregion
@@ -51,7 +55,7 @@ namespace DeadDog.Audio.Libraries
             this.album = album;
             this.artist = artist;
             this.title = trackinfo.TrackTitle;
-            this.tracknumber = trackinfo.TrackNumberUnknown ?  (int?)null : trackinfo.TrackNumber;
+            this.tracknumber = trackinfo.TrackNumberUnknown ? (int?)null : trackinfo.TrackNumber;
         }
     }
 }
