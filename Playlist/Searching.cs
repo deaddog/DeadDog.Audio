@@ -9,6 +9,29 @@ namespace DeadDog.Audio
 {
     public static class Searching
     {
+        public static IEnumerable<T> Search<T>(this IEnumerable<T> list, SearchMethods method, PredicateString<T> predicate, string searchstring)
+        {
+            return Search(list, method, predicate, searchstring.Trim().Split(' '));
+        }
+        public static IEnumerable<T> Search<T>(this IEnumerable<T> list, SearchMethods method, PredicateString<T> predicate, params string[] searchstring)
+        {
+            string[] search = searchstring;
+            for (int i = 0; i < search.Length; i++)
+                search[i] = search[i].ToLower();
+
+            if (search.Length == 0)
+            {
+                foreach (T element in list)
+                    yield return element;
+            }
+            else
+            {
+                foreach (T element in list)
+                    if (test(element, method, search, predicate))
+                        yield return element;
+            }
+        }
+
         public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, SearchMethods method, PredicateString<T> predicate, string searchstring)
         {
             return Search(playlist, method, predicate, searchstring.Trim().Split(' '));
@@ -26,7 +49,7 @@ namespace DeadDog.Audio
             }
             else
             {
-                foreach(PlaylistEntry<T> track in playlist)
+                foreach (PlaylistEntry<T> track in playlist)
                     if (test(track.Track, method, search, predicate))
                         yield return track;
             }
