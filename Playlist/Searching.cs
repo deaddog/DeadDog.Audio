@@ -47,21 +47,7 @@ namespace DeadDog.Audio
         }
         public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, PredicateString<T> predicate, SearchMethods method, params string[] searchstring)
         {
-            string[] search = searchstring;
-            for (int i = 0; i < search.Length; i++)
-                search[i] = search[i].ToLower();
-
-            if (search.Length == 0)
-            {
-                foreach (PlaylistEntry<T> track in playlist)
-                    yield return track;
-            }
-            else
-            {
-                foreach (PlaylistEntry<T> track in playlist)
-                    if (test(track.Track, predicate, method, search))
-                        yield return track;
-            }
+            return Search(playlist, t => t.Track, predicate, method, searchstring);
         }
 
         public static IEnumerable<PlaylistEntry<Track>> Search(this IPlaylist<Track> playlist, SearchMethods method, string searchstring)
