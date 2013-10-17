@@ -9,11 +9,11 @@ namespace DeadDog.Audio
 {
     public static class Searching
     {
-        public static IEnumerable<T> Search<T>(this IEnumerable<T> list, SearchMethods method, PredicateString<T> predicate, string searchstring)
+        public static IEnumerable<T> Search<T>(this IEnumerable<T> list, PredicateString<T> predicate, SearchMethods method, string searchstring)
         {
-            return Search(list, method, predicate, searchstring.Trim().Split(' '));
+            return Search(list, predicate, method, searchstring.Trim().Split(' '));
         }
-        public static IEnumerable<T> Search<T>(this IEnumerable<T> list, SearchMethods method, PredicateString<T> predicate, params string[] searchstring)
+        public static IEnumerable<T> Search<T>(this IEnumerable<T> list, PredicateString<T> predicate, SearchMethods method, params string[] searchstring)
         {
             string[] search = searchstring;
             for (int i = 0; i < search.Length; i++)
@@ -27,16 +27,16 @@ namespace DeadDog.Audio
             else
             {
                 foreach (T element in list)
-                    if (test(element, method, search, predicate))
+                    if (test(element, predicate, method, search))
                         yield return element;
             }
         }
 
-        public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, SearchMethods method, PredicateString<T> predicate, string searchstring)
+        public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, PredicateString<T> predicate, SearchMethods method, string searchstring)
         {
-            return Search(playlist, method, predicate, searchstring.Trim().Split(' '));
+            return Search(playlist, predicate, method, searchstring.Trim().Split(' '));
         }
-        public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, SearchMethods method, PredicateString<T> predicate, params string[] searchstring)
+        public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, PredicateString<T> predicate, SearchMethods method, params string[] searchstring)
         {
             string[] search = searchstring;
             for (int i = 0; i < search.Length; i++)
@@ -50,21 +50,21 @@ namespace DeadDog.Audio
             else
             {
                 foreach (PlaylistEntry<T> track in playlist)
-                    if (test(track.Track, method, search, predicate))
+                    if (test(track.Track, predicate, method, search))
                         yield return track;
             }
         }
 
         public static IEnumerable<PlaylistEntry<Track>> Search(this IPlaylist<Track> playlist, SearchMethods method, string searchstring)
         {
-            return Search(playlist, method, ContainedInTitleArtistAlbum, searchstring);
+            return Search(playlist, ContainedInTitleArtistAlbum, method, searchstring);
         }
         public static IEnumerable<PlaylistEntry<Track>> Search(this IPlaylist<Track> playlist, SearchMethods method, params string[] searchstring)
         {
-            return Search(playlist, method, ContainedInTitleArtistAlbum, searchstring);
+            return Search(playlist, ContainedInTitleArtistAlbum, method, searchstring);
         }
 
-        private static bool test<T>(T track, SearchMethods method, string[] searchstring, PredicateString<T> pre)
+        private static bool test<T>(T track, PredicateString<T> pre, SearchMethods method, string[] searchstring)
         {
             switch (method)
             {
