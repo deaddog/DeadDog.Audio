@@ -32,6 +32,15 @@ namespace DeadDog.Audio
             }
         }
 
+        public static IEnumerable<T> Search<T, R>(this IEnumerable<T> list, Converter<T, R> convert, PredicateString<R> predicate, SearchMethods method, string searchstring)
+        {
+            return Search(list, convert, predicate, method, searchstring.Trim().Split(' '));
+        }
+        public static IEnumerable<T> Search<T, R>(this IEnumerable<T> list, Converter<T, R> convert, PredicateString<R> predicate, SearchMethods method, params string[] searchstring)
+        {
+            return Search(list, (t, s) => predicate(convert(t), s), method, searchstring);
+        }
+
         public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, PredicateString<T> predicate, SearchMethods method, string searchstring)
         {
             return Search(playlist, predicate, method, searchstring.Trim().Split(' '));
