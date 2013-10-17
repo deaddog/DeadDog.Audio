@@ -27,7 +27,7 @@ namespace DeadDog.Audio
             else
             {
                 foreach (T element in list)
-                    if (test(element, predicate, method, search))
+                    if (compareElement(element, predicate, method, search))
                         yield return element;
             }
         }
@@ -64,7 +64,7 @@ namespace DeadDog.Audio
             return searchstring.Trim().Split(' ');
         }
 
-        private static bool test<T>(T track, PredicateString<T> pre, SearchMethods method, string[] searchstring)
+        private static bool compareElement<T>(T track, PredicateString<T> pre, SearchMethods method, string[] searchstring)
         {
             switch (method)
             {
