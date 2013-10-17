@@ -11,7 +11,7 @@ namespace DeadDog.Audio
     {
         public static IEnumerable<T> Search<T>(this IEnumerable<T> list, PredicateString<T> predicate, SearchMethods method, string searchstring)
         {
-            return Search(list, predicate, method, searchstring.Trim().Split(' '));
+            return Search(list, predicate, method, splitString(searchstring));
         }
         public static IEnumerable<T> Search<T>(this IEnumerable<T> list, PredicateString<T> predicate, SearchMethods method, params string[] searchstring)
         {
@@ -34,7 +34,7 @@ namespace DeadDog.Audio
 
         public static IEnumerable<T> Search<T, R>(this IEnumerable<T> list, Converter<T, R> convert, PredicateString<R> predicate, SearchMethods method, string searchstring)
         {
-            return Search(list, convert, predicate, method, searchstring.Trim().Split(' '));
+            return Search(list, convert, predicate, method, splitString(searchstring));
         }
         public static IEnumerable<T> Search<T, R>(this IEnumerable<T> list, Converter<T, R> convert, PredicateString<R> predicate, SearchMethods method, params string[] searchstring)
         {
@@ -43,7 +43,7 @@ namespace DeadDog.Audio
 
         public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, PredicateString<T> predicate, SearchMethods method, string searchstring)
         {
-            return Search(playlist, predicate, method, searchstring.Trim().Split(' '));
+            return Search(playlist, predicate, method, splitString(searchstring));
         }
         public static IEnumerable<PlaylistEntry<T>> Search<T>(this IPlaylist<T> playlist, PredicateString<T> predicate, SearchMethods method, params string[] searchstring)
         {
@@ -52,11 +52,16 @@ namespace DeadDog.Audio
 
         public static IEnumerable<PlaylistEntry<Track>> Search(this IPlaylist<Track> playlist, SearchMethods method, string searchstring)
         {
-            return Search(playlist, ContainedInTitleArtistAlbum, method, searchstring);
+            return Search(playlist, method, splitString(searchstring));
         }
         public static IEnumerable<PlaylistEntry<Track>> Search(this IPlaylist<Track> playlist, SearchMethods method, params string[] searchstring)
         {
             return Search(playlist, ContainedInTitleArtistAlbum, method, searchstring);
+        }
+
+        private static string[] splitString(string searchstring)
+        {
+            return searchstring.Trim().Split(' ');
         }
 
         private static bool test<T>(T track, PredicateString<T> pre, SearchMethods method, string[] searchstring)
