@@ -77,6 +77,24 @@ namespace DeadDog.Audio.Playback
                     throw new InvalidOperationException("Unknown playback state: " + playback.Status);
             }
         }
+        public bool Pause()
+        {
+            switch (playback.Status)
+            {
+                case PlayerStatus.Playing:
+                    if (!playback.Pause())
+                        throw new Exception("Player failed to pause playback.");
+                    return true;
+                case PlayerStatus.Paused:
+                    return Play();
+                case PlayerStatus.Stopped:
+                    return false;
+                case PlayerStatus.NoFileOpen:
+                    return false;
+                default:
+                    throw new InvalidOperationException("Unknown playback state: " + playback.Status);
+            }
+        }
 
         public PlayerStatus Status
         {
