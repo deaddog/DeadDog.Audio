@@ -88,6 +88,8 @@
     <Compile Include="Parsing\OggParser.cs" />
     <Compile Include="Playback\IPlayback.cs" />
     <Compile Include="Playback\Player.cs" />
+    <Compile Include="Playback\PositionChangedEventArgs.cs" />
+    <Compile Include="Playback\PositionChangedEventHandler.cs" />
     <Compile Include="Playlist\AlbumPlaylist[T].cs" />
     <Compile Include="Playlist\ArtistPlaylist[T].cs" />
     <Compile Include="Playlist\Interfaces\IPlaylist[T].cs" />

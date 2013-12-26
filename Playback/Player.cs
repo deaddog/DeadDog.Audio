@@ -17,17 +17,17 @@ namespace DeadDog.Audio.Playback
             this.playback.StatusChanged += playback_StatusChanged;
         }
 
-        private void playback_PositionChanged(object sender, EventArgs e)
+        private void playback_PositionChanged(object sender, PositionChangedEventArgs e)
         {
             OnPositionChanged(e);
         }
 
-        protected virtual void OnPositionChanged(EventArgs e)
+        protected virtual void OnPositionChanged(PositionChangedEventArgs e)
         {
             if (PositionChanged != null)
                 PositionChanged(this, e);
         }
-        public event EventHandler PositionChanged;
+        public event PositionChangedEventHandler PositionChanged;
 
         private void playback_StatusChanged(object sender, EventArgs e)
         {

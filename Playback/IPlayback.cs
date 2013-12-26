@@ -17,7 +17,7 @@ namespace DeadDog.Audio.Playback
         /// <summary>
         /// Occurs when the value of the Position property is changed;
         /// </summary>
-        public event EventHandler PositionChanged;
+        public event PositionChangedEventHandler PositionChanged;
 
         public bool Seek(PlayerSeekOrigin origin, uint offset);
 
