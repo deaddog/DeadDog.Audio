@@ -47,6 +47,22 @@ namespace DeadDog.Audio.Playback
 
         #endregion
 
+        #region TrackChanged event
+
+        protected virtual void OnTrackChanged(EventArgs e)
+        {
+            if (TrackChanged != null)
+                TrackChanged(this, e);
+        }
+        public event EventHandler TrackChanged;
+
+        #endregion
+
+        public T Track
+        {
+            get { return playlist.CurrentEntry == null ? null : playlist.CurrentEntry.Track; }
+        }
+
         public bool Play()
         {
             switch (playback.Status)
