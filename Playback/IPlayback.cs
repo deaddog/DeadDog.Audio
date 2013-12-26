@@ -10,6 +10,15 @@ namespace DeadDog.Audio.Playback
         public bool Pause();
         public bool Stop();
 
+        /// <summary>
+        /// Occurs when the value of the Status property is changed.
+        /// </summary>
+        public event EventHandler StatusChanged;
+        /// <summary>
+        /// Occurs when the value of the Position property is changed;
+        /// </summary>
+        public event EventHandler PositionChanged;
+
         public bool Seek(PlayerSeekOrigin origin, uint offset);
 
         public PlayerStatus Status { get; }
