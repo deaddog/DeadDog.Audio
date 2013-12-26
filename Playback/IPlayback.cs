@@ -13,7 +13,7 @@ namespace DeadDog.Audio.Playback
         public bool Seek(PlayerSeekOrigin origin, uint offset);
 
         public PlayerStatus Status { get; }
-        public uint Position { get; set; }
+        public uint Position { get; }
         public uint Length { get; }
     }
 }
