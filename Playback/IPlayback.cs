@@ -3,26 +3,26 @@ namespace DeadDog.Audio.Playback
 {
     public interface IPlayback : IDisposable
     {
-        public void Open(string filepath);
-        public bool Close();
+        void Open(string filepath);
+        bool Close();
 
-        public bool Play();
-        public bool Pause();
-        public bool Stop();
+        bool Play();
+        bool Pause();
+        bool Stop();
 
         /// <summary>
         /// Occurs when the value of the Status property is changed.
         /// </summary>
-        public event EventHandler StatusChanged;
+        event EventHandler StatusChanged;
         /// <summary>
         /// Occurs when the value of the Position property is changed;
         /// </summary>
-        public event PositionChangedEventHandler PositionChanged;
+        event PositionChangedEventHandler PositionChanged;
 
-        public bool Seek(PlayerSeekOrigin origin, uint offset);
+        bool Seek(PlayerSeekOrigin origin, uint offset);
 
-        public PlayerStatus Status { get; }
-        public uint Position { get; }
-        public uint Length { get; }
+        PlayerStatus Status { get; }
+        uint Position { get; }
+        uint Length { get; }
     }
 }
