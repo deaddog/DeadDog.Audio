@@ -12,7 +12,34 @@ namespace DeadDog.Audio.Playback
         {
             this.playlist = playlist;
             this.playback = playback;
+
+            this.playback.PositionChanged += playback_PositionChanged;
+            this.playback.StatusChanged += playback_StatusChanged;
         }
+
+        private void playback_PositionChanged(object sender, EventArgs e)
+        {
+            OnPositionChanged(e);
+        }
+
+        protected virtual void OnPositionChanged(EventArgs e)
+        {
+            if (PositionChanged != null)
+                PositionChanged(this, e);
+        }
+        public event EventHandler PositionChanged;
+
+        private void playback_StatusChanged(object sender, EventArgs e)
+        {
+            OnStatusChanged(e);
+        }
+
+        protected virtual void OnStatusChanged(EventArgs e)
+        {
+            if (StatusChanged != null)
+                StatusChanged(this, e);
+        }
+        public event EventHandler StatusChanged;
 
         public PlayerStatus Status
         {
