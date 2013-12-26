@@ -47,6 +47,37 @@ namespace DeadDog.Audio.Playback
 
         #endregion
 
+        public bool Play()
+        {
+            switch (playback.Status)
+            {
+                case PlayerStatus.Playing:
+                    playback.Seek(PlayerSeekOrigin.Begin, 0);
+                    return true;
+                case PlayerStatus.Paused:
+                    if (!playback.Play())
+                        throw new Exception("Player failed to resume playback.");
+                    return true;
+                case PlayerStatus.Stopped:
+                    if (!playback.Play())
+                        throw new Exception("Player failed to start playback.");
+                    return true;
+                case PlayerStatus.NoFileOpen:
+                    if (playlist.MoveNext())
+                    {
+                        if (!playlist.CurrentEntry.Track.FileExist)
+                            return Play();
+                        playback.Open(playlist.CurrentEntry.Track.FilePath);
+                        playback.Play();
+                        return true;
+                    }
+                    else
+                        return false;
+                default:
+                    throw new InvalidOperationException("Unknown playback state: " + playback.Status);
+            }
+        }
+
         public PlayerStatus Status
         {
             get { return playback.Status; }
