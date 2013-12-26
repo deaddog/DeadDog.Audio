@@ -48,7 +48,7 @@ namespace DeadDog.Audio.Playback
         public uint Position
         {
             get { return playback.Position; }
-            set { Seek(PlayerSeekOrigin.Begin, value); }
+            set { playback.Seek(PlayerSeekOrigin.Begin, value); }
         }
         public uint Length
         {
@@ -61,7 +61,6 @@ namespace DeadDog.Audio.Playback
 
         void IDisposable.Dispose()
         {
-            Stop();
             playback.Close();
             playback.Dispose();
             playback = null;
