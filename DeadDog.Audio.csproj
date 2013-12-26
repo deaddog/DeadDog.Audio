@@ -86,6 +86,7 @@
     <Compile Include="mp3Control\PlayerSeekOrigin.cs" />
     <Compile Include="mp3Control\PlayerStatus.cs" />
     <Compile Include="Parsing\OggParser.cs" />
+    <Compile Include="Playback\IPlayback.cs" />
     <Compile Include="Playlist\AlbumPlaylist[T].cs" />
     <Compile Include="Playlist\ArtistPlaylist[T].cs" />
     <Compile Include="Playlist\Interfaces\IPlaylist[T].cs" />
