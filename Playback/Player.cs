@@ -17,11 +17,12 @@ namespace DeadDog.Audio.Playback
             this.playback.StatusChanged += playback_StatusChanged;
         }
 
+        #region PositionChanged event
+
         private void playback_PositionChanged(object sender, PositionChangedEventArgs e)
         {
             OnPositionChanged(e);
         }
-
         protected virtual void OnPositionChanged(PositionChangedEventArgs e)
         {
             if (PositionChanged != null)
@@ -29,17 +30,22 @@ namespace DeadDog.Audio.Playback
         }
         public event PositionChangedEventHandler PositionChanged;
 
+        #endregion
+
+        #region StatusChanged event
+
         private void playback_StatusChanged(object sender, EventArgs e)
         {
             OnStatusChanged(e);
         }
-
         protected virtual void OnStatusChanged(EventArgs e)
         {
             if (StatusChanged != null)
                 StatusChanged(this, e);
         }
         public event EventHandler StatusChanged;
+
+        #endregion
 
         public PlayerStatus Status
         {
