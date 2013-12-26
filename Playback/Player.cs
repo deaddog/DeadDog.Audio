@@ -112,6 +112,10 @@ namespace DeadDog.Audio.Playback
                     throw new InvalidOperationException("Unknown playback state: " + playback.Status);
             }
         }
+        public bool Seek(PlayerSeekOrigin origin, uint offset)
+        {
+            return playback.Seek(origin, offset);
+        }
 
         public PlayerStatus Status
         {
