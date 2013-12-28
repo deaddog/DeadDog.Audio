@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playback
 {
     /// <summary>
     /// Provides the fields that represent reference points for seeking.

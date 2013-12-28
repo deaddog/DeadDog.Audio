@@ -5,7 +5,7 @@ using System.Text;
 
 using libZPlay;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playback
 {
     /// <summary>
     /// Enables playback of audio-files using the libzplay multimedia library.

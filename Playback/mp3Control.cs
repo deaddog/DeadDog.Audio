@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playback
 {
     /// <summary>
     /// Utilizes winmm.dll (Windows Multi Media) to play audiofiles.

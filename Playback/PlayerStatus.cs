@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playback
 {
     /// <summary>
     /// Specifies a state for an audio player.

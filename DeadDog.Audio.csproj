@@ -80,11 +80,11 @@
     <Compile Include="Libraries\Library.cs" />
     <Compile Include="Libraries\Track.cs" />
     <Compile Include="Libraries\TrackCollection.cs" />
-    <Compile Include="mp3Control\AudioControl.cs" />
-    <Compile Include="mp3Control\libZPlay.cs" />
-    <Compile Include="mp3Control\mp3Control.cs" />
-    <Compile Include="mp3Control\PlayerSeekOrigin.cs" />
-    <Compile Include="mp3Control\PlayerStatus.cs" />
+    <Compile Include="Playback\AudioControl.cs" />
+    <Compile Include="Playback\libZPlay.cs" />
+    <Compile Include="Playback\mp3Control.cs" />
+    <Compile Include="Playback\PlayerSeekOrigin.cs" />
+    <Compile Include="Playback\PlayerStatus.cs" />
     <Compile Include="Parsing\OggParser.cs" />
     <Compile Include="Playback\IPlayback.cs" />
     <Compile Include="Playback\Player.cs" />
