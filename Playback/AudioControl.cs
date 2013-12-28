@@ -191,15 +191,10 @@ namespace DeadDog.Audio.Playback
         public uint Position
         {
             get { return time.ms; }
-            set { Seek(PlayerSeekOrigin.Begin, value); }
         }
         public uint Length
         {
             get { return info.Length.ms; }
-        }
-        public double PercentPlayed
-        {
-            get { return (double)Position / (double)Length; }
         }
 
         private void Update()
