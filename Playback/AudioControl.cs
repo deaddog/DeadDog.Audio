@@ -24,7 +24,8 @@ namespace DeadDog.Audio.Playback
         private TStreamStatus status;
         private TStreamTime time;
 
-        private uint TIMER_INTERVAL = 100;
+        private int TIMER_INTERVAL = 100;
+        private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
         private System.Threading.Timer timer;
 
         public AudioControl()
@@ -83,8 +84,7 @@ namespace DeadDog.Audio.Playback
                     if (Resumed != null)
                         Resumed(this, EventArgs.Empty);
 
-                    if (UsesTimer)
-                        timer.Start();
+                    timer.Change(0, TIMER_INTERVAL);
                     return true;
                 case PlayerStatus.Stopped:
                     if (!player.StartPlayback())
@@ -94,8 +94,7 @@ namespace DeadDog.Audio.Playback
                     if (PlaybackStart != null)
                         PlaybackStart(this, EventArgs.Empty);
 
-                    if (UsesTimer)
-                        timer.Start();
+                    timer.Change(0, TIMER_INTERVAL);
                     return true;
                 case PlayerStatus.NoFileOpen:
                     return false;
@@ -142,8 +141,7 @@ namespace DeadDog.Audio.Playback
                     if (Paused != null)
                         Paused(this, EventArgs.Empty);
 
-                    if (UsesTimer)
-                        timer.Stop();
+                    timer.Change(0, TIMER_INFINITE);
                     return true;
                 case PlayerStatus.Paused:
                     return Play();
@@ -168,8 +166,7 @@ namespace DeadDog.Audio.Playback
                     if (Stopped != null)
                         Stopped(this, EventArgs.Empty);
 
-                    if (UsesTimer)
-                        timer.Stop();
+                    timer.Change(0, TIMER_INFINITE);
                     return true;
                 case PlayerStatus.Stopped:
                     return true;
@@ -239,7 +236,7 @@ namespace DeadDog.Audio.Playback
                 && Position == 0 && Length > 0)
             {
                 plStatus = PlayerStatus.Stopped;
-                timer.Stop();
+                timer.Change(TIMER_INFINITE, TIMER_INFINITE);
 
                 if (this.Tick != null)
                     Tick(this, EventArgs.Empty);
