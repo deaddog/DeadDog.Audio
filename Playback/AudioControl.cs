@@ -38,34 +38,9 @@ namespace DeadDog.Audio.Playback
 
             this.timer = new System.Threading.Timer(obj => Update(), null, 0, 0);
         }
-
-        #region Events
-        /// <summary>
-        /// Occurs when the playing has reached it's end.
-        /// </summary>
-        public event EventHandler PlaybackEnd;
-        /// <summary>
-        /// Occurs when a small portion of the currently playing file has been played. Is therefore not called when the file is paused.
-        /// </summary>
-        public event EventHandler Tick;
-
-        /// <summary>
-        /// Occurs when playback starts.
-        /// </summary>
-        public event EventHandler PlaybackStart;
-        /// <summary>
-        /// Occurs when playback is paused.
-        /// </summary>
-        public event EventHandler Paused;
-        /// <summary>
-        /// Occurs when playback is resumed (from pause).
-        /// </summary>
-        public event EventHandler Resumed;
-        /// <summary>
-        /// Occurs when playback is stopped.
-        /// </summary>
-        public event EventHandler Stopped;
-        #endregion
+        
+        public event EventHandler StatusChanged;
+        public event PositionChangedEventHandler PositionChanged;
 
         public bool Play()
         {
