@@ -3,12 +3,12 @@
 namespace DeadDog.Audio.Playback
 {
     public class Player<T> : IDisposable
-        where T : DeadDog.Audio.Libraries.Track
+        where T : class
     {
         private IPlaylist<T> playlist;
-        private IPlayback playback;
+        private IPlayback<T> playback;
 
-        public Player(IPlaylist<T> playlist, IPlayback playback)
+        public Player(IPlaylist<T> playlist, IPlayback<T> playback)
         {
             this.playlist = playlist;
             this.playback = playback;
@@ -81,9 +81,8 @@ namespace DeadDog.Audio.Playback
                 case PlayerStatus.NoFileOpen:
                     if (playlist.MoveNext())
                     {
-                        if (!playlist.CurrentEntry.Track.FileExist)
+                        if (!playback.Open(playlist.CurrentEntry.Track))
                             return Play();
-                        playback.Open(playlist.CurrentEntry.Track.FilePath);
                         playback.Play();
                         return true;
                     }

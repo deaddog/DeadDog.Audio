@@ -1,9 +1,9 @@
 ﻿using System;
 namespace DeadDog.Audio.Playback
 {
-    public interface IPlayback : IDisposable
+    public interface IPlayback<T> : IDisposable
     {
-        bool Open(string filepath);
+        bool Open(T element);
         bool Close();
 
         bool Play();
