@@ -15,7 +15,6 @@ namespace DeadDog.Audio.Playback
     /// </remarks>
     public class AudioControl : IDisposable
     {
-        private string filepath = null;
         private ZPlay player;
 
         private PlayerStatus plStatus = PlayerStatus.NoFileOpen;
