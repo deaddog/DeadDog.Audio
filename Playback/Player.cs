@@ -63,6 +63,15 @@ namespace DeadDog.Audio.Playback
             get { return playlist.CurrentEntry == null ? null : playlist.CurrentEntry.Track; }
         }
 
+        public bool MoveNext()
+        {
+            return moveGeneric(playlist.MoveNext);
+        }
+        public bool MovePrevious()
+        {
+            return moveGeneric(playlist.MovePrevious);
+        }
+
         private bool moveGeneric(Func<bool> move)
         {
             PlayerStatus status = playback.Status;
