@@ -24,17 +24,10 @@ namespace DeadDog.Audio.Playback
         private TStreamStatus status;
         private TStreamTime time;
 
-        private System.Windows.Forms.Timer timer;
+        private uint TIMER_INTERVAL = 100;
+        private System.Threading.Timer timer;
 
-        /// <summary>
-        /// Gets a value indicating if a <see cref="System.Windows.Forms.Timer"/> is associated with the <see cref="AudioControl"/> and thus determines the <see cref="Update"/> is invoked automatically.
-        /// </summary>
-        public bool UsesTimer
-        {
-            get { return timer != null; }
-        }
-
-        public AudioControl(bool usesTimer)
+        public AudioControl()
         {
             this.player = new ZPlay();
 
@@ -42,12 +35,7 @@ namespace DeadDog.Audio.Playback
             this.status = new TStreamStatus();
             this.time = new TStreamTime();
 
-            this.timer = usesTimer ? new System.Windows.Forms.Timer() : null;
-            if (this.timer != null)
-            {
-                this.timer.Interval = 100;
-                this.timer.Tick += new EventHandler(timer_Tick);
-            }
+            this.timer = new System.Threading.Timer(obj => Update(), null, 0, 0);
         }
 
         #region Events
@@ -242,11 +230,7 @@ namespace DeadDog.Audio.Playback
             get { return (double)Position / (double)Length; }
         }
 
-        /// <summary>
-        /// Updates the current state of this <see cref="AudioControl"/>.
-        /// This method should never be called directly when <see cref="UsesTimer"/> is true.
-        /// </summary>
-        public void Update()
+        private void Update()
         {
             player.GetStatus(ref status);
             player.GetPosition(ref time);
@@ -265,10 +249,6 @@ namespace DeadDog.Audio.Playback
             }
             else if (this.Tick != null)
                 Tick(this, EventArgs.Empty);
-        }
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            this.Update();
         }
 
         public void Dispose()
