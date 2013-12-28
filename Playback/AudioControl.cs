@@ -207,20 +207,19 @@ namespace DeadDog.Audio.Playback
             player.GetStatus(ref status);
             player.GetPosition(ref time);
 
+            bool endreached = false;
+
             if (plStatus == PlayerStatus.Playing && !status.fPlay
                 && Position == 0 && Length > 0)
             {
                 plStatus = PlayerStatus.Stopped;
                 timer.Change(TIMER_INFINITE, TIMER_INFINITE);
 
-                if (this.Tick != null)
-                    Tick(this, EventArgs.Empty);
-
-                if (this.PlaybackEnd != null)
-                    PlaybackEnd(this, EventArgs.Empty);
+                endreached = true;
             }
-            else if (this.Tick != null)
-                Tick(this, EventArgs.Empty);
+
+            if (PositionChanged != null)
+                PositionChanged(this, new PositionChangedEventArgs(endreached));
         }
 
         public void Dispose()
