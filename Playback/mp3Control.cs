@@ -158,21 +158,23 @@ namespace DeadDog.Audio.Playback
         /// <summary>
         /// Stops playback.
         /// </summary>
-        public void Stop()
+        public bool Stop()
         {
-            if (!fileOpen)
-                return;
-            mciSendString("stop " + playerAlias, null, 0, 0);
-            Seek(PlayerSeekOrigin.Begin, false);
-            if (Position != Length)
-                isPlaying = false;
-            if (Stopping != null)
-                Stopping(this, EventArgs.Empty);
-
-            if (throwTick && timer.Enabled)
+            switch (plStatus)
             {
-                timer_Tick(null, null);
-                timer.Stop();
+                case PlayerStatus.Playing:
+                case PlayerStatus.Paused:
+                    mciSendString("stop " + playerAlias, null, 0, 0);
+                    Seek(PlayerSeekOrigin.Begin, false);
+                    updateStatus();
+                    timer.Change(0, TIMER_INFINITE);
+                    return true;
+                case PlayerStatus.Stopped:
+                    return true;
+                case PlayerStatus.NoFileOpen:
+                    return false;
+                default:
+                    throw new Exception("Unknown PlayerStatus.");
             }
         }
 
