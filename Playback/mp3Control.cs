@@ -51,43 +51,54 @@ namespace DeadDog.Audio.Playback
 
         [DllImport("winmm.dll")]
         private static extern long mciSendString(string lpstrCommand, StringBuilder lpstrReturnString, int uReturnLength, int hwndCallback);
-
+        
         /// <summary>
         /// Loads a new file into this mp3Control
         /// </summary>
-        /// <param name="fullpath">The full path of the file to load.</param>
-        public void LoadFile(string fullpath)
+        /// <param name="element">The path of the file to load.</param>
+        public bool Open(string element)
         {
-            if (fileOpen)
-                CloseFile();
-            string command = "open " + "\"" + fullpath + "\"" + " type MPEGVideo alias " + playerAlias;
-            long err = mciSendString(command, null, 0, 0);
-            long b = 1 + err;
-            fileOpen = true;
-            if (Opening != null)
-                Opening(this, EventArgs.Empty);
+            switch (plStatus)
+            {
+                case PlayerStatus.Playing:
+                case PlayerStatus.Paused:
+                case PlayerStatus.Stopped:
+                    Close();
+                    return Open(element);
+                case PlayerStatus.NoFileOpen:
+                    if (element == null)
+                        return false;
+                    System.IO.FileInfo file = new System.IO.FileInfo(element);
 
-            string s = status;
+                    if (!file.Exists)
+                        return false;
+                    string command = "open " + "\"" + file.FullName + "\"" + " type MPEGVideo alias " + playerAlias;
+                    long err = mciSendString(command, null, 0, 0);
+                    long b = 1 + err;
 
-            UpdateVolumes();
+                    //if (!player.OpenFile(file.FullName, TStreamFormat.sfAutodetect))
+                    //    return false;
+
+                    updateStatus();
+                    UpdateVolumes();
+                    return plStatus != PlayerStatus.NoFileOpen;
+                default:
+                    throw new Exception("Unknown PlayerStatus.");
+            }
         }
         /// <summary>
         /// Unloads the currently loaded file.
         /// </summary>
-        public void CloseFile()
+        public bool Close()
         {
-            if (!fileOpen)
-                return;
-            mciSendString("close " + playerAlias, null, 0, 0);
-            fileOpen = false;
-
-            if (Closing != null)
-                Closing(this, EventArgs.Empty);
-
-            if (throwTick && timer.Enabled)
+            if (plStatus == PlayerStatus.NoFileOpen)
+                return true;
+            else
             {
-                timer_Tick(null, null);
-                timer.Stop();
+                Stop();
+                mciSendString("close " + playerAlias, null, 0, 0);
+                updateStatus();
+                return plStatus == PlayerStatus.NoFileOpen;
             }
         }
 
