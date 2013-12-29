@@ -136,44 +136,24 @@ namespace DeadDog.Audio.Playback
         /// <summary>
         /// Pauses playback.
         /// </summary>
-        public void Pause()
+        public bool Pause()
         {
-            if (!fileOpen)
-                return;
-            mciSendString("pause " + playerAlias, null, 0, 0);
-            if (Position != Length)
-                isPlaying = false;
-            if (Pausing != null)
-                Pausing(this, EventArgs.Empty);
-
-            if (throwTick && timer.Enabled)
+            switch (plStatus)
             {
-                timer_Tick(null, null);
-                timer.Stop();
+                case PlayerStatus.Playing:
+                    mciSendString("pause " + playerAlias, null, 0, 0);
+                    updateStatus();
+                    timer.Change(0, TIMER_INFINITE);
+                    return true;
+                case PlayerStatus.Paused:
+                    return true;
+                case PlayerStatus.Stopped:
+                    return false;
+                case PlayerStatus.NoFileOpen:
+                    return false;
+                default:
+                    throw new Exception("Unknown PlayerStatus.");
             }
-        }
-        /// <summary>
-        /// Resumes playback.
-        /// </summary>
-        public void Resume()
-        {
-            if (!fileOpen)
-                return;
-
-            mciSendString("play " + playerAlias, null, 0, 0);
-            if (Position != Length)
-                isPlaying = true;
-            else
-                isPlaying = false;
-            if (Resuming != null)
-                Resuming(this, EventArgs.Empty);
-
-            if (throwTick && !timer.Enabled)
-            {
-                timer_Tick(null, null);
-                timer.Start();
-            }
-
         }
         /// <summary>
         /// Stops playback.
