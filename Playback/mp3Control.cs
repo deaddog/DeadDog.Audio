@@ -18,6 +18,8 @@ namespace DeadDog.Audio.Playback
     {
         private string playerAlias;
         private PlayerStatus plStatus;
+        private uint position;
+        private uint length;
 
         private bool swapped = false;
         private int vol = 1000, right = 1000, left = 1000, bass = 1000, treble = 1000;
@@ -29,10 +31,13 @@ namespace DeadDog.Audio.Playback
 
         private mp3Control()
         {
-            timer = new System.Threading.Timer(obj => update(), null, TIMER_INFINITE, TIMER_INFINITE);
+            timer = new System.Threading.Timer(obj => updatePosition(), null, TIMER_INFINITE, TIMER_INFINITE);
             timer.Change(TIMER_INFINITE, TIMER_INFINITE);
 
             playerAlias = "MediaFile";
+            plStatus = PlayerStatus.NoFileOpen;
+            position = 0;
+            left = 0;
         }
 
         private static mp3Control instance;
@@ -51,7 +56,7 @@ namespace DeadDog.Audio.Playback
 
         [DllImport("winmm.dll")]
         private static extern long mciSendString(string lpstrCommand, StringBuilder lpstrReturnString, int uReturnLength, int hwndCallback);
-        
+
         /// <summary>
         /// Loads a new file into this mp3Control
         /// </summary>
@@ -76,11 +81,16 @@ namespace DeadDog.Audio.Playback
                     long err = mciSendString(command, null, 0, 0);
                     long b = 1 + err;
 
-                    //if (!player.OpenFile(file.FullName, TStreamFormat.sfAutodetect))
-                    //    return false;
+                    StringBuilder buffer = new StringBuilder(128);
+                    mciSendString("status " + playerAlias + " length", buffer, 128, 0);
+                    if (buffer.Length == 0)
+                        length = 0;
+                    else
+                        length = uint.Parse(buffer.ToString());
 
                     updateStatus();
                     UpdateVolumes();
+                    timer.Change(0, TIMER_INFINITE);
                     return plStatus != PlayerStatus.NoFileOpen;
                 default:
                     throw new Exception("Unknown PlayerStatus.");
@@ -225,38 +235,28 @@ namespace DeadDog.Audio.Playback
         /// <summary>
         /// Gets the position, in milliseconds, in the currently loaded file.
         /// </summary>
-        public int Position
+        public uint Position
         {
-            get
-            {
-                if (!fileOpen)
-                    return 0;
+            get { return position; }
+        }
+        private void updatePosition()
+        {
+            StringBuilder buffer = new StringBuilder(128);
+            mciSendString("status " + playerAlias + " position", buffer, 128, 0);
+            if (buffer.Length == 0)
+                position = 0;
 
-                StringBuilder buffer = new StringBuilder(128);
-                mciSendString("status " + playerAlias + " position", buffer, 128, 0);
-                if (buffer.Length == 0)
-                    return 0;
-
-                return int.Parse(buffer.ToString());
-            }
+            position = uint.Parse(buffer.ToString());
+            bool endreached = length > 0 && position == length && plStatus == PlayerStatus.Playing;
+            if (PositionChanged != null)
+                PositionChanged(this, new PositionChangedEventArgs(endreached));
         }
         /// <summary>
         /// Gets the length, in milliseconds, of the currently loaded file.
         /// </summary>
-        public int Length
+        public uint Length
         {
-            get
-            {
-                if (!fileOpen)
-                    return 0;
-
-                StringBuilder buffer = new StringBuilder(128);
-                mciSendString("status " + playerAlias + " length", buffer, 128, 0);
-                if (buffer.Length == 0)
-                    return 0;
-
-                return int.Parse(buffer.ToString());
-            }
+            get { return length; }
         }
 
         /// <summary>
@@ -461,20 +461,6 @@ namespace DeadDog.Audio.Playback
         public void SwapLeftRight()
         {
             swapped = !swapped;
-        }
-
-        private void update()
-        {
-            double pos = (double)Position;
-            double total = (double)Length;
-            if (total > 0)
-                percent = ((double)pos) / ((double)total);
-            else
-                percent = 0;
-            if (total > 0 && pos == total && isPlaying && ReachedEnd != null)
-                ReachedEnd(this, EventArgs.Empty);
-            if (Tick != null)
-                Tick(this, EventArgs.Empty);
         }
 
         #region IDisposable Members
