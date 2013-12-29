@@ -28,20 +28,18 @@ namespace DeadDog.Audio.Playback
 
         //todo Recreate without the use of Forms.
         private double percent = 0;
-        private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-        private bool throwTick = false;
+        private int TIMER_INTERVAL = 100;
+        private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
+        private System.Threading.Timer timer;
 
         static mp3Control()
         {
-            staticC = new mp3Control(false);
+            staticC = new mp3Control();
         }
-        private mp3Control(bool throwsTickEvent)
+        private mp3Control()
         {
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = 100;
-            this.throwTick = throwsTickEvent;
-            if (this.throwTick)
-                timer.Start();
+            timer = new System.Threading.Timer(obj => update(), null, TIMER_INFINITE, TIMER_INFINITE);
+            timer.Change(TIMER_INFINITE, TIMER_INFINITE);
 
             playerAlias = "MediaFile";
         }
@@ -514,7 +512,7 @@ namespace DeadDog.Audio.Playback
                     timer.Stop();
             }
         }
-        private void timer_Tick(object sender, EventArgs e)
+        private void update()
         {
             double pos = (double)Position;
             double total = (double)Length;
