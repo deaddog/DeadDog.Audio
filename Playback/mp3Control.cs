@@ -16,8 +16,6 @@ namespace DeadDog.Audio.Playback
     /// </remarks>
     public class mp3Control : IDisposable
     {
-        private static mp3Control staticC;
-
         private string playerAlias;
         private bool isPlaying = false;
         private bool fileOpen = false;
@@ -32,10 +30,6 @@ namespace DeadDog.Audio.Playback
         private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
         private System.Threading.Timer timer;
 
-        static mp3Control()
-        {
-            staticC = new mp3Control();
-        }
         private mp3Control()
         {
             timer = new System.Threading.Timer(obj => update(), null, TIMER_INFINITE, TIMER_INFINITE);
@@ -44,9 +38,15 @@ namespace DeadDog.Audio.Playback
             playerAlias = "MediaFile";
         }
 
-        public static mp3Control StaticControl
+        private static mp3Control instance;
+        public static mp3Control Instance
         {
-            get { return staticC; }
+            get
+            {
+                if (instance == null)
+                    instance = new mp3Control();
+                return instance;
+            }
         }
 
         /// <summary>
