@@ -70,7 +70,7 @@ namespace DeadDog.Audio.Playback
                         return false;
 
                     player.GetStreamInfo(ref info);
-                    plStatus = PlayerStatus.Stopped;
+                    Status = PlayerStatus.Stopped;
                     return true;
                 default:
                     throw new Exception("Unknown PlayerStatus.");
@@ -85,7 +85,7 @@ namespace DeadDog.Audio.Playback
                 Stop(); Stop();
                 if (!player.Close())
                     throw new Exception("AudioControl failed to close file.");
-                plStatus = PlayerStatus.NoFileOpen;
+                Status = PlayerStatus.NoFileOpen;
                 return true;
             }
         }
@@ -100,13 +100,13 @@ namespace DeadDog.Audio.Playback
                 case PlayerStatus.Paused:
                     if (!player.ResumePlayback())
                         throw new Exception("Player failed to resume playback.");
-                    plStatus = PlayerStatus.Playing;
+                    Status = PlayerStatus.Playing;
                     timer.Change(0, TIMER_INTERVAL);
                     return true;
                 case PlayerStatus.Stopped:
                     if (!player.StartPlayback())
                         throw new Exception("Player failed to start playback.");
-                    plStatus = PlayerStatus.Playing;
+                    Status = PlayerStatus.Playing;
                     timer.Change(0, TIMER_INTERVAL);
                     return true;
                 case PlayerStatus.NoFileOpen:
@@ -122,7 +122,7 @@ namespace DeadDog.Audio.Playback
                 case PlayerStatus.Playing:
                     if (!player.PausePlayback())
                         throw new Exception("Player failed to pause playback.");
-                    plStatus = PlayerStatus.Paused;
+                    Status = PlayerStatus.Paused;
                     timer.Change(0, TIMER_INFINITE);
                     return true;
                 case PlayerStatus.Paused:
@@ -143,7 +143,7 @@ namespace DeadDog.Audio.Playback
                 case PlayerStatus.Paused:
                     if (!player.StopPlayback())
                         throw new Exception("Player failed to stop playback.");
-                    plStatus = PlayerStatus.Stopped;
+                    Status = PlayerStatus.Stopped;
                     timer.Change(0, TIMER_INFINITE);
                     return true;
                 case PlayerStatus.Stopped:
@@ -163,7 +163,8 @@ namespace DeadDog.Audio.Playback
                     {
                         TStreamTime seekTime = new TStreamTime() { ms = offset };
                         bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TranslateSeek(origin));
-                        Update();
+                        if (plStatus == PlayerStatus.Paused)
+                            Update();
                         return r;
                     }
                 case PlayerStatus.Stopped:
@@ -190,6 +191,12 @@ namespace DeadDog.Audio.Playback
         public PlayerStatus Status
         {
             get { return plStatus; }
+            private set
+            {
+                plStatus = value;
+                if (StatusChanged != null)
+                    StatusChanged(this, EventArgs.Empty);
+            }
         }
         public uint Position
         {
@@ -210,7 +217,7 @@ namespace DeadDog.Audio.Playback
             if (plStatus == PlayerStatus.Playing && !status.fPlay
                 && Position == 0 && Length > 0)
             {
-                plStatus = PlayerStatus.Stopped;
+                Status = PlayerStatus.Stopped;
                 timer.Change(TIMER_INFINITE, TIMER_INFINITE);
 
                 endreached = true;
@@ -224,7 +231,7 @@ namespace DeadDog.Audio.Playback
         {
             Stop();
             player.Close();
-            plStatus = PlayerStatus.NoFileOpen;
+            Status = PlayerStatus.NoFileOpen;
             this.player = null;
         }
     }
