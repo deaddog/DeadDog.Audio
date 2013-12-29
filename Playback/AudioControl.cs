@@ -126,7 +126,7 @@ namespace DeadDog.Audio.Playback
                     timer.Change(0, TIMER_INFINITE);
                     return true;
                 case PlayerStatus.Paused:
-                    return Play();
+                    return true;
                 case PlayerStatus.Stopped:
                     return false;
                 case PlayerStatus.NoFileOpen:
