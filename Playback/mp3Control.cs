@@ -14,7 +14,7 @@ namespace DeadDog.Audio.Playback
     /// You can find more info about the functionalities of winmm.dll here: http://msdn2.microsoft.com/en-us/library/ms712636.aspx .
     /// The mp3Control includes a System.Windows.Forms.Timer object from the .NET 2.0 framework, though it has no included UI.
     /// </remarks>
-    public class mp3Control : IDisposable
+    public class mp3Control : IPlayback<string>
     {
         private string playerAlias;
         private bool isPlaying = false;
@@ -47,42 +47,8 @@ namespace DeadDog.Audio.Playback
             }
         }
 
-        /// <summary>
-        /// Occurs when the mp3Control starts playback.
-        /// </summary>
-        public event EventHandler Playing;
-        /// <summary>
-        /// Occurs when the mp3Control is paused.
-        /// </summary>
-        public event EventHandler Pausing;
-        /// <summary>
-        /// Occurs when the mp3Control resumes playback.
-        /// </summary>
-        public event EventHandler Resuming;
-        /// <summary>
-        /// Occurs when the mp3Control stops playback.
-        /// </summary>
-        public event EventHandler Stopping;
-        /// <summary>
-        /// Occurs when the mp3Control changes position in the file being played.
-        /// </summary>
-        public event EventHandler Seeking;
-        /// <summary>
-        /// Occurs when a file is loaded into the mp3Control.
-        /// </summary>
-        public event EventHandler Opening;
-        /// <summary>
-        /// Occurs when a file is unloaded from the mp3Control.
-        /// </summary>
-        public event EventHandler Closing;
-        /// <summary>
-        /// Occurs when the playing has reached it's end.
-        /// </summary>
-        public event EventHandler ReachedEnd;
-        /// <summary>
-        /// Occurs when a small portion of the currently playing file has been played. Is therefore not called when the file is paused.
-        /// </summary>
-        public event EventHandler Tick;
+        public event EventHandler StatusChanged;
+        public event PositionChangedEventHandler PositionChanged;
 
         [DllImport("winmm.dll")]
         private static extern long mciSendString(string lpstrCommand, StringBuilder lpstrReturnString, int uReturnLength, int hwndCallback);
