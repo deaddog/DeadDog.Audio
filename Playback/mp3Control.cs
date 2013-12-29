@@ -24,8 +24,6 @@ namespace DeadDog.Audio.Playback
         private int vol = 1000, right = 1000, left = 1000, bass = 1000, treble = 1000;
         private int pubLeft = 1000, pubRight = 1000;
 
-        //todo Recreate without the use of Forms.
-        private double percent = 0;
         private int TIMER_INTERVAL = 100;
         private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
         private System.Threading.Timer timer;
@@ -487,31 +485,6 @@ namespace DeadDog.Audio.Playback
             swapped = !swapped;
         }
 
-        /// <summary>
-        /// Getter of the played percentage of the file.
-        /// </summary>
-        public double PercentPlayed
-        {
-            get
-            {
-                return percent;
-            }
-        }
-
-        public bool ThrowsTickEvent
-        {
-            get { return throwTick; }
-            set
-            {
-                if (value == throwTick)
-                    return;
-                throwTick = value;
-                if (throwTick)
-                    timer.Start();
-                else
-                    timer.Stop();
-            }
-        }
         private void update()
         {
             double pos = (double)Position;
