@@ -165,7 +165,7 @@ namespace DeadDog.Audio.Playback
                 case PlayerStatus.Playing:
                 case PlayerStatus.Paused:
                     mciSendString("stop " + playerAlias, null, 0, 0);
-                    Seek(PlayerSeekOrigin.Begin, false);
+                    Seek(PlayerSeekOrigin.Begin, 0);
                     updateStatus();
                     timer.Change(0, TIMER_INFINITE);
                     return true;
@@ -206,17 +206,6 @@ namespace DeadDog.Audio.Playback
         }
 
         /// <summary>
-        /// Getter of whether or not a file is loaded.
-        /// </summary>
-        public bool FileOpen
-        {
-            get
-            {
-                return fileOpen;
-            }
-        }
-
-        /// <summary>
         /// Gets the position, in milliseconds, in the currently loaded file.
         /// </summary>
         public uint Position
@@ -248,76 +237,56 @@ namespace DeadDog.Audio.Playback
         /// </summary>
         /// <param name="offset">An offset, in milliseconds, relative to the origin parameter.</param>
         /// <param name="origin">A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
-        /// <param name="resumeplayback">A boolean indicating whether or not playback should be resumed.</param>
-        /// <returns>The new position in the audiofile.</returns>
-        public int Seek(int offset, PlayerSeekOrigin origin, bool resumeplayback)
+        /// <returns>true, if the seek operation was succesfull; otherwise, false.</returns>
+        public bool Seek(PlayerSeekOrigin origin, uint offset)
         {
-            int position = this.Position;
-            int length = this.Length;
-            int newP;
+            switch (plStatus)
+            {
+                case PlayerStatus.Playing:
+                case PlayerStatus.Paused:
+                    {
+                        uint seek = translateSeek(origin, offset);
+                        mciSendString("seek " + playerAlias + " to " + seek, null, 0, 0);
+                        if (plStatus == PlayerStatus.Paused)
+                            updatePosition();
+                        return true;
+                    }
+                case PlayerStatus.Stopped:
+                    return false;
+                case PlayerStatus.NoFileOpen:
+                    return false;
+                default:
+                    throw new Exception("Unknown PlayerStatus.");
+            }
+        }
+        private uint translateSeek(PlayerSeekOrigin origin, uint offset)
+        {
+            uint position = this.Position;
+            uint length = this.Length;
+            uint newPosition;
 
             switch (origin)
             {
                 case PlayerSeekOrigin.Begin:
-                    newP = offset;
+                    newPosition = offset;
                     break;
                 case PlayerSeekOrigin.CurrentForwards:
-                    newP = position + offset;
+                    newPosition = position + offset;
+                    break;
+                case PlayerSeekOrigin.CurrentBackwards:
+                    newPosition = position - offset;
                     break;
                 case PlayerSeekOrigin.End:
-                    newP = length + offset;
+                    newPosition = length - offset;
                     break;
                 default:
-                    newP = offset;
-                    break;
+                    throw new ArgumentException("Unknown PlayerSeekOrigin: " + origin, "origin");
             }
 
-            if (newP < 0)
-                newP = 0;
-            if (newP >= length)
-                newP = length - 1;
+            if (newPosition < 0) newPosition = 0;
+            if (newPosition >= length) newPosition = length - 1;
 
-            mciSendString("seek " + playerAlias + " to " + newP, null, 0, 0);
-
-            if (Seeking != null)
-                Seeking(this, EventArgs.Empty);
-
-            if (newP != length && resumeplayback)
-                Resume();
-
-            return newP;
-        }
-        /// <summary>
-        /// Sets the current position in the audiofile.
-        /// </summary>
-        /// <param name="origin">A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
-        /// <returns>The new position in the audiofile, in milliseconds.</returns>
-        /// <param name="resumeplayback">A boolean indicating whether or not playback should be resumed.</param>
-        public int Seek(PlayerSeekOrigin origin, bool resumeplayback)
-        {
-            int newP = 0;
-
-            switch (origin)
-            {
-                case PlayerSeekOrigin.Begin:
-                    newP = 0;
-                    break;
-                case PlayerSeekOrigin.CurrentForwards:
-                    return this.Position;
-                case PlayerSeekOrigin.End:
-                    newP = this.Length;
-                    break;
-            }
-
-            mciSendString("seek " + playerAlias + " to " + newP, null, 0, 0);
-
-            if (Seeking != null)
-                Seeking(this, EventArgs.Empty);
-
-            if (origin != PlayerSeekOrigin.End && resumeplayback)
-                Resume();
-
-            return newP;
+            return newPosition;
         }
 
         /// <summary>
@@ -454,10 +423,9 @@ namespace DeadDog.Audio.Playback
         /// </summary>
         public void Dispose()
         {
-            timer.Stop();
-            timer.Dispose();
             Stop();
-            CloseFile();
+            Close();
+            timer.Dispose();
         }
 
         #endregion
