@@ -17,8 +17,7 @@ namespace DeadDog.Audio.Playback
     public class mp3Control : IPlayback<string>
     {
         private string playerAlias;
-        private bool isPlaying = false;
-        private bool fileOpen = false;
+        private PlayerStatus plStatus;
 
         private bool swapped = false;
         private int vol = 1000, right = 1000, left = 1000, bass = 1000, treble = 1000;
@@ -179,26 +178,28 @@ namespace DeadDog.Audio.Playback
         /// </summary>
         public PlayerStatus Status
         {
-            get
-            {
-                switch (status)
-                {
-                    case "playing": return PlayerStatus.Playing;
-                    case "paused": return PlayerStatus.Paused;
-                    case "stopped": return PlayerStatus.Stopped;
-                    default: return PlayerStatus.NoFileOpen;
-                }
-            }
+            get { return plStatus; }
         }
-        private string status
+        private void updateStatus()
         {
-            get
+            System.Text.StringBuilder buffer = new System.Text.StringBuilder(128);
+            mciSendString("status " + playerAlias + " mode", buffer, 128, 0);
+            string status = buffer.ToString();
+
+            PlayerStatus old = plStatus;
+
+            switch (status)
             {
-                System.Text.StringBuilder buffer = new System.Text.StringBuilder(128);
-                mciSendString("status " + playerAlias + " mode", buffer, 128, 0);
-                return buffer.ToString();
+                case "playing": plStatus = PlayerStatus.Playing; break;
+                case "paused": plStatus = PlayerStatus.Paused; break;
+                case "stopped": plStatus = PlayerStatus.Stopped; break;
+                default: plStatus = PlayerStatus.NoFileOpen; break;
             }
+
+            if (plStatus != old && StatusChanged != null)
+                StatusChanged(this, EventArgs.Empty);
         }
+
         /// <summary>
         /// Getter of whether or not a file is loaded.
         /// </summary>
@@ -219,7 +220,7 @@ namespace DeadDog.Audio.Playback
             {
                 if (!fileOpen)
                     return 0;
-                
+
                 StringBuilder buffer = new StringBuilder(128);
                 mciSendString("status " + playerAlias + " position", buffer, 128, 0);
                 if (buffer.Length == 0)
@@ -246,7 +247,7 @@ namespace DeadDog.Audio.Playback
                 return int.Parse(buffer.ToString());
             }
         }
-        
+
         /// <summary>
         /// Sets the current position in the audiofile.
         /// </summary>
