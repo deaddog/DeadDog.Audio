@@ -42,7 +42,7 @@ namespace DeadDog.Audio.Playback
             this.status = new TStreamStatus();
             this.time = new TStreamTime();
 
-            this.timer = new System.Threading.Timer(obj => Update(), null, 0, 0);
+            this.timer = new System.Threading.Timer(obj => update(), null, 0, 0);
         }
 
         public event EventHandler StatusChanged;
@@ -164,7 +164,7 @@ namespace DeadDog.Audio.Playback
                         TStreamTime seekTime = new TStreamTime() { ms = offset };
                         bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TranslateSeek(origin));
                         if (plStatus == PlayerStatus.Paused)
-                            Update();
+                            update();
                         return r;
                     }
                 case PlayerStatus.Stopped:
@@ -207,7 +207,7 @@ namespace DeadDog.Audio.Playback
             get { return info.Length.ms; }
         }
 
-        private void Update()
+        private void update()
         {
             player.GetStatus(ref status);
             player.GetPosition(ref time);
