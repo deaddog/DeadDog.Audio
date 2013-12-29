@@ -28,8 +28,14 @@ namespace DeadDog.Audio.Playback
         private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
         private System.Threading.Timer timer;
 
-        public AudioControl()
+        private Func<T, string> getFilename;
+
+        public AudioControl(Func<T, string> getFilename)
         {
+            if (getFilename == null)
+                throw new ArgumentNullException("getFilename");
+            this.getFilename = getFilename;
+
             this.player = new ZPlay();
 
             this.info = new TStreamInfo();
@@ -38,9 +44,51 @@ namespace DeadDog.Audio.Playback
 
             this.timer = new System.Threading.Timer(obj => Update(), null, 0, 0);
         }
-        
+
         public event EventHandler StatusChanged;
         public event PositionChangedEventHandler PositionChanged;
+
+        public bool Open(T element)
+        {
+            switch (plStatus)
+            {
+                case PlayerStatus.Playing:
+                case PlayerStatus.Paused:
+                case PlayerStatus.Stopped:
+                    Close();
+                    return Open(element);
+
+                case PlayerStatus.NoFileOpen:
+                    string path = getFilename(element);
+                    if (path == null)
+                        return false;
+                    System.IO.FileInfo file = new System.IO.FileInfo(path);
+
+                    if (!file.Exists)
+                        return false;
+                    if (!player.OpenFile(file.FullName, TStreamFormat.sfAutodetect))
+                        return false;
+
+                    player.GetStreamInfo(ref info);
+                    plStatus = PlayerStatus.Stopped;
+                    return true;
+                default:
+                    throw new Exception("Unknown PlayerStatus.");
+            }
+        }
+        public bool Close()
+        {
+            if (plStatus == PlayerStatus.NoFileOpen)
+                return true;
+            else
+            {
+                Stop(); Stop();
+                if (!player.Close())
+                    throw new Exception("AudioControl failed to close file.");
+                plStatus = PlayerStatus.NoFileOpen;
+                return true;
+            }
+        }
 
         public bool Play()
         {
@@ -73,33 +121,6 @@ namespace DeadDog.Audio.Playback
                     return true;
                 case PlayerStatus.NoFileOpen:
                     return false;
-                default:
-                    return false;
-            }
-        }
-        public bool Play(string filepath)
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                case PlayerStatus.Stopped:
-                    Stop();
-                    if (!player.Close())
-                        throw new Exception("Player failed to close file.");
-                    plStatus = PlayerStatus.NoFileOpen;
-                    return Play(filepath);
-
-                case PlayerStatus.NoFileOpen:
-                    if (!player.OpenFile(filepath, TStreamFormat.sfAutodetect))
-                        throw new Exception("Player failed to open file.");
-                    else
-                    {
-                        player.GetStreamInfo(ref info);
-                        plStatus = PlayerStatus.Stopped;
-                        return Play();
-                    }
-
                 default:
                     return false;
             }
