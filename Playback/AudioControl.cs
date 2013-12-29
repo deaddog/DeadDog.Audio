@@ -96,27 +96,17 @@ namespace DeadDog.Audio.Playback
             {
                 case PlayerStatus.Playing:
                     Seek(PlayerSeekOrigin.Begin, 0);
-                    if (PlaybackStart != null)
-                        PlaybackStart(this, EventArgs.Empty);
                     return true;
                 case PlayerStatus.Paused:
                     if (!player.ResumePlayback())
                         throw new Exception("Player failed to resume playback.");
                     plStatus = PlayerStatus.Playing;
-                    Update();
-                    if (Resumed != null)
-                        Resumed(this, EventArgs.Empty);
-
                     timer.Change(0, TIMER_INTERVAL);
                     return true;
                 case PlayerStatus.Stopped:
                     if (!player.StartPlayback())
                         throw new Exception("Player failed to start playback.");
                     plStatus = PlayerStatus.Playing;
-                    Update();
-                    if (PlaybackStart != null)
-                        PlaybackStart(this, EventArgs.Empty);
-
                     timer.Change(0, TIMER_INTERVAL);
                     return true;
                 case PlayerStatus.NoFileOpen:
@@ -133,10 +123,6 @@ namespace DeadDog.Audio.Playback
                     if (!player.PausePlayback())
                         throw new Exception("Player failed to pause playback.");
                     plStatus = PlayerStatus.Paused;
-                    Update();
-                    if (Paused != null)
-                        Paused(this, EventArgs.Empty);
-
                     timer.Change(0, TIMER_INFINITE);
                     return true;
                 case PlayerStatus.Paused:
@@ -158,10 +144,6 @@ namespace DeadDog.Audio.Playback
                     if (!player.StopPlayback())
                         throw new Exception("Player failed to stop playback.");
                     plStatus = PlayerStatus.Stopped;
-                    Update();
-                    if (Stopped != null)
-                        Stopped(this, EventArgs.Empty);
-
                     timer.Change(0, TIMER_INFINITE);
                     return true;
                 case PlayerStatus.Stopped:
