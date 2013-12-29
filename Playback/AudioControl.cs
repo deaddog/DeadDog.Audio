@@ -82,7 +82,7 @@ namespace DeadDog.Audio.Playback
                 return true;
             else
             {
-                Stop(); Stop();
+                Stop();
                 if (!player.Close())
                     throw new Exception("AudioControl failed to close file.");
                 Status = PlayerStatus.NoFileOpen;
