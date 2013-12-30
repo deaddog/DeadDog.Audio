@@ -101,8 +101,7 @@
     <Compile Include="Playlist\Playlist.cs" />
     <Compile Include="Playlist\PlayQueue[T, Q].cs" />
     <Compile Include="Playlist\PlayQueue[T].cs" />
-    <Compile Include="Playlist\QueueEntry[T, Q].cs" />
-    <Compile Include="Playlist\QueueEntry[T].cs" />
+    <Compile Include="Playlist\QueueEntry.cs" />
     <Compile Include="Playlist\QueueFactory[T, Q].cs" />
     <Compile Include="Playlist\RepeatTypes.cs" />
     <Compile Include="Playlist\RestrictionTypes.cs" />
