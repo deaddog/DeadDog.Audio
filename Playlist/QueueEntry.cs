@@ -22,23 +22,15 @@ namespace DeadDog.Audio
             nextid++;
         }
 
-        public int CompareTo(QueueEntry<T> x)
+        public virtual int CompareTo(QueueEntry<T> x)
         {
             return this.id.CompareTo(x.id);
         }
     }
 
-    public abstract class QueueEntry<T, Q>
+    public class QueueEntry<T, Q> : QueueEntry<T>
     {
-        private static int nextid = 0;
-        private int id;
-        private PlaylistEntry<T> entry;
         private Q queueinfo;
-
-        public PlaylistEntry<T> Entry
-        {
-            get { return entry; }
-        }
 
         public Q QueueInfo
         {
@@ -46,19 +38,9 @@ namespace DeadDog.Audio
         }
 
         public QueueEntry(PlaylistEntry<T> entry, Q queueinfo)
+            :base(entry)
         {
-            this.entry = entry;
             this.queueinfo = queueinfo;
-            this.id = nextid;
-            nextid++;
-        }
-
-        public abstract int CompareTo(QueueEntry<T, Q> x);
-
-        public int CompareByAddedOrder(QueueEntry<T, Q> x)
-        {
-            return this.id.CompareTo(x.id);
         }
     }
-
 }
