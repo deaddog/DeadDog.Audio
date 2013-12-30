@@ -99,8 +99,7 @@
     <Compile Include="Playlist\PlaylistEntry.cs" />
     <Compile Include="Playlist\PlaylistList.cs" />
     <Compile Include="Playlist\Playlist.cs" />
-    <Compile Include="Playlist\PlayQueue[T, Q].cs" />
-    <Compile Include="Playlist\PlayQueue[T].cs" />
+    <Compile Include="Playlist\PlayQueue.cs" />
     <Compile Include="Playlist\QueueEntry.cs" />
     <Compile Include="Playlist\QueueFactory[T, Q].cs" />
     <Compile Include="Playlist\RepeatTypes.cs" />
