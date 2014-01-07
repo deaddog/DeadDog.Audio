@@ -1,4 +1,4 @@
-﻿namespace DeadDog.Audio.Playlist.Interfaces
+﻿namespace DeadDog.Audio
 {
     public interface ISeekablePlaylist<T> : IPlaylist<T>
     {
