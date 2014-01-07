@@ -6,7 +6,7 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public class AlbumPlaylist : IPlaylist<Track>
+    public class AlbumPlaylist : IEnumerablePlaylist<Track>
     {
         private int index;
         private Album album;
@@ -35,6 +35,11 @@ namespace DeadDog.Audio
                 return true;
         }
 
+        public void Reset()
+        {
+            index = -1;
+        }
+
         public bool MoveNext()
         {
             if (index == -2)
@@ -54,7 +59,6 @@ namespace DeadDog.Audio
                 return !TryEntryChanged(false);
             }
         }
-
         public bool MovePrevious()
         {
             if (index == -1)
@@ -75,11 +79,6 @@ namespace DeadDog.Audio
             else
                 return !TryEntryChanged(false);
 
-        }
-
-        public void Reset()
-        {
-            index = -1;
         }
 
         public bool MoveToFirst()
