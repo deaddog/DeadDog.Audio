@@ -15,6 +15,7 @@ namespace DeadDog.Audio
 
         public AlbumPlaylist(Album album)
         {
+            this.index = -1;
             this.album = album;
             entries = new List<PlaylistEntry<Track>>();
 
@@ -172,9 +173,14 @@ namespace DeadDog.Audio
             else
             {
                 this.sort = sort;
-                PlaylistEntry<Track> track = entries[index];
-                sortEntries();
-                index = entries.IndexOf(track);
+                if (index >= 0)
+                {
+                    PlaylistEntry<Track> track = entries[index];
+                    sortEntries();
+                    index = entries.IndexOf(track);
+                }
+                else
+                    sortEntries();
             }
         }
 
