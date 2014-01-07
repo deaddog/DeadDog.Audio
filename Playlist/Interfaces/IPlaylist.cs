@@ -16,7 +16,8 @@ namespace DeadDog.Audio
         /// </summary>
         T Entry { get; }
 
-        event EntryChangedEventHandler<T> EntryChanged;
+        event EventHandler EntryChanged;
+        event EntryChangedEventHandler<T> EntryChanging;
 
         /// <summary>
         /// Moves to the next item in the playlist.

@@ -7,7 +7,8 @@
             get { throw new System.NotImplementedException(); }
         }
 
-        public event EntryChangedEventHandler<T> EntryChanged;
+        public event System.EventHandler EntryChanged;
+        public event EntryChangedEventHandler<T> EntryChanging;
 
         public bool MoveNext()
         {
