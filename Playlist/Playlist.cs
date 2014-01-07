@@ -8,7 +8,7 @@
         }
 
         public event System.EventHandler EntryChanged;
-        public event EntryChangedEventHandler<T> EntryChanging;
+        public event EntryChangingEventHandler<T> EntryChanging;
 
         public bool MoveNext()
         {

@@ -3,17 +3,19 @@
 namespace DeadDog.Audio
 {
     /// <summary>
-    /// Provides data for the <see cref="IPlaylist{T}.EntryChanged"/> event.
+    /// Provides data for the <see cref="IPlaylist{T}.EntryChanging"/> event.
     /// </summary>
-    public class EntryChangedEventArgs : EventArgs
+    public class EntryChangingEventArgs<T> : EventArgs
     {
         private bool rejected;
         private bool canReject;
 
+        private T entry;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntryChangedEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="EntryChangingEventArgs"/> class.
         /// </summary>
-        public EntryChangedEventArgs(bool canReject)
+        public EntryChangingEventArgs(T entry, bool canReject)
         {
             this.rejected = false;
             this.canReject = canReject;
@@ -43,6 +45,14 @@ namespace DeadDog.Audio
         public bool Rejected
         {
             get { return rejected; }
+        }
+
+        /// <summary>
+        /// Gets the new playlist entry. This can be null for reference types.
+        /// </summary>
+        public T NewEntry
+        {
+            get { return entry; }
         }
     }
 }
