@@ -91,6 +91,8 @@
     <Compile Include="Playback\PositionChangedEventHandler.cs" />
     <Compile Include="Playlist\AlbumPlaylist.cs" />
     <Compile Include="Playlist\ArtistPlaylist.cs" />
+    <Compile Include="Playlist\Interfaces\EntryChangedEventArgs.cs" />
+    <Compile Include="Playlist\Interfaces\EntryChangedEventHandler.cs" />
     <Compile Include="Playlist\Interfaces\IPlaylist.cs" />
     <Compile Include="Playlist\Interfaces\IPlayQueue.cs" />
     <Compile Include="Playlist\Interfaces\IQueueList.cs" />
