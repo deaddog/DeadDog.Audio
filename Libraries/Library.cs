@@ -51,6 +51,9 @@ namespace DeadDog.Audio.Libraries
             tracks.Add(t);
             album.Tracks.Add(t);
 
+            if (album.IsUnknown && !artist.IsUnknown)
+                artist.Albums.UnknownAlbum.Tracks.Add(t);
+
             trackDict.Add(track.FullFilename, t);
 
             return t;
