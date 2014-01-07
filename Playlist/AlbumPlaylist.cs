@@ -17,12 +17,9 @@ namespace DeadDog.Audio
             this.album = album;
         }
 
-        public PlaylistEntry<Track> CurrentEntry
+        public Track Entry
         {
-            get
-            {
-                return index < 0 ? null : entries[index];
-            }
+            get { return index < 0 ? null : album.Tracks[index]; }
         }
 
         public bool MoveNext()
