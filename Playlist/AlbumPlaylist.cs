@@ -53,21 +53,6 @@ namespace DeadDog.Audio
 
         }
 
-        public bool MoveRandom()
-        {
-            if (entries.Count > 0)
-            {
-                Random r = new Random();
-                index = r.Next(entries.Count);
-                return true;
-            }
-            else
-            {
-                index = -2;
-                return false;
-            }
-        }
-
         public void Reset()
         {
             index = -1;
