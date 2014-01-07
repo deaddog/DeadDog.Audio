@@ -9,7 +9,7 @@ namespace DeadDog.Audio
     /// Represents a collection of objects that can be iterated through a selection of commands.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IPlaylist<T> : IEnumerable<PlaylistEntry<T>>
+    public interface IPlaylist<T>
     {
         /// <summary>
         /// Gets the currently seleected entry in the playlist.
