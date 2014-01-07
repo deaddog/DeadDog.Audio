@@ -57,17 +57,23 @@ namespace DeadDog.Audio
 
         public bool MovePrevious()
         {
-            if (index == -2)
+            if (index == -1)
                 return false;
 
-            index--;
-            if (index < 0)
-                return true;
+            if (index == -2)
+                index = album.Tracks.Count - 1;
             else
+                index--;
+
+            if (index >= 0)
             {
-                index = -2;
-                return false;
+                if (!TryEntryChanged(true))
+                    return MovePrevious();
+                else
+                    return true;
             }
+            else
+                return !TryEntryChanged(false);
 
         }
 
