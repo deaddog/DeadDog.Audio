@@ -3,7 +3,7 @@
 namespace DeadDog.Audio
 {
     /// <summary>
-    /// Provides data for the <see cref="IPlaylist.EntryChanged"/> event.
+    /// Provides data for the <see cref="IPlaylist{T}.EntryChanged"/> event.
     /// </summary>
     public class EntryChangedEventArgs : EventArgs
     {
