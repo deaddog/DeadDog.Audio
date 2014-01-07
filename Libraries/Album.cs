@@ -62,8 +62,11 @@ namespace DeadDog.Audio.Libraries
 
             if (collection.Count == 1)
             {
-                this.artist = e.Track.Artist;
-                this.artist.Albums.Add(this);
+                if (!this.IsUnknown)
+                {
+                    this.artist = e.Track.Artist;
+                    this.artist.Albums.Add(this);
+                }
             }
             else if (e.Track.Artist != null && e.Track.Artist != this.artist)
             {
