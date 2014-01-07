@@ -8,7 +8,6 @@ namespace DeadDog.Audio
 {
     public class AlbumPlaylist : IPlaylist<Track>
     {
-        private List<PlaylistEntry<Track>> entries;
         private int index;
         private Album album;
 
@@ -16,44 +15,6 @@ namespace DeadDog.Audio
         {
             this.index = -1;
             this.album = album;
-            entries = new List<PlaylistEntry<Track>>();
-
-            foreach (var track in album.Tracks)
-            {
-                entries.Add(new PlaylistEntry<Track>(track));
-            }
-
-            this.album.Tracks.TrackAdded += new TrackEventHandler(Tracks_TrackAdded);
-            this.album.Tracks.TrackRemoved += new TrackEventHandler(Tracks_TrackRemoved);
-        }
-
-        void Tracks_TrackAdded(Track.TrackCollection collection, TrackEventArgs e)
-        {
-            int i = entries.BinarySearch(e.Track, sort, x => x.Track);
-            if (i >= 0 && entries[i].Track == e.Track)
-                throw new ArgumentException("A playlist cannot contain the same track twice");
-            else if (i < 0)
-                i = ~i;
-
-            entries.Insert(i, new PlaylistEntry<Track>(e.Track));
-            if (i <= index)
-                index++;
-        }
-
-        void Tracks_TrackRemoved(Track.TrackCollection collection, TrackEventArgs e)
-        {
-            int i = entries.BinarySearch(e.Track, sort, x => x.Track);
-            if (i >= 0)
-            {
-                entries.RemoveAt(i);
-                if (i < index)
-                    index--;
-                else if (index >= entries.Count)
-                    index = -2;
-               
-            }
-            else throw new ArgumentException("Playlist did not contain the track");
-
         }
 
         public PlaylistEntry<Track> CurrentEntry
