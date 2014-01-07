@@ -8,31 +8,11 @@ namespace DeadDog.Audio
 {
     public class AlbumPlaylist : IEnumerablePlaylist<Track>
     {
-        private int index;
         private Album album;
 
         public AlbumPlaylist(Album album)
         {
-            this.index = -1;
             this.album = album;
-        }
-
-        public Track Entry
-        {
-            get { return index < 0 ? null : album.Tracks[index]; }
-        }
-
-        public event EntryChangedEventHandler<Track> EntryChanged;
-        private bool TryEntryChanged(bool canReject)
-        {
-            if (EntryChanged != null)
-            {
-                EntryChangedEventArgs e = new EntryChangedEventArgs(canReject);
-                EntryChanged(this, e);
-                return !e.Rejected;
-            }
-            else
-                return true;
         }
 
         public void Reset()
