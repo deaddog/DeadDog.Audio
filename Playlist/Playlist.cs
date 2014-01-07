@@ -33,14 +33,8 @@
             return true;
         }
 
-        public bool MoveNext()
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract bool MoveNext();
 
-        public void Reset()
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract void Reset();
     }
 }
