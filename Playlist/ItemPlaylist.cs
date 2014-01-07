@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeadDog.Audio
 {
-    public class Playlist<T> : IPlaylist<T>, IList<PlaylistEntry<T>>
+    public class ItemPlaylist<T> : IPlaylist<T>, IList<PlaylistEntry<T>>
     {
         private List<PlaylistEntry<T>> entries;
         private int index = -1;
@@ -18,7 +18,7 @@ namespace DeadDog.Audio
             get { return index; }
         }
 
-        public Playlist()
+        public ItemPlaylist()
         {
             this.entries = new List<PlaylistEntry<T>>();
         }
