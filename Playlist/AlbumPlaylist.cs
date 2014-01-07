@@ -22,6 +22,19 @@ namespace DeadDog.Audio
             get { return index < 0 ? null : album.Tracks[index]; }
         }
 
+        public event EntryChangedEventHandler<Track> EntryChanged;
+        private bool TryEntryChanged(bool canReject)
+        {
+            if (EntryChanged != null)
+            {
+                EntryChangedEventArgs e = new EntryChangedEventArgs(canReject);
+                EntryChanged(this, e);
+                return !e.Rejected;
+            }
+            else
+                return true;
+        }
+
         public bool MoveNext()
         {
             if (index == -2)
