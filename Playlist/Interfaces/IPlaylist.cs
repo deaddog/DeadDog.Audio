@@ -26,21 +26,7 @@ namespace DeadDog.Audio
         /// </summary>
         /// <returns>true, if the move was successful; otherwise false.</returns>
         bool MoveNext();
-        /// <summary>
-        /// Moves to the previous item in the playlist.
-        /// </summary>
-        /// <returns>true, if the move was successful; otherwise false.</returns>
-        bool MovePrevious();
-        /// <summary>
-        /// Moves to a random item in the playlist.
-        /// </summary>
-        /// <returns>true, if the move was successful; otherwise false.</returns>
-        bool MoveRandom();
 
-        bool MoveToFirst();
-        bool MoveToLast();
-
-        bool MoveToEntry(PlaylistEntry<T> entry);
         bool Contains(PlaylistEntry<T> entry);
 
         /// <summary>
