@@ -71,6 +71,17 @@ namespace DeadDog.Audio.Libraries
             list.Insert(index, element);
         }
 
+        public int IndexOf(T element)
+        {
+            int index = list.BinarySearch(element, Compare);
+            return index < 0 ? -1 : index;
+        }
+        public int IndexOf(string name)
+        {
+            int index = list.BinarySearch(name, string.Compare, GetName);
+            return index < 0 ? -1 : index;
+        }
+
         protected abstract void OnAdded(T element);
         protected abstract void OnRemoved(T element);
 
