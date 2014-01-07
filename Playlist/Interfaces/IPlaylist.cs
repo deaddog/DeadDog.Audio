@@ -12,12 +12,9 @@ namespace DeadDog.Audio
     public interface IPlaylist<T> : IEnumerable<PlaylistEntry<T>>
     {
         /// <summary>
-        /// Gets the currently selected <see cref="PlaylistEntry{T}"/>.
+        /// Gets the currently seleected entry in the playlist.
         /// </summary>
-        /// <value>
-        /// The currently selected <see cref="PlaylistEntry{T}"/>.
-        /// </value>
-        PlaylistEntry<T> CurrentEntry { get; }
+        T Entry { get; }
 
         event EntryChangedEventHandler EntryChanged;
 
