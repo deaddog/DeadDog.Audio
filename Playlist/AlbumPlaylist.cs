@@ -11,7 +11,6 @@ namespace DeadDog.Audio
         private List<PlaylistEntry<Track>> entries;
         private int index;
         private Album album;
-        private Comparison<Track> sort;
 
         public AlbumPlaylist(Album album)
         {
@@ -26,8 +25,6 @@ namespace DeadDog.Audio
 
             this.album.Tracks.TrackAdded += new TrackEventHandler(Tracks_TrackAdded);
             this.album.Tracks.TrackRemoved += new TrackEventHandler(Tracks_TrackRemoved);
-
-            SetSortMethod(DefaultSort);
         }
 
         void Tracks_TrackAdded(Track.TrackCollection collection, TrackEventArgs e)
@@ -164,43 +161,6 @@ namespace DeadDog.Audio
             if (entries.Contains(entry))
                 return true;
             else return false;
-        }
-
-        public void SetSortMethod(Comparison<Track> sort)
-        {
-            if (sort == null)
-                throw new ArgumentNullException("Sortmethod cannot be null. Consider setting to the DefaultSort Method");
-            else
-            {
-                this.sort = sort;
-                if (index >= 0)
-                {
-                    PlaylistEntry<Track> track = entries[index];
-                    sortEntries();
-                    index = entries.IndexOf(track);
-                }
-                else
-                    sortEntries();
-            }
-        }
-
-        private void sortEntries()
-        {
-            entries.Sort((x, y) => sort(x.Track, y.Track));
-        }
-
-        public static Comparison<Track> DefaultSort
-        {
-            get { return Compare; }
-        }
-
-        private static int Compare(Track element1, Track element2)
-        {
-            int? v1 = element1.Tracknumber, v2 = element2.Tracknumber;
-            if (v1.HasValue)
-                return v2.HasValue ? v1.Value.CompareTo(v2.Value) : 1;
-            else
-                return v2.HasValue ? -1 : 0;
         }
 
         #region IEnumerable<PlaylistEntry<Track>> Members
