@@ -24,8 +24,6 @@ namespace DeadDog.Audio
         /// <returns>true, if the move was successful; otherwise false.</returns>
         bool MoveNext();
 
-        bool Contains(PlaylistEntry<T> entry);
-
         /// <summary>
         /// Resets the playlist.
         /// </summary>
