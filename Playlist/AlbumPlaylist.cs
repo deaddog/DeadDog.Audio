@@ -41,12 +41,17 @@ namespace DeadDog.Audio
                 return false;
 
             index++;
-            if (index < entries.Count)
-                return true;
+            if (index < album.Tracks.Count)
+            {
+                if (!TryEntryChanged(true))
+                    return MoveNext();
+                else
+                    return true;
+            }
             else
             {
                 index = -2;
-                return false;
+                return !TryEntryChanged(false);
             }
         }
 
