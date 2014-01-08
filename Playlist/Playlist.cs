@@ -7,6 +7,13 @@
         public T Entry
         {
             get { return entry; }
+            protected set
+            {
+                this.entry = value;
+
+                if (EntryChanged != null)
+                    EntryChanged(this, System.EventArgs.Empty);
+            }
         }
 
         public Playlist()
@@ -17,19 +24,17 @@
         public event System.EventHandler EntryChanged;
         public event EntryChangingEventHandler<T> EntryChanging;
 
-        protected bool trySettingEntry(T entry, bool canReject)
+        protected bool trySettingEntry(T entry)
         {
             if (EntryChanging != null)
             {
-                EntryChangingEventArgs<T> e = new EntryChangingEventArgs<T>(entry, canReject);
+                EntryChangingEventArgs<T> e = new EntryChangingEventArgs<T>(entry);
                 EntryChanging(this, e);
                 if (e.Rejected)
                     return false;
             }
 
-            this.entry = entry;
-            if (EntryChanged != null)
-                EntryChanged(this, System.EventArgs.Empty);
+            this.Entry = entry;
             return true;
         }
 

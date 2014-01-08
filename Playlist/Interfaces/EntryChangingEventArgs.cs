@@ -8,32 +8,24 @@ namespace DeadDog.Audio
     public class EntryChangingEventArgs<T> : EventArgs
     {
         private bool rejected;
-        private bool canReject;
 
         private T entry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EntryChangingEventArgs"/> class.
         /// </summary>
-        public EntryChangingEventArgs(T entry, bool canReject)
+        public EntryChangingEventArgs(T entry)
         {
             this.rejected = false;
-            this.canReject = canReject;
         }
 
         /// <summary>
         /// Attempts to reject the entry change.
         /// </summary>
         /// <returns><c>true</c> if the entry change could be rejected; otherwise, <c>false</c>.</returns>
-        public bool RejectChange()
+        public void RejectChange()
         {
-            if (rejected)
-                return true;
-
-            if (canReject)
-                rejected = true;
-
-            return rejected;
+            rejected = true;
         }
 
         /// <summary>
