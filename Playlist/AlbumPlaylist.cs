@@ -15,14 +15,11 @@ namespace DeadDog.Audio
 
         public AlbumPlaylist(Album album)
         {
-            this.index = -1;
             this.album = album;
             entries = new List<PlaylistEntry<Track>>();
 
             foreach (var track in album.Tracks)
-            {
                 entries.Add(new PlaylistEntry<Track>(track));
-            }
 
             this.album.Tracks.TrackAdded += new TrackEventHandler(Tracks_TrackAdded);
             this.album.Tracks.TrackRemoved += new TrackEventHandler(Tracks_TrackRemoved);
