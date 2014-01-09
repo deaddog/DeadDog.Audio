@@ -26,6 +26,12 @@ namespace DeadDog.Audio
         event EntryChangingEventHandler<T> EntryChanging;
 
         /// <summary>
+        /// Moves to the next item in the playlist.
+        /// </summary>
+        /// <returns>true, if the move was successful; otherwise false.</returns>
+        bool MoveNext();
+
+        /// <summary>
         /// Resets the playlist.
         /// </summary>
         void Reset();

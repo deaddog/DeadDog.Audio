@@ -39,5 +39,7 @@
         }
 
         public abstract void Reset();
+
+        public abstract bool MoveNext();
     }
 }

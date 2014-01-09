@@ -62,7 +62,7 @@ namespace DeadDog.Audio
                 throw new ArgumentException("Playlist did not contain the track");
         }
 
-        public bool MoveNext()
+        public override bool MoveNext()
         {
             if (index == -2)
                 return false;
