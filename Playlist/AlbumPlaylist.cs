@@ -8,6 +8,10 @@ namespace DeadDog.Audio
 {
     public class AlbumPlaylist : Playlist<Track>, IEnumerablePlaylist<Track>
     {
+        /// <summary>
+        /// Determines if the playlist, when pointing to null is pointing in front of the tracklist.
+        /// </summary>
+        private bool initial;
         private Album album;
 
         public AlbumPlaylist(Album album)
@@ -17,47 +21,53 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            index = -1;
+            if (Entry != null)
+                Entry = null;
+            initial = true;
         }
 
         public bool MoveNext()
         {
-            if (index == -2)
+            int index = Entry == null ? -1 : album.Tracks.IndexOf(Entry);
+            int nextIndex = index == -1 ? (initial ? 0 : -1) : index + 1;
+
+            if (index == -1 && nextIndex == -1)
                 return false;
 
-            index++;
-            if (index < album.Tracks.Count)
+            if (nextIndex < album.Tracks.Count)
             {
-                if (!TryEntryChanged(true))
+                if (!trySettingEntry(album.Tracks[nextIndex]))
                     return MoveNext();
                 else
                     return true;
             }
             else
             {
-                index = -2;
-                return !TryEntryChanged(false);
+                Entry = null;
+                return false;
             }
         }
         public bool MovePrevious()
         {
-            if (index == -1)
+            int index = Entry == null ? -1 : album.Tracks.IndexOf(Entry);
+            int nextIndex = index == -1 ? (initial ? -1 : album.Tracks.Count - 1) : index - 1;
+
+            if (index == -1 && nextIndex == -1)
                 return false;
 
-            if (index == -2)
-                index = album.Tracks.Count - 1;
-            else
-                index--;
-
-            if (index >= 0)
+            if (nextIndex >= 0)
             {
-                if (!TryEntryChanged(true))
+                if (!trySettingEntry(album.Tracks[nextIndex]))
                     return MovePrevious();
                 else
                     return true;
             }
             else
-                return !TryEntryChanged(false);
+            {
+                Entry = null;
+                initial = true;
+                return false;
+            }
 
         }
 
