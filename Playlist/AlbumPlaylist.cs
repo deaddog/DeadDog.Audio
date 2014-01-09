@@ -46,7 +46,6 @@ namespace DeadDog.Audio
             if (i <= index)
                 index++;
         }
-
         void Tracks_TrackRemoved(Track.TrackCollection collection, TrackEventArgs e)
         {
             int i = entries.BinarySearch(e.Track, sort);
@@ -55,9 +54,9 @@ namespace DeadDog.Audio
                 entries.RemoveAt(i);
                 if (i < index)
                     index--;
-                else if (index >= entries.Count)
-                    index = -2;
-               
+                else if (i == index)
+                    if (!trySettingEntry(entries[index]))
+                        MoveNext();
             }
             else
                 throw new ArgumentException("Playlist did not contain the track");
