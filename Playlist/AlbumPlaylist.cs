@@ -6,7 +6,7 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public class AlbumPlaylist : Playlist<Track>, IEnumerablePlaylist<Track>
+    public class AlbumPlaylist : Playlist<Track>, IEnumerablePlaylist<Track>, ISeekablePlaylist<Track>
     {
         private List<Track> entries;
         private int index;
