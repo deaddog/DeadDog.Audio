@@ -30,6 +30,13 @@ namespace DeadDog.Audio
             SetSortMethod(DefaultSort);
         }
 
+        public void Reset()
+        {
+            if (Entry != null)
+                Entry = null;
+            index = -1;
+        }
+
         void Tracks_TrackAdded(Track.TrackCollection collection, TrackEventArgs e)
         {
             int i = entries.BinarySearch(e.Track, sort, x => x.Track);
@@ -96,11 +103,6 @@ namespace DeadDog.Audio
                 return false;
             }
 
-        }
-
-        public void Reset()
-        {
-            index = -1;
         }
 
         public bool MoveToFirst()
