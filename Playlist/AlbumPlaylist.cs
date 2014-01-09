@@ -139,11 +139,15 @@ namespace DeadDog.Audio
             if (entries.Contains(entry))
             {
                 index = entries.IndexOf(entry);
+                if (Entry != entry)
+                    Entry = entry;
                 return true;
             }
             else
             {
                 index = -2;
+                if (Entry != null)
+                    Entry = null;
                 return false;
             }
 
