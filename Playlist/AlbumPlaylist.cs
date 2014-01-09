@@ -27,7 +27,7 @@ namespace DeadDog.Audio
             SetSortMethod(DefaultSort);
         }
 
-        public void Reset()
+        public override void Reset()
         {
             if (Entry != null)
                 Entry = null;
