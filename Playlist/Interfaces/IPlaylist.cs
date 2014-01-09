@@ -6,17 +6,23 @@ using System.Text;
 namespace DeadDog.Audio
 {
     /// <summary>
-    /// Represents a collection of objects that can be iterated through a selection of commands.
+    /// Represents a collection of objects of which the currently active one is retrieveable through a property.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of elements in the playlist.</typeparam>
     public interface IPlaylist<T>
     {
         /// <summary>
-        /// Gets the currently seleected entry in the playlist.
+        /// Gets the currently selected entry in the playlist.
         /// </summary>
         T Entry { get; }
-
+        
+        /// <summary>
+        /// Occurs after the <see cref="Entry"/> property is changed.
+        /// </summary>
         event EventHandler EntryChanged;
+        /// <summary>
+        /// Occurs before the <see cref="Entry"/> property is changed.
+        /// </summary>
         event EntryChangingEventHandler<T> EntryChanging;
 
         /// <summary>
