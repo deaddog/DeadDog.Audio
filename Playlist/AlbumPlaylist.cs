@@ -8,7 +8,7 @@ namespace DeadDog.Audio
 {
     public class AlbumPlaylist : Playlist<Track>, IEnumerablePlaylist<Track>
     {
-        private List<PlaylistEntry<Track>> entries;
+        private List<Track> entries;
         private int index;
         private Album album;
         private Comparison<Track> sort;
@@ -16,10 +16,10 @@ namespace DeadDog.Audio
         public AlbumPlaylist(Album album)
         {
             this.album = album;
-            entries = new List<PlaylistEntry<Track>>();
+            entries = new List<Track>();
 
             foreach (var track in album.Tracks)
-                entries.Add(new PlaylistEntry<Track>(track));
+                entries.Add(track);
 
             this.album.Tracks.TrackAdded += new TrackEventHandler(Tracks_TrackAdded);
             this.album.Tracks.TrackRemoved += new TrackEventHandler(Tracks_TrackRemoved);
@@ -36,20 +36,20 @@ namespace DeadDog.Audio
 
         void Tracks_TrackAdded(Track.TrackCollection collection, TrackEventArgs e)
         {
-            int i = entries.BinarySearch(e.Track, sort, x => x.Track);
-            if (i >= 0 && entries[i].Track == e.Track)
+            int i = entries.BinarySearch(e.Track, sort);
+            if (i >= 0 && entries[i] == e.Track)
                 throw new ArgumentException("A playlist cannot contain the same track twice");
             else if (i < 0)
                 i = ~i;
 
-            entries.Insert(i, new PlaylistEntry<Track>(e.Track));
+            entries.Insert(i, e.Track);
             if (i <= index)
                 index++;
         }
 
         void Tracks_TrackRemoved(Track.TrackCollection collection, TrackEventArgs e)
         {
-            int i = entries.BinarySearch(e.Track, sort, x => x.Track);
+            int i = entries.BinarySearch(e.Track, sort);
             if (i >= 0)
             {
                 entries.RemoveAt(i);
@@ -59,8 +59,8 @@ namespace DeadDog.Audio
                     index = -2;
                
             }
-            else throw new ArgumentException("Playlist did not contain the track");
-
+            else
+                throw new ArgumentException("Playlist did not contain the track");
         }
 
         public bool MoveNext()
@@ -120,7 +120,7 @@ namespace DeadDog.Audio
             }
         }
 
-        public bool MoveToEntry(PlaylistEntry<Track> entry)
+        public bool MoveToEntry(Track entry)
         {
             if (entries.Contains(entry))
             {
@@ -135,7 +135,7 @@ namespace DeadDog.Audio
 
         }
 
-        public bool Contains(PlaylistEntry<Track> entry)
+        public bool Contains(Track entry)
         {
             if (entries.Contains(entry))
                 return true;
@@ -151,18 +151,13 @@ namespace DeadDog.Audio
                 this.sort = sort;
                 if (index >= 0)
                 {
-                    PlaylistEntry<Track> track = entries[index];
-                    sortEntries();
+                    Track track = entries[index];
+                    entries.Sort(sort);
                     index = entries.IndexOf(track);
                 }
                 else
-                    sortEntries();
+                    entries.Sort(sort);
             }
-        }
-
-        private void sortEntries()
-        {
-            entries.Sort((x, y) => sort(x.Track, y.Track));
         }
 
         public static Comparison<Track> DefaultSort
