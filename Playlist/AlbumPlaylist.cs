@@ -137,9 +137,7 @@ namespace DeadDog.Audio
 
         public bool Contains(Track entry)
         {
-            if (entries.Contains(entry))
-                return true;
-            else return false;
+            return entries.Contains(entry);
         }
 
         public void SetSortMethod(Comparison<Track> sort)
