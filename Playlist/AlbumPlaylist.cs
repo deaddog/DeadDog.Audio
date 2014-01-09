@@ -69,25 +69,38 @@ namespace DeadDog.Audio
 
             index++;
             if (index < entries.Count)
-                return true;
+            {
+                if (trySettingEntry(entries[index]))
+                    return true;
+                else
+                    return MoveNext();
+            }
             else
             {
                 index = -2;
+                if (Entry != null)
+                    Entry = null;
                 return false;
             }
         }
-
         public bool MovePrevious()
         {
-            if (index == -2)
+            if (index == -1)
                 return false;
 
-            index--;
-            if (index < 0)
-                return true;
+            index = index == -2 ? entries.Count - 1 : index - 1;
+            if (index >= 0)
+            {
+                if (trySettingEntry(entries[index]))
+                    return true;
+                else
+                    return MovePrevious();
+            }
             else
             {
-                index = -2;
+                index = -1;
+                if (Entry != null)
+                    Entry = null;
                 return false;
             }
 
@@ -97,24 +110,26 @@ namespace DeadDog.Audio
         {
             if (entries.Count == 0)
                 return false;
+            else if (index == 0)
+                return true;
             else
             {
                 index = 0;
+                Entry = entries[index];
                 return true;
             }
 
         }
-
         public bool MoveToLast()
         {
             if (entries.Count == 0)
-            {
-                index = -2;
                 return false;
-            }
+            else if (index == entries.Count - 1)
+                return true;
             else
             {
                 index = entries.Count;
+                Entry = entries[index];
                 return true;
             }
         }
