@@ -38,8 +38,6 @@
             return true;
         }
 
-        public abstract bool MoveNext();
-
         public abstract void Reset();
     }
 }
