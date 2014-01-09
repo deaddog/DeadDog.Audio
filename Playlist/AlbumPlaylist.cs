@@ -192,7 +192,7 @@ namespace DeadDog.Audio
 
         #region IEnumerable<PlaylistEntry<Track>> Members
 
-        IEnumerator<PlaylistEntry<Track>> IEnumerable<PlaylistEntry<Track>>.GetEnumerator()
+        IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
         {
             return entries.GetEnumerator();
         }
