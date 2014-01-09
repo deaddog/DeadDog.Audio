@@ -66,14 +66,6 @@ namespace DeadDog.Audio
 
         }
 
-        public PlaylistEntry<Track> CurrentEntry
-        {
-            get
-            {
-                return index < 0 ? null : entries[index];
-            }
-        }
-
         public bool MoveNext()
         {
             if (index == -2)
