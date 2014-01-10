@@ -6,7 +6,7 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public abstract class PlaylistCollection<T> : IPlaylist<T>
+    public abstract class PlaylistCollection<T> : Playlist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>
     {
         private List<IPlaylist<T>> playlists;
         private int index = -1;
@@ -33,11 +33,6 @@ namespace DeadDog.Audio
                 if (current != null)
                     index = playlists.IndexOf(current);
             }
-        }
-
-        public PlaylistEntry<T> CurrentEntry
-        {
-            get { return index < 0 ? null : playlists[index].CurrentEntry; }
         }
 
         public bool MoveNext()
