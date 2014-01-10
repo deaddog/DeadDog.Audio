@@ -11,28 +11,9 @@ namespace DeadDog.Audio
         private List<IPlaylist<T>> playlists;
         private int index = -1;
 
-        private bool isSorted = false;
-        private Comparison<IPlaylist<T>> sortMethod = null;
-
         public PlaylistCollection()
         {
             this.playlists = new List<IPlaylist<T>>();
-        }
-
-        protected void setSortMethod(Comparison<IPlaylist<T>> method)
-        {
-            if (method == null)
-                throw new ArgumentNullException("Sort method cannot be null.");
-            else
-            {
-                this.isSorted = true;
-                this.sortMethod = method;
-
-                IPlaylist<T> current = index >= 0 ? playlists[index] : null;
-                playlists.Sort(this.sortMethod);
-                if (current != null)
-                    index = playlists.IndexOf(current);
-            }
         }
 
         public bool MoveNext()
