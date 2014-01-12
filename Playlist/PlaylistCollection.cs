@@ -139,6 +139,12 @@ namespace DeadDog.Audio
             get { return playlists.Count; }
         }
 
+        public IPlaylist<T> this[int index]
+        {
+            get { return playlists[index]; }
+            set { throw new NotImplementedException(); }
+        }
+
         protected IPlaylist<T> getPlaylist(int index)
         {
             return playlists[index];
