@@ -115,25 +115,6 @@ namespace DeadDog.Audio
 
             throw new NotImplementedException();
         }
-        public bool MoveRandom()
-        {
-            Random rnd = new Random();
-            List<IPlaylist<T>> temp = new List<IPlaylist<T>>(playlists);
-
-            while (temp.Count > 0)
-            {
-                int i = rnd.Next(temp.Count);
-                if (temp[i].MoveRandom())
-                {
-                    index = i;
-                    return true;
-                }
-                else
-                    temp.RemoveAt(i);
-            }
-            index = -2;
-            return false;
-        }
 
         public bool MoveToFirst()
         {
