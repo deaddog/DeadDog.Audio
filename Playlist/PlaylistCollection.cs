@@ -134,7 +134,7 @@ namespace DeadDog.Audio
             throw new NotImplementedException();
         }
 
-        protected int count
+        public int Count
         {
             get { return playlists.Count; }
         }
@@ -145,11 +145,11 @@ namespace DeadDog.Audio
             set { throw new NotImplementedException(); }
         }
 
-        protected bool contains(IPlaylist<T> playlist)
+        public bool Contains(IPlaylist<T> playlist)
         {
             return playlists.Contains(playlist);
         }
-        protected bool move(IPlaylist<T> playlist, int index)
+        public bool Move(IPlaylist<T> playlist, int index)
         {
             int i = playlists.IndexOf(playlist);
 
