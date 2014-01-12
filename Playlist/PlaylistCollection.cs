@@ -6,15 +6,66 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public abstract class PlaylistCollection<T> : Playlist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>
+    public abstract class PlaylistCollection<T> : IPlaylist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>
         where T : class
     {
         private List<IPlaylist<T>> playlists;
-        private int index = -1;
+        private IPlaylist<T> currentList;
+        private int _index;
+        private int index
+        {
+            get { return _index; }
+            set
+            {
+                _index = value;
+
+                IPlaylist<T> newList;
+                if (value < 0)
+                    newList = null;
+                else
+                    newList = playlists[value];
+
+                if (currentList != null)
+                {
+                    currentList.EntryChanging -= list_EntryChanging;
+                    currentList.EntryChanged -= list_EntryChanged;
+                }
+                if (newList != null)
+                {
+                    newList.EntryChanging -= list_EntryChanging;
+                    newList.EntryChanged -= list_EntryChanged;
+                }
+                currentList = newList;
+            }
+        }
+
+        private void list_EntryChanging(IPlaylist<T> sender, EntryChangingEventArgs<T> e)
+        {
+            if (EntryChanging != null)
+                EntryChanging(this, e);
+        }
+        private void list_EntryChanged(object sender, EventArgs e)
+        {
+            if (EntryChanged != null)
+                EntryChanged(this, e);
+        }
 
         public PlaylistCollection()
         {
             this.playlists = new List<IPlaylist<T>>();
+        }
+
+        public T Entry
+        {
+            get { return currentList == null ? null : currentList.Entry; }
+        }
+
+        public event EventHandler EntryChanged;
+        public event EntryChangingEventHandler<T> EntryChanging;
+
+        public void Reset()
+        {
+            index = -1;
         }
 
         public bool MoveNext()
@@ -149,11 +200,6 @@ namespace DeadDog.Audio
                 if (playlists[i].Contains(entry))
                     return true;
             return false;
-        }
-
-        public void Reset()
-        {
-            index = -1;
         }
 
         protected int count
