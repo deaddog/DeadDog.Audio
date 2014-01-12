@@ -87,39 +87,33 @@ namespace DeadDog.Audio
             {
                 index++;
                 if (index >= playlists.Count)
-                {
                     index = -2;
-                    return false;
-                }
-                playlists[index].Reset();
+                else
+                    playlists[index].Reset();
                 return MoveNext();
             }
             return true;
         }
         public bool MovePrevious()
         {
-            if (index == -2)
+            if (index == -1)
                 return false;
 
-            if (playlists.Count == 0 || index == -1)
+            else if (playlists.Count == 0)
             {
-                index = -2;
+                index = -1;
                 return false;
             }
-
-            if (!playlists[index].MovePrevious())
+            else if (index == -2)
             {
-                index--;
-                if (index < 0)
-                {
-                    index = -2;
-                    return false;
-                }
+                index = playlists.Count - 1;
                 playlists[index].Reset();
-                if (!playlists[index].MoveToLast())
-                    return MovePrevious();
             }
-            return true;
+
+            if (!(playlists[index] is IEnumerablePlaylist<T>))
+                throw new InvalidOperationException("Cannot perform MovePrevious, as inner playlist does not implement IEnumerablePlaylist.");
+
+            throw new NotImplementedException();
         }
         public bool MoveRandom()
         {
@@ -143,63 +137,20 @@ namespace DeadDog.Audio
 
         public bool MoveToFirst()
         {
-            if (playlists.Count == 0)
-            {
-                index = -2;
-                return false;
-            }
-
-            index = 0;
-            while (!playlists[index].MoveToFirst())
-            {
-                index++;
-                if (index >= playlists.Count)
-                {
-                    index = -2;
-                    return false;
-                }
-            }
-            return true;
+            throw new NotImplementedException();
         }
         public bool MoveToLast()
         {
-            if (playlists.Count == 0)
-            {
-                index = -2;
-                return false;
-            }
-
-            index = playlists.Count - 1;
-            while (!playlists[index].MoveToLast())
-            {
-                index--;
-                if (index < 0)
-                {
-                    index = -2;
-                    return false;
-                }
-            }
-            return true;
+            throw new NotImplementedException();
         }
         public bool MoveToEntry(PlaylistEntry<T> entry)
         {
-            for (int i = 0; i < playlists.Count; i++)
-                if (playlists[i].MoveToEntry(entry))
-                {
-                    index = i;
-                    return true;
-                }
-
-            index = -2;
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool Contains(PlaylistEntry<T> entry)
         {
-            for (int i = 0; i < playlists.Count; i++)
-                if (playlists[i].Contains(entry))
-                    return true;
-            return false;
+            throw new NotImplementedException();
         }
 
         protected int count
