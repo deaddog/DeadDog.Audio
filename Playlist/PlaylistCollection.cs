@@ -145,10 +145,6 @@ namespace DeadDog.Audio
             set { throw new NotImplementedException(); }
         }
 
-        protected IPlaylist<T> getPlaylist(int index)
-        {
-            return playlists[index];
-        }
         protected bool contains(IPlaylist<T> playlist)
         {
             return playlists.Contains(playlist);
@@ -170,24 +166,13 @@ namespace DeadDog.Audio
             return true;
         }
 
-        protected void addPlaylist(IPlaylist<T> playlist)
+        public void Insert(int index, IPlaylist<T> playlist)
         {
-            if (isSorted)
-            {
-                int i = playlists.BinarySearch(playlist, sortMethod);
-                if (i >= 0 && playlists[i] == playlist)
-                    throw new ArgumentException("A playlist cannot contain the same playlist twice.");
-                else if (i < 0)
-                    i = ~i;
-
-                this.playlists.Insert(i, playlist);
-                if (i <= index)
-                    index++;
-            }
-            else
-                this.playlists.Add(playlist);
+            playlists.Insert(index, playlist);
+            if (index <= this.index)
+                this.index++;
         }
-        protected bool removePlaylist(IPlaylist<T> playlist)
+        public bool Remove(IPlaylist<T> playlist)
         {
             bool removed = this.playlists.Remove(playlist);
             if (index >= playlists.Count)
