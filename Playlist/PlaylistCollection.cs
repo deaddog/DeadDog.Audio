@@ -184,10 +184,14 @@ namespace DeadDog.Audio
 
         #region IEnumerable<T> Members
 
-        IEnumerator<PlaylistEntry<T>> IEnumerable<PlaylistEntry<T>>.GetEnumerator()
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             foreach (IPlaylist<T> playlist in playlists)
-                foreach (PlaylistEntry<T> t in playlist)
+                if (!(playlist is IEnumerablePlaylist<T>))
+                    throw new InvalidOperationException("To enumerate a PlaylistCollection, all inner playlists must implement the IEnumerablePlaylist interface.");
+
+            foreach (IPlaylist<T> playlist in playlists)
+                foreach (T t in (playlist as IEnumerablePlaylist<T>))
                     yield return t;
         }
 
@@ -197,9 +201,8 @@ namespace DeadDog.Audio
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            foreach (IPlaylist<T> playlist in playlists)
-                foreach (PlaylistEntry<T> t in playlist)
-                    yield return t;
+            foreach (var t in (this as IEnumerable<T>))
+                yield return t;
         }
 
         #endregion
