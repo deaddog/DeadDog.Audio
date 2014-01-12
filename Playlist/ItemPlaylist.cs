@@ -10,10 +10,6 @@ namespace DeadDog.Audio
         private List<PlaylistEntry<T>> entries;
         private int index = -1;
 
-        public PlaylistEntry<T> CurrentEntry
-        {
-            get { return index < 0 ? null : entries[index]; }
-        }
         public int CurrentIndex
         {
             get { return index; }
