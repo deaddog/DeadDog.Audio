@@ -124,12 +124,12 @@ namespace DeadDog.Audio
         {
             throw new NotImplementedException();
         }
-        public bool MoveToEntry(PlaylistEntry<T> entry)
+        public bool MoveToEntry(T entry)
         {
             throw new NotImplementedException();
         }
 
-        public bool Contains(PlaylistEntry<T> entry)
+        public bool Contains(T entry)
         {
             throw new NotImplementedException();
         }
