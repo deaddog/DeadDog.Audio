@@ -7,6 +7,7 @@ using DeadDog.Audio.Libraries;
 namespace DeadDog.Audio
 {
     public abstract class PlaylistCollection<T> : Playlist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>
+        where T : class
     {
         private List<IPlaylist<T>> playlists;
         private int index = -1;
