@@ -4,7 +4,8 @@ using System.Text;
 
 namespace DeadDog.Audio
 {
-    public class ItemPlaylist<T> : IPlaylist<T>, IList<PlaylistEntry<T>>
+    public class ItemPlaylist<T> : Playlist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>, IList<PlaylistEntry<T>>
+        where T : class
     {
         private List<PlaylistEntry<T>> entries;
         private int index = -1;
