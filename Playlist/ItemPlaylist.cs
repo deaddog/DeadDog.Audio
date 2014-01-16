@@ -204,16 +204,27 @@ namespace DeadDog.Audio
         public void Insert(int index, T item)
         {
             entries.Insert(index, item);
+            if (index <= this.index)
+                this.tempIndex = this.index++;
         }
 
         public void RemoveAt(int index)
         {
-            PlaylistEntry<T> entry = entries[index];
-            if (index == this.index && index >= entries.Count - 1)
-                this.index = -2;
-            else if (index > this.index)
-                this.index--;
-            entries.Remove(entry);
+            T entry = entries[index];
+            if (index == this.index)
+            {
+                tempIndex = index;
+                entries.RemoveAt(index);
+                if (!TrySettingEntry(entries[tempIndex]))
+                    MoveNext();
+            }
+            else if (index < this.index)
+            {
+                entries.RemoveAt(index);
+                tempIndex = index--;
+            }
+            else
+                entries.RemoveAt(index);
         }
 
         public T this[int index]
