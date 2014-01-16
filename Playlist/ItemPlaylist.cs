@@ -259,7 +259,7 @@ namespace DeadDog.Audio
         public void Clear()
         {
             entries.Clear();
-            index = -2;
+            Reset();
         }
 
         public bool Contains(T item)
@@ -284,6 +284,9 @@ namespace DeadDog.Audio
 
         public bool Remove(T item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             int index = entries.IndexOf(item);
             if (index == -1)
                 return false;
@@ -300,8 +303,8 @@ namespace DeadDog.Audio
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            foreach (PlaylistEntry<T> entry in entries)
-                yield return entry.Track;
+            foreach (T e in entries)
+                yield return e;
         }
 
         #endregion
@@ -310,8 +313,8 @@ namespace DeadDog.Audio
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            foreach (PlaylistEntry<T> entry in entries)
-                yield return entry.Track;
+            foreach (T e in entries)
+                yield return e;
         }
 
         #endregion
