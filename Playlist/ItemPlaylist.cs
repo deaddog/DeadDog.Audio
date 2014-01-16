@@ -110,31 +110,41 @@ namespace DeadDog.Audio
 
         public bool MoveNext()
         {
-            if (index == -2)
+            if (index == PostListIndex)
                 return false;
 
-            index++;
-            if (index >= entries.Count)
+            tempIndex++;
+            if (tempIndex < entries.Count)
             {
-                index = -2;
-                return false;
+                if (TrySettingEntry(entries[tempIndex]))
+                    return true;
+                else
+                    return MoveNext();
             }
             else
-                return true;
+            {
+                Index = PostListIndex;
+                return false;
+            }
         }
         public bool MovePrevious()
         {
-            if (index == -2)
+            if (index == PreListIndex)
                 return false;
 
-            index--;
-            if (index == -1)
+            tempIndex = tempIndex == PostListIndex ? entries.Count - 1 : tempIndex - 1;
+            if (tempIndex >= 0)
             {
-                index = -2;
-                return false;
+                if (TrySettingEntry(entries[tempIndex]))
+                    return true;
+                else
+                    return MovePrevious();
             }
             else
-                return true;
+            {
+                Index = PreListIndex;
+                return false;
+            }
         }
 
         public bool MoveToFirst()
