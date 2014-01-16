@@ -10,6 +10,7 @@ namespace DeadDog.Audio
         private T entry;
         private List<T> entries;
         private int index = -1;
+        private int tempIndex = -1;
 
         public T Entry
         {
@@ -19,6 +20,14 @@ namespace DeadDog.Audio
                 if (value != null)
                     if (!entries.Contains(value))
                         throw new KeyNotFoundException("The supplied entry was not found in the playlist.");
+
+                T indexEntry = tempIndex < 0 ? null : entries[tempIndex];
+                if (indexEntry == value)
+                    this.index = this.tempIndex;
+                else if (value == null)
+                    this.index = this.tempIndex = -1;
+                else
+                    this.index = this.tempIndex = entries.IndexOf(value);
 
                 if (this.entry != value)
                 {
