@@ -173,15 +173,18 @@ namespace DeadDog.Audio
         }
         public bool MoveToEntry(T entry)
         {
+            if (entry == null)
+            {
+                Index = PostListIndex;
+                return true;
+            }
+
             int i = entries.IndexOf(entry);
             if (i == -1)
-            {
-                index = -2;
                 return false;
-            }
             else
             {
-                index = i;
+                Index = i;
                 return true;
             }
         }
