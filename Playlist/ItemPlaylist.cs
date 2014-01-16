@@ -190,7 +190,7 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            this.index = -1;
+            this.Index = PreListIndex;
         }
 
         #region IList<T> Members
