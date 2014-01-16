@@ -14,12 +14,19 @@ namespace DeadDog.Audio
         public T Entry
         {
             get { return entry; }
-            protected set
+            set
             {
-                this.entry = value;
+                if (value != null)
+                    if (!entries.Contains(value))
+                        throw new KeyNotFoundException("The supplied entry was not found in the playlist.");
 
-                if (EntryChanged != null)
-                    EntryChanged(this, System.EventArgs.Empty);
+                if (this.entry != value)
+                {
+                    this.entry = value;
+
+                    if (EntryChanged != null)
+                        EntryChanged(this, System.EventArgs.Empty);
+                }
             }
         }
         protected bool trySettingEntry(T entry)
