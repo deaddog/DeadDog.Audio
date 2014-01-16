@@ -7,7 +7,7 @@ namespace DeadDog.Audio
     public class ItemPlaylist<T> : Playlist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>, IList<T>
         where T : class
     {
-        private List<PlaylistEntry<T>> entries;
+        private List<T> entries;
         private int index = -1;
 
         public int CurrentIndex
@@ -75,7 +75,7 @@ namespace DeadDog.Audio
                 return true;
             }
         }
-        public bool MoveToEntry(PlaylistEntry<T> entry)
+        public bool MoveToEntry(T entry)
         {
             int i = entries.IndexOf(entry);
             if (i == -1)
@@ -95,18 +95,14 @@ namespace DeadDog.Audio
             this.index = -1;
         }
 
-        #region IList<PlaylistEntry<T>> Members
+        #region IList<T> Members
 
         public int IndexOf(T item)
-        {
-            return entries.FindIndex(x => x.Track.Equals(item));
-        }
-        public int IndexOf(PlaylistEntry<T> item)
         {
             return entries.IndexOf(item);
         }
 
-        public void Insert(int index, PlaylistEntry<T> item)
+        public void Insert(int index, T item)
         {
             entries.Insert(index, item);
         }
@@ -121,22 +117,17 @@ namespace DeadDog.Audio
             entries.Remove(entry);
         }
 
-        PlaylistEntry<T> IList<PlaylistEntry<T>>.this[int index]
-        {
-            get { return this[index]; }
-            set { throw new InvalidOperationException("Property cannot be set."); }
-        }
-
-        public PlaylistEntry<T> this[int index]
+        public T this[int index]
         {
             get { return entries[index]; }
+            set { throw new NotImplementedException(); }
         }
 
         #endregion
 
-        #region ICollection<PlaylistEntry<T>> Members
+        #region ICollection<T> Members
 
-        public void Add(PlaylistEntry<T> item)
+        public void Add(T item)
         {
             entries.Add(item);
         }
@@ -147,12 +138,12 @@ namespace DeadDog.Audio
             index = -2;
         }
 
-        public bool Contains(PlaylistEntry<T> item)
+        public bool Contains(T item)
         {
             return entries.Contains(item);
         }
 
-        void ICollection<PlaylistEntry<T>>.CopyTo(PlaylistEntry<T>[] array, int arrayIndex)
+        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
         {
             entries.CopyTo(array, arrayIndex);
         }
@@ -162,12 +153,12 @@ namespace DeadDog.Audio
             get { return entries.Count; }
         }
 
-        bool ICollection<PlaylistEntry<T>>.IsReadOnly
+        bool ICollection<T>.IsReadOnly
         {
             get { return false; }
         }
 
-        public bool Remove(PlaylistEntry<T> item)
+        public bool Remove(T item)
         {
             int index = entries.IndexOf(item);
             if (index == -1)
@@ -181,7 +172,7 @@ namespace DeadDog.Audio
 
         #endregion
 
-        #region IEnumerable<PlaylistEntry<T>> Members
+        #region IEnumerable<T> Members
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
