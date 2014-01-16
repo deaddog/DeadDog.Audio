@@ -150,26 +150,24 @@ namespace DeadDog.Audio
         public bool MoveToFirst()
         {
             if (entries.Count == 0)
-            {
-                index = -2;
                 return false;
-            }
+            else if (index == 0)
+                return true;
             else
             {
-                index = 0;
+                Index = 0;
                 return true;
             }
         }
         public bool MoveToLast()
         {
             if (entries.Count == 0)
-            {
-                index = -2;
                 return false;
-            }
+            else if (index == entries.Count - 1)
+                return true;
             else
             {
-                index = entries.Count - 1;
+                Index = entries.Count - 1;
                 return true;
             }
         }
