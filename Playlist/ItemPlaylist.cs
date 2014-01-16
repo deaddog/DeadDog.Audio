@@ -76,6 +76,26 @@ namespace DeadDog.Audio
                     Entry = entries[value];
             }
         }
+        public bool TrySetIndex(int index)
+        {
+            int temp = this.tempIndex;
+
+            this.tempIndex = index;
+            bool couldSet;
+
+            if (index == PreListIndex)
+                couldSet = TrySettingEntry(null);
+            else if (index == PostListIndex)
+                couldSet = TrySettingEntry(null);
+            else if (index < 0 || index >= entries.Count)
+                throw new ArgumentOutOfRangeException("value", "Index must be greater than or equal to zero and less than the Count property. Use PreListIndex and PostListIndex for null value.");
+            else
+                couldSet = TrySettingEntry(entries[index]);
+
+            if (!couldSet)
+                this.tempIndex = temp;
+            return couldSet;
+        }
 
         public ItemPlaylist()
         {
