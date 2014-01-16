@@ -38,7 +38,7 @@ namespace DeadDog.Audio
                 }
             }
         }
-        protected bool trySettingEntry(T entry)
+        public bool TrySettingEntry(T entry)
         {
             if (EntryChanging != null)
             {
