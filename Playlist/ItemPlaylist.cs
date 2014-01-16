@@ -198,11 +198,17 @@ namespace DeadDog.Audio
 
         public int IndexOf(T item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             return entries.IndexOf(item);
         }
 
         public void Insert(int index, T item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
             entries.Insert(index, item);
             if (index <= this.index)
                 this.tempIndex = this.index++;
@@ -230,7 +236,15 @@ namespace DeadDog.Audio
         public T this[int index]
         {
             get { return entries[index]; }
-            set { throw new NotImplementedException(); }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
+                entries[index] = value;
+                if (!TrySettingEntry(value))
+                    MoveNext();
+            }
         }
 
         #endregion
