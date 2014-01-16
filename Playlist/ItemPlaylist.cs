@@ -4,11 +4,37 @@ using System.Text;
 
 namespace DeadDog.Audio
 {
-    public class ItemPlaylist<T> : Playlist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>, IList<T>
+    public class ItemPlaylist<T> : IPlaylist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>, IList<T>
         where T : class
     {
+        private T entry;
         private List<T> entries;
         private int index = -1;
+
+        public T Entry
+        {
+            get { return entry; }
+            protected set
+            {
+                this.entry = value;
+
+                if (EntryChanged != null)
+                    EntryChanged(this, System.EventArgs.Empty);
+            }
+        }
+        protected bool trySettingEntry(T entry)
+        {
+            if (EntryChanging != null)
+            {
+                EntryChangingEventArgs<T> e = new EntryChangingEventArgs<T>(entry);
+                EntryChanging(this, e);
+                if (e.Rejected)
+                    return false;
+            }
+
+            this.Entry = entry;
+            return true;
+        }
 
         public int CurrentIndex
         {
@@ -19,6 +45,9 @@ namespace DeadDog.Audio
         {
             this.entries = new List<PlaylistEntry<T>>();
         }
+
+        public event System.EventHandler EntryChanged;
+        public event EntryChangingEventHandler<T> EntryChanging;
 
         public bool MoveNext()
         {
