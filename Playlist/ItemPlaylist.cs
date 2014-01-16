@@ -28,7 +28,7 @@ namespace DeadDog.Audio
                 if (indexEntry == value)
                     this.index = this.tempIndex;
                 else if (value == null)
-                    this.index = this.tempIndex = -1;
+                    this.index = this.tempIndex = PreListIndex;
                 else
                     this.index = this.tempIndex = entries.IndexOf(value);
 
