@@ -9,8 +9,11 @@ namespace DeadDog.Audio
     {
         private T entry;
         private List<T> entries;
-        private int index = -1;
-        private int tempIndex = -1;
+        private int index;
+        private int tempIndex;
+
+        public const int PreListIndex = -1;
+        public const int PostListIndex = -2;
 
         public T Entry
         {
@@ -56,14 +59,17 @@ namespace DeadDog.Audio
             return true;
         }
 
-        public int CurrentIndex
+        public int Index
         {
             get { return index; }
         }
 
         public ItemPlaylist()
         {
-            this.entries = new List<PlaylistEntry<T>>();
+            this.entries = new List<T>();
+            this.entry = null;
+            this.index = PreListIndex;
+            this.tempIndex = PreListIndex;
         }
 
         public event System.EventHandler EntryChanged;
