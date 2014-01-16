@@ -40,6 +40,10 @@ namespace DeadDog.Audio
         }
         public bool TrySettingEntry(T entry)
         {
+            if (entry != null)
+                if (!entries.Contains(entry))
+                    throw new KeyNotFoundException("The supplied entry was not found in the playlist.");
+
             if (EntryChanging != null)
             {
                 EntryChangingEventArgs<T> e = new EntryChangingEventArgs<T>(entry);
