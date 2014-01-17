@@ -9,9 +9,13 @@ namespace DeadDog.Audio
     public abstract class PlaylistCollection<T> : IPlaylist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>
         where T : class
     {
-        private List<IPlaylist<T>> playlists;
-        private IPlaylist<T> currentList;
-        private int _index;
+        private IPlaylist<T> list;
+        private List<IPlaylist<T>> playlist;
+        private int index;
+        private int tempIndex;
+
+        public const int PreListIndex = -1;
+        public const int PostListIndex = -2;
         public int Index
         {
             get { return _index; }
