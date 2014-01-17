@@ -12,7 +12,7 @@ namespace DeadDog.Audio
         private List<IPlaylist<T>> playlists;
         private IPlaylist<T> currentList;
         private int _index;
-        private int index
+        public int Index
         {
             get { return _index; }
             set
