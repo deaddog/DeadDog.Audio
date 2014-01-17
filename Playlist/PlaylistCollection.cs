@@ -74,7 +74,10 @@ namespace DeadDog.Audio
 
         public PlaylistCollection()
         {
-            this.playlists = new List<IPlaylist<T>>();
+            this.playlist = new List<IPlaylist<T>>();
+            this.list = null;
+            this.index = PreListIndex;
+            this.tempIndex = PreListIndex;
         }
 
         public T Entry
@@ -87,7 +90,7 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            index = -1;
+            index = PreListIndex;
         }
 
         public bool MoveNext()
