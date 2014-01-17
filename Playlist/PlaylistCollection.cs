@@ -16,6 +16,7 @@ namespace DeadDog.Audio
 
         public const int PreListIndex = -1;
         public const int PostListIndex = -2;
+
         public int Index
         {
             get { return _index; }
@@ -40,6 +41,23 @@ namespace DeadDog.Audio
                     newList.EntryChanged -= list_EntryChanged;
                 }
                 currentList = newList;
+            }
+        }
+
+        private void removeEntryHandlers()
+        {
+            if (list != null)
+            {
+                list.EntryChanging -= list_EntryChanging;
+                list.EntryChanged -= list_EntryChanged;
+            }
+        }
+        private void addEntryHandlers()
+        {
+            if (list != null)
+            {
+                list.EntryChanging += list_EntryChanging;
+                list.EntryChanged += list_EntryChanged;
             }
         }
 
