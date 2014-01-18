@@ -51,7 +51,7 @@ namespace DeadDog.Audio.YouTube
 
         private string getClipPath(YouTubeID id)
         {
-            return Path.Combine(directory, +id.ID + ".mp3");
+            return Path.Combine(directory, id.ID + ".mp3");
         }
 
         public enum State
