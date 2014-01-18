@@ -122,6 +122,8 @@
     <Compile Include="Playlist\Searching.cs" />
     <Compile Include="PredicateString.cs" />
     <Compile Include="SearchMethods.cs" />
+    <Compile Include="YouTube\ClipInfo.cs" />
+    <Compile Include="YouTube\Downloader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libzplay.dll">
