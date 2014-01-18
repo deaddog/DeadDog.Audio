@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace DeadDog.Audio.YouTube
@@ -31,6 +32,7 @@ namespace DeadDog.Audio.YouTube
 
             XDocument document = XDocument.Load(documentPath);
             string title = getTitle(filepath, document);
+            return parseTitle(filepath, title);
         }
 
         private string getTitle(string filepath, XDocument document)
@@ -44,6 +46,25 @@ namespace DeadDog.Audio.YouTube
                          select title;
 
             return tracks.FirstOrDefault();
+        }
+
+        private RawTrack parseTitle(string filepath, string youtubeTitle)
+        {
+            Regex dash = new Regex("^(?<artist>[^-]+)-(?<track>[^-]+)$");
+            Regex slash = new Regex("^(?<artist>[^/]+)/(?<track>.+)$");
+            Match match;
+
+            string title = youtubeTitle;
+            string album = null;
+            string artist = null;
+
+            if ((match = dash.Match(youtubeTitle)).Success || (match = slash.Match(youtubeTitle)).Success)
+            {
+                artist = match.Groups["artist"].Value.Trim();
+                title = match.Groups["track"].Value.Trim();
+            }
+
+            return new RawTrack(filepath, title, album, RawTrack.TrackNumberIfUnknown, artist, RawTrack.YearIfUnknown);
         }
     }
 }
