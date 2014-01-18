@@ -15,6 +15,9 @@ namespace DeadDog.Audio.YouTube
 
         public YouTubeParser(string directory, IDataParser parser)
         {
+            if (directory == null)
+                throw new ArgumentNullException("directory");
+
             this.fallbackParser = parser;
 
             this.directory = Path.GetFullPath(directory);
@@ -23,16 +26,27 @@ namespace DeadDog.Audio.YouTube
 
         public RawTrack ParseTrack(string filepath)
         {
-            if (documentPath == null)
-                return null;
             if (!new FileInfo(documentPath).Exists)
                 return null;
+
             if (!filepath.StartsWith(directory))
-                return null;
+                return fallbackParse(filepath);
 
             XDocument document = XDocument.Load(documentPath);
             string title = getTitle(filepath, document);
+
+            if (title == null)
+                return null;
+
             return parseTitle(filepath, title);
+        }
+
+        private RawTrack fallbackParse(string filepath)
+        {
+            if (fallbackParser == null)
+                return null;
+            else
+                return fallbackParser.ParseTrack(filepath);
         }
 
         private string getTitle(string filepath, XDocument document)
