@@ -23,7 +23,7 @@ namespace DeadDog.Audio.YouTube
             if (!file.Exists)
                 document = new XDocument(new XElement("tracks"));
             else
-                document = XDocument.Load(directory);
+                document = XDocument.Load(documentPath);
         }
 
         public void Load(YouTubeID id)
@@ -57,7 +57,18 @@ namespace DeadDog.Audio.YouTube
             if (doc != null)
                 text = doc.Root.Element(XName.Get("title", "http://www.w3.org/2005/Atom")).Value;
 
-            throw new NotImplementedException();
+            mp3URL.GetFile(Path.Combine(directory, id.ID + ".mp3"));
+
+            XElement track = new XElement("track",
+                new XAttribute("id", id.ID),
+                new XElement("path", id.ID + ".mp3"),
+                new XElement("title", text));
+
+            lock (document)
+            {
+                document.Element("tracks").Add(track);
+                document.Save(documentPath);
+            }
         }
         private URL getMp3URL(YouTubeID id, out string text)
         {
@@ -71,11 +82,6 @@ namespace DeadDog.Audio.YouTube
             text = html.Substring(7, html.IndexOf("<br />") - 12).Replace('_', ' ');
 
             return new URL(link);
-        }
-
-        private string getClipPath(YouTubeID id)
-        {
-            return Path.Combine(directory, id.ID + ".mp3");
         }
 
         public enum State
