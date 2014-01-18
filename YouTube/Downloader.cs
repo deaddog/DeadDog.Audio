@@ -9,8 +9,6 @@ namespace DeadDog.Audio.YouTube
         private string directory;
         private Dictionary<YouTubeID, State> files;
 
-        private readonly object dictionaryLock = new object();
-
         public Downloader(string directory)
         {
             this.directory = System.IO.Path.GetFullPath(directory).TrimEnd('\\');
@@ -22,7 +20,7 @@ namespace DeadDog.Audio.YouTube
             if (id == null)
                 throw new ArgumentNullException("id");
 
-            lock (dictionaryLock)
+            lock (files)
             {
                 if (files.ContainsKey(id))
                     return;
