@@ -28,11 +28,12 @@ namespace DeadDog.Audio.YouTube
             {
                 YouTubeID id;
                 string idStr = match.Groups["id"].Value;
-                if (!lookup.TryGetValue(idStr, out id))
-                {
-                    id = new YouTubeID(idStr);
-                    lookup.Add(idStr, id);
-                }
+                lock (lookup)
+                    if (!lookup.TryGetValue(idStr, out id))
+                    {
+                        id = new YouTubeID(idStr);
+                        lookup.Add(idStr, id);
+                    }
                 return id;
             }
         }
@@ -47,11 +48,12 @@ namespace DeadDog.Audio.YouTube
             else
             {
                 string idStr = match.Groups["id"].Value;
-                if (!lookup.TryGetValue(idStr, out id))
-                {
-                    id = new YouTubeID(idStr);
-                    lookup.Add(idStr, id);
-                }
+                lock (lookup)
+                    if (!lookup.TryGetValue(idStr, out id))
+                    {
+                        id = new YouTubeID(idStr);
+                        lookup.Add(idStr, id);
+                    }
                 return true;
             }
         }
