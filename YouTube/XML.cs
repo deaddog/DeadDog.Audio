@@ -1,9 +1,13 @@
 ﻿using System;
-using System.Xml.Linq;
+using System.IO;
 
 namespace DeadDog.Audio.YouTube
 {
-    internal class XML
+    internal static class XML
     {
+        public static string DocumentPath(string directory)
+        {
+            return Path.Combine(Path.GetFullPath(directory), "youtube.xml");
+        }
     }
 }

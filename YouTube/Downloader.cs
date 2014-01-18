@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace DeadDog.Audio.YouTube
@@ -11,7 +12,7 @@ namespace DeadDog.Audio.YouTube
 
         public Downloader(string directory)
         {
-            this.directory = System.IO.Path.GetFullPath(directory).TrimEnd('\\');
+            this.directory = Path.GetFullPath(directory);
             this.files = new Dictionary<YouTubeID, State>();
         }
 
@@ -40,7 +41,7 @@ namespace DeadDog.Audio.YouTube
 
         private string getClipPath(YouTubeID id)
         {
-            return directory + "\\" + id.ID + ".mp3";
+            return Path.Combine(directory, +id.ID + ".mp3");
         }
 
         public enum State
