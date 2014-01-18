@@ -123,6 +123,7 @@
     <Compile Include="PredicateString.cs" />
     <Compile Include="SearchMethods.cs" />
     <Compile Include="YouTube\Downloader.cs" />
+    <Compile Include="YouTube\YouTubeID.cs" />
     <Compile Include="YouTube\YouTubeParser.cs" />
   </ItemGroup>
   <ItemGroup>
