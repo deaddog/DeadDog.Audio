@@ -8,27 +8,23 @@ namespace DeadDog.Audio.YouTube
     {
         private IDataParser fallbackParser;
         private string documentPath;
-        private XDocument document;
 
-        public YouTubeParser(string xmlpath, IDataParser parser)
+        public YouTubeParser(string directory, IDataParser parser)
         {
             this.fallbackParser = parser;
 
-            this.documentPath = xmlpath;
-            System.IO.FileInfo file = new System.IO.FileInfo(xmlpath);
+            System.IO.FileInfo file = new System.IO.FileInfo(XML.DocumentPath(directory));
             if (!file.Exists)
-                document = createNewXML();
+                documentPath = null;
             else
-                document = XDocument.Load(xmlpath);
-        }
-
-        private static XDocument createNewXML()
-        {
-            return new XDocument(new XElement("tracks"));
+                documentPath = file.FullName;
         }
 
         public RawTrack ParseTrack(string filepath)
         {
+            if (documentPath == null)
+                return null;
+
             throw new NotImplementedException();
         }
     }
