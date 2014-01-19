@@ -49,7 +49,7 @@ namespace DeadDog.Audio.Scan
 
         internal Library Library
         {
-            set { this.library = library; }
+            set { this.library = value; }
         }
 
         internal IEnumerable<string> Extensions
