@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 
 using DeadDog.Audio.Parsing;
+using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio.Scan
 {
@@ -112,11 +113,11 @@ namespace DeadDog.Audio.Scan
             set { searchoption = value; }
         }
 
-        public AudioScan RunScannerAsync()
+        public AudioScan RunScannerAsync(Library library)
         {
-            return RunScannerAsync(new string[] { });
+            return RunScannerAsync(library, new string[] { });
         }
-        public AudioScan RunScannerAsync(params string[] ignoreFiles)
+        public AudioScan RunScannerAsync(Library library, params string[] ignoreFiles)
         {
             if (!directory.Exists)
                 throw new ArgumentException("Directory must exist.", "directory");
@@ -134,7 +135,8 @@ namespace DeadDog.Audio.Scan
             {
                 Extensions = extensionList,
                 ExistingFiles = existingFiles,
-                IgnoredFiles = ig
+                IgnoredFiles = ig,
+                Library = library
             };
 
             lastScan = scan;
