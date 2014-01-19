@@ -11,11 +11,9 @@ namespace DeadDog.Audio.Scan
     public partial class AudioScan
     {
         private Thread thread;
-
         private IDataParser parser;
 
         private Dictionary<FileInfo, RawTrack> existingFiles;
-
         private FileInfo[] ignoredFiles;
 
         private event ScanFileEventHandler parsed;
@@ -230,43 +228,10 @@ namespace DeadDog.Audio.Scan
             return false;
         }
 
-        #region Path comparison
-
-        private int ComparePath(RawTrack x, RawTrack y)
-        {
-            return x.FullFilename.CompareTo(y.FullFilename);
-        }
         private int ComparePath(FileInfo x, FileInfo y)
         {
             return x.FullName.CompareTo(y.FullName);
         }
-        private int ComparePath(RawTrack x, FileInfo y)
-        {
-            return x.FullFilename.CompareTo(y.FullName);
-        }
-        private int ComparePath(FileInfo x, RawTrack y)
-        {
-            return x.FullName.CompareTo(y.FullFilename);
-        }
-
-        private bool PathEqual(RawTrack x, RawTrack y)
-        {
-            return x.FullFilename.Equals(y.FullFilename);
-        }
-        private bool PathEqual(FileInfo x, FileInfo y)
-        {
-            return x.FullName.Equals(y.FullName);
-        }
-        private bool PathEqual(RawTrack x, FileInfo y)
-        {
-            return x.FullFilename.Equals(y.FullName);
-        }
-        private bool PathEqual(FileInfo x, RawTrack y)
-        {
-            return x.FullName.Equals(y.FullFilename);
-        }
-
-        #endregion
 
         private enum Action
         {
