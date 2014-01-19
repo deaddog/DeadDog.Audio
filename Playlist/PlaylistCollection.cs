@@ -23,28 +23,19 @@ namespace DeadDog.Audio
 
         public int Index
         {
-            get { return _index; }
+            get { return index; }
             set
             {
-                _index = value;
+                if (value < 0 || value >= playlists.Count)
+                    throw new ArgumentOutOfRangeException("value");
 
-                IPlaylist<T> newList;
-                if (value < 0)
-                    newList = null;
-                else
-                    newList = playlists[value];
+                T entry = Entry;
 
-                if (currentList != null)
-                {
-                    currentList.EntryChanging -= list_EntryChanging;
-                    currentList.EntryChanged -= list_EntryChanged;
-                }
-                if (newList != null)
-                {
-                    newList.EntryChanging -= list_EntryChanging;
-                    newList.EntryChanged -= list_EntryChanged;
-                }
-                currentList = newList;
+                index = tempIndex = value;
+                list = playlists[index];
+
+                if (entry != Entry && EntryChanged != null)
+                    EntryChanged(this, EventArgs.Empty);
             }
         }
 
