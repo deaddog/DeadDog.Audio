@@ -46,6 +46,17 @@ namespace DeadDog.Audio
         }
         private void list_EntryChanged(object sender, EventArgs e)
         {
+            if (!(sender is IPlaylist<T>))
+                throw new ArgumentException("Event sender must be a playlist.", "sender");
+
+            IPlaylist<T> playlist = sender as IPlaylist<T>;
+            if (!playlists.Contains(playlist))
+                throw new ArgumentException("Event sender must be a playlist contained by the PlaylistCollection.", "sender");
+
+            int listIndex = playlists.IndexOf(playlist);
+            this.index = tempIndex = listIndex;
+            this.list = playlist;
+
             if (EntryChanged != null)
                 EntryChanged(this, e);
         }
