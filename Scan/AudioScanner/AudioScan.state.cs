@@ -5,6 +5,8 @@ namespace DeadDog.Audio.Scan
 {
     public partial class AudioScan
     {
+        private DirectoryInfo directory;
+        private SearchOption searchoption;
         public DirectoryInfo Directory
         {
             get { return directory; }
@@ -14,6 +16,9 @@ namespace DeadDog.Audio.Scan
             get { return searchoption; }
         }
 
+        private bool parseAdd;
+        private bool parseUpdate;
+        private bool removeDeadFiles;
         public bool ParseAdd
         {
             get { return parseAdd; }
@@ -27,16 +32,24 @@ namespace DeadDog.Audio.Scan
             get { return removeDeadFiles; }
         }
 
+        private string[] extensions;
         public string[] FileExtensions
         {
             get { return extensions; }
         }
 
+        private ScannerState state;
         public ScannerState State
         {
             get { return state; }
         }
 
+        private int added;
+        private int updated;
+        private int skipped;
+        private int error;
+        private int removed;
+        private int total;
         public int Added
         {
             get { return added; }

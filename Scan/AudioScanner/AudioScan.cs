@@ -12,31 +12,14 @@ namespace DeadDog.Audio.Scan
     {
         private Thread thread;
 
-        private DirectoryInfo directory;
-        private SearchOption searchoption;
-
-        private bool parseAdd;
-        private bool parseUpdate;
-        private bool removeDeadFiles;
-
         private IDataParser parser;
 
-        private string[] extensions;
         private Dictionary<FileInfo, RawTrack> existingFiles;
 
         private FileInfo[] ignoredFiles;
 
         private event ScanFileEventHandler parsed;
         private event ScanCompletedEventHandler done;
-
-        private ScannerState state;
-
-        private int added;
-        private int updated;
-        private int skipped;
-        private int error;
-        private int removed;
-        private int total;
 
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
             bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser,
