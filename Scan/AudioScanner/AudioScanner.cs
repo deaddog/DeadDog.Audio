@@ -137,6 +137,8 @@ namespace DeadDog.Audio.Scan
                 IgnoredFiles = ig
             };
 
+            scan.Start();
+
             return scan;
         }
 

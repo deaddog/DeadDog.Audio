@@ -10,7 +10,6 @@ namespace DeadDog.Audio.Scan
 {
     public partial class AudioScan
     {
-        private Thread thread;
         private IDataParser parser;
 
         private string[] extensions;
@@ -24,8 +23,6 @@ namespace DeadDog.Audio.Scan
             bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser,
             ScanFileEventHandler parsed, ScanCompletedEventHandler done)
         {
-            this.thread = new Thread(Run);
-
             this.directory = directory;
             this.searchoption = searchoption;
 
@@ -45,8 +42,6 @@ namespace DeadDog.Audio.Scan
             this.state = ScannerState.NotRunning;
 
             this.added = updated = skipped = error = removed = total = 0;
-
-            thread.Start();
         }
 
         internal IEnumerable<string> Extensions
@@ -62,24 +57,28 @@ namespace DeadDog.Audio.Scan
             set { ignoredFiles = (from s in value select new FileInfo(s)).ToArray(); }
         }
 
-        private void Run()
+        internal void Start()
         {
-            state = ScannerState.Scanning;
+            new Thread(() =>
+            {
+                state = ScannerState.Scanning;
 
-            var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
-            foreach (FileInfo file in ignoredFiles)
-                actions[file] = Action.Skip;
+                var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
+                foreach (FileInfo file in ignoredFiles)
+                    actions[file] = Action.Skip;
 
-            total = actions.Count;
+                total = actions.Count;
 
-            state = ScannerState.Parsing;
+                state = ScannerState.Parsing;
 
-            foreach (var file in actions)
-                ParseFile(file.Key, file.Value);
+                foreach (var file in actions)
+                    ParseFile(file.Key, file.Value);
 
-            state = ScannerState.Completed;
-            if (done != null)
-                done(this, new ScanCompletedEventArgs());
+                state = ScannerState.Completed;
+                if (done != null)
+                    done(this, new ScanCompletedEventArgs());
+            }).Start();
+
         }
 
         private IEnumerable<FileInfo> ScanForFiles()
