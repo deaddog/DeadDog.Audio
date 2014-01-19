@@ -23,7 +23,11 @@ namespace DeadDog.Audio.YouTube
             if (!file.Exists)
                 document = new XDocument(new XElement("tracks"));
             else
+            {
                 document = XDocument.Load(documentPath);
+                foreach (var e in document.Element("tracks").Elements("track"))
+                    files.Add(YouTubeID.Parse(e.Attribute("id").Value), State.Loaded);
+            }
         }
 
         public void Load(YouTubeID id)
@@ -69,6 +73,8 @@ namespace DeadDog.Audio.YouTube
                 document.Element("tracks").Add(track);
                 document.Save(documentPath);
             }
+            lock (files)
+                files[id] = State.Loaded;
         }
         private URL getMp3URL(YouTubeID id, out string text)
         {
