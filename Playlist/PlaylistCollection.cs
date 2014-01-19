@@ -13,7 +13,6 @@ namespace DeadDog.Audio
     public abstract class PlaylistCollection<T> : IPlaylist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>
         where T : class
     {
-        private IPlaylist<T> list;
         private List<IPlaylist<T>> playlists;
         private int index;
         private int tempIndex;
@@ -31,9 +30,7 @@ namespace DeadDog.Audio
                     throw new ArgumentOutOfRangeException("value");
 
                 T entry = Entry;
-
                 index = tempIndex = value;
-                list = playlists[index];
 
                 if (entry != Entry && EntryChanged != null)
                     EntryChanged(this, EventArgs.Empty);
@@ -58,7 +55,6 @@ namespace DeadDog.Audio
             {
                 int listIndex = playlists.IndexOf(playlist);
                 this.index = tempIndex = listIndex;
-                this.list = playlist;
 
                 if (EntryChanged != null)
                     EntryChanged(this, e);
@@ -67,7 +63,6 @@ namespace DeadDog.Audio
 
         public PlaylistCollection()
         {
-            this.list = null;
             this.playlists = new List<IPlaylist<T>>();
             this.index = PreListIndex;
             this.tempIndex = PreListIndex;
@@ -76,7 +71,7 @@ namespace DeadDog.Audio
 
         public T Entry
         {
-            get { return list == null ? null : list.Entry; }
+            get { return index < 0 ? null : playlists[index].Entry; }
         }
 
         public event EventHandler EntryChanged;
@@ -84,7 +79,6 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            this.list = null;
             this.index = tempIndex = PreListIndex;
         }
 
