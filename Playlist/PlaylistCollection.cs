@@ -17,6 +17,7 @@ namespace DeadDog.Audio
         private List<IPlaylist<T>> playlists;
         private int index;
         private int tempIndex;
+        private bool allowNullChange;
 
         public const int PreListIndex = -1;
         public const int PostListIndex = -2;
@@ -53,20 +54,24 @@ namespace DeadDog.Audio
             if (!playlists.Contains(playlist))
                 throw new ArgumentException("Event sender must be a playlist contained by the PlaylistCollection.", "sender");
 
-            int listIndex = playlists.IndexOf(playlist);
-            this.index = tempIndex = listIndex;
-            this.list = playlist;
+            if (allowNullChange || playlist.Entry != null)
+            {
+                int listIndex = playlists.IndexOf(playlist);
+                this.index = tempIndex = listIndex;
+                this.list = playlist;
 
-            if (EntryChanged != null)
-                EntryChanged(this, e);
+                if (EntryChanged != null)
+                    EntryChanged(this, e);
+            }
         }
 
         public PlaylistCollection()
         {
-            this.playlist = new List<IPlaylist<T>>();
             this.list = null;
+            this.playlists = new List<IPlaylist<T>>();
             this.index = PreListIndex;
             this.tempIndex = PreListIndex;
+            this.allowNullChange = true;
         }
 
         public T Entry
