@@ -32,12 +32,6 @@ namespace DeadDog.Audio.Scan
             get { return removeDeadFiles; }
         }
 
-        private string[] extensions;
-        public string[] FileExtensions
-        {
-            get { return extensions; }
-        }
-
         private ScannerState state;
         public ScannerState State
         {

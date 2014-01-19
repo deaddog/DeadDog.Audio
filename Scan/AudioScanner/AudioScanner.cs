@@ -130,9 +130,14 @@ namespace DeadDog.Audio.Scan
             ScanFileEventHandler parsed = FileParsed;
             parsed += AudioScanner_FileParsed;
 
-            return new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles,
-                parser, extensionList.ToArray(), existingFiles.ToArray(), ig,
-                parsed, ScanDone);
+            AudioScan scan = new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles, parser, parsed, ScanDone)
+            {
+                Extensions = extensionList,
+                ExistingFiles = existingFiles,
+                IgnoredFiles = ig
+            };
+
+            return scan;
         }
 
         private void AudioScanner_FileParsed(AudioScan sender, ScanFileEventArgs e)

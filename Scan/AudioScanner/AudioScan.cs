@@ -13,6 +13,7 @@ namespace DeadDog.Audio.Scan
         private Thread thread;
         private IDataParser parser;
 
+        private string[] extensions;
         private Dictionary<FileInfo, RawTrack> existingFiles;
         private FileInfo[] ignoredFiles;
 
@@ -21,9 +22,7 @@ namespace DeadDog.Audio.Scan
 
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
             bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser,
-            string[] extensions, RawTrack[] existingFiles, string[] ignoredFiles,
-            ScanFileEventHandler parsed,
-            ScanCompletedEventHandler done)
+            ScanFileEventHandler parsed, ScanCompletedEventHandler done)
         {
             this.thread = new Thread(Run);
 
@@ -36,10 +35,9 @@ namespace DeadDog.Audio.Scan
 
             this.parser = parser;
 
-            this.extensions = extensions;
-            this.existingFiles = existingFiles.ToDictionary(rt => rt.File);
-
-            this.ignoredFiles = (from s in ignoredFiles select new FileInfo(s)).ToArray();
+            this.extensions = new string[] { };
+            this.existingFiles = new Dictionary<FileInfo, RawTrack>();
+            this.ignoredFiles = new FileInfo[] { };
 
             this.parsed = parsed;
             this.done = done;
@@ -49,6 +47,19 @@ namespace DeadDog.Audio.Scan
             this.added = updated = skipped = error = removed = total = 0;
 
             thread.Start();
+        }
+
+        internal IEnumerable<string> Extensions
+        {
+            set { extensions = value.ToArray(); }
+        }
+        internal IEnumerable<RawTrack> ExistingFiles
+        {
+            set { existingFiles = value.ToDictionary(rt => rt.File); }
+        }
+        internal IEnumerable< string> IgnoredFiles
+        {
+            set { ignoredFiles = (from s in value select new FileInfo(s)).ToArray(); }
         }
 
         private void Run()
