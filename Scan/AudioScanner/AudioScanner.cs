@@ -20,6 +20,11 @@ namespace DeadDog.Audio.Scan
         private ExtensionList extensionList;
         private ExistingFilesCollection existingFiles;
 
+        public AudioScan ActiveScan
+        {
+            get { return lastScan; }
+        }
+
         public string DirectoryFullName
         {
             get { return directory.FullName; }
