@@ -5,12 +5,14 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using DeadDog.Audio.Parsing;
+using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio.Scan
 {
     public partial class AudioScan
     {
         private IDataParser parser;
+        private Library library;
 
         private string[] extensions;
         private Dictionary<FileInfo, RawTrack> existingFiles;
@@ -31,6 +33,7 @@ namespace DeadDog.Audio.Scan
             this.removeDeadFiles = removeDeadFiles;
 
             this.parser = parser;
+            this.library = null;
 
             this.extensions = new string[] { };
             this.existingFiles = new Dictionary<FileInfo, RawTrack>();
@@ -42,6 +45,11 @@ namespace DeadDog.Audio.Scan
             this.state = ScannerState.NotRunning;
 
             this.added = updated = skipped = error = removed = total = 0;
+        }
+
+        internal Library Library
+        {
+            set { this.library = library; }
         }
 
         internal IEnumerable<string> Extensions
