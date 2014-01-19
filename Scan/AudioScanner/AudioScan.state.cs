@@ -71,7 +71,7 @@ namespace DeadDog.Audio.Scan
 
         public bool IsRunning
         {
-            get { return state != ScannerState.Completed && state != ScannerState.NotRunning; }
+            get { return state != ScannerState.Completed; }
         }
     }
 }
