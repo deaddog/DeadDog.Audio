@@ -84,7 +84,8 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            index = PreListIndex;
+            this.list = null;
+            this.index = tempIndex = PreListIndex;
         }
 
         public bool MoveNext()
