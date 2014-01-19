@@ -84,28 +84,36 @@ namespace DeadDog.Audio
 
         public bool MoveNext()
         {
-            if (index == -2)
+            if (index == PostListIndex)
                 return false;
-            else if (playlists.Count == 0)
+            if (playlists.Count == 0)
             {
-                index = -2;
+                index = PostListIndex;
                 return false;
             }
-            else if (index == -1)
+
+            allowNullChange = false;
+
+            if (index == PreListIndex)
             {
                 index = 0;
                 playlists[index].Reset();
             }
 
-            if (!playlists[index].MoveNext())
+            while (index != PostListIndex && !playlists[index].MoveNext())
             {
                 index++;
                 if (index >= playlists.Count)
-                    index = -2;
+                    index = PostListIndex;
                 else
                     playlists[index].Reset();
-                return MoveNext();
             }
+
+            allowNullChange = true;
+
+            if (index == PostListIndex && EntryChanged != null)
+                EntryChanged(this, EventArgs.Empty);
+
             return true;
         }
         public bool MovePrevious()
