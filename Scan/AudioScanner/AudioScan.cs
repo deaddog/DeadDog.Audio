@@ -42,7 +42,7 @@ namespace DeadDog.Audio.Scan
             this.parsed = parsed;
             this.done = done;
 
-            this.state = ScannerState.NotRunning;
+            this.state = ScannerState.NotStarted;
 
             this.added = updated = skipped = error = removed = total = 0;
         }
