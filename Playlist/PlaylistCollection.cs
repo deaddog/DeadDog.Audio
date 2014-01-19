@@ -6,6 +6,10 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
+    /// <summary>
+    /// Provides a collection of playlists, joining them into one.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the playlists.</typeparam>
     public abstract class PlaylistCollection<T> : IPlaylist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>
         where T : class
     {
