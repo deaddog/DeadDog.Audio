@@ -212,6 +212,14 @@ namespace DeadDog.Audio.Scan
                 default: throw new InvalidOperationException("Unknown filestate.");
             }
 
+            if (library != null)
+                switch (state)
+                {
+                    case FileState.Added: library.AddTrack(track); break;
+                    case FileState.Updated: library.UpdateTrack(track); break;
+                    case FileState.Removed: library.RemoveTrack(filepath.FullName); break;
+                }
+
             if (parsed != null)
                 parsed(this, new ScanFileEventArgs(filepath.FullName, track, state));
         }
