@@ -76,7 +76,7 @@ namespace DeadDog.Audio
 
         public T Entry
         {
-            get { return currentList == null ? null : currentList.Entry; }
+            get { return list == null ? null : list.Entry; }
         }
 
         public event EventHandler EntryChanged;
