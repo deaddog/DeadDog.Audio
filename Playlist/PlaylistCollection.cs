@@ -14,7 +14,7 @@ namespace DeadDog.Audio
         where T : class
     {
         private IPlaylist<T> list;
-        private List<IPlaylist<T>> playlist;
+        private List<IPlaylist<T>> playlists;
         private int index;
         private int tempIndex;
 
