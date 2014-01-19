@@ -91,17 +91,12 @@ namespace DeadDog.Audio.Scan
         private IEnumerable<FileInfo> TrimForExtensions(IEnumerable<FileInfo> files)
         {
             foreach (var file in files)
-            {
-                bool ok = false;
                 foreach (string ext in extensions)
                     if (file.Extension.ToLower() == ext)
                     {
-                        ok = true;
+                        yield return file;
                         break;
                     }
-                if (ok)
-                    yield return file;
-            }
         }
 
         private Dictionary<FileInfo, Action> BuildActionDictionary(IEnumerable<FileInfo> scanFiles, IEnumerable<FileInfo> existingFiles)
