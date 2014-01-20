@@ -84,35 +84,38 @@ namespace DeadDog.Audio
 
         public bool MoveNext()
         {
-            if (index == PostListIndex)
+            if (tempIndex == PostListIndex)
                 return false;
             if (playlists.Count == 0)
             {
-                index = PostListIndex;
+                tempIndex = PostListIndex;
                 return false;
             }
 
             allowNullChange = false;
 
-            if (index == PreListIndex)
+            if (tempIndex == PreListIndex)
             {
-                index = 0;
-                playlists[index].Reset();
+                tempIndex = 0;
+                playlists[tempIndex].Reset();
             }
 
-            while (index != PostListIndex && !playlists[index].MoveNext())
+            while (tempIndex != PostListIndex && !playlists[tempIndex].MoveNext())
             {
-                index++;
-                if (index >= playlists.Count)
-                    index = PostListIndex;
+                tempIndex++;
+                if (tempIndex >= playlists.Count)
+                    tempIndex = PostListIndex;
                 else
-                    playlists[index].Reset();
+                    playlists[tempIndex].Reset();
             }
 
             allowNullChange = true;
 
-            if (index == PostListIndex && EntryChanged != null)
+            if (tempIndex == PostListIndex && EntryChanged != null)
+            {
+                index = tempIndex;
                 EntryChanged(this, EventArgs.Empty);
+            }
 
             return true;
         }
@@ -121,41 +124,44 @@ namespace DeadDog.Audio
             if (!IsIEnumerablePlaylist)
                 throw new InvalidOperationException("Cannot perform MovePrevious, as one or more inner playlists does not implement IEnumerablePlaylist.");
 
-            if (index == PreListIndex)
+            if (tempIndex == PreListIndex)
                 return false;
             if (playlists.Count == 0)
             {
-                index = PreListIndex;
+                tempIndex = PreListIndex;
                 return false;
             }
 
             allowNullChange = false;
 
-            if (index == PostListIndex)
+            if (tempIndex == PostListIndex)
             {
-                index = playlists.Count - 1;
-                playlists[index].Reset();
+                tempIndex = playlists.Count - 1;
+                playlists[tempIndex].Reset();
             }
 
             bool moved = false;
 
-            while (index != PreListIndex && !moved)
+            while (tempIndex != PreListIndex && !moved)
             {
-                moved = (playlists[index] as IEnumerablePlaylist<T>).MovePrevious();
+                moved = (playlists[tempIndex] as IEnumerablePlaylist<T>).MovePrevious();
                 if (!moved)
                 {
-                    index++;
-                    if (index >= playlists.Count)
-                        index = PostListIndex;
+                    tempIndex++;
+                    if (tempIndex >= playlists.Count)
+                        tempIndex = PostListIndex;
                     else
-                        moved = !(playlists[index] as IEnumerablePlaylist<T>).MoveToLast();
+                        moved = !(playlists[tempIndex] as IEnumerablePlaylist<T>).MoveToLast();
                 }
             }
 
             allowNullChange = true;
 
-            if (index == PostListIndex && EntryChanged != null)
+            if (tempIndex == PostListIndex && EntryChanged != null)
+            {
+                index = tempIndex;
                 EntryChanged(this, EventArgs.Empty);
+            }
 
             return true;
         }
