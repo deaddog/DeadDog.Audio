@@ -112,8 +112,6 @@ namespace DeadDog.Audio.Playback
                 case PlayerStatus.NoFileOpen:
                     if (playlist.MoveNext())
                     {
-                        if (!playback.Open(playlist.Entry))
-                            return Play();
                         playback.Play();
                         return true;
                     }
