@@ -15,7 +15,6 @@ namespace DeadDog.Audio
     {
         private List<IPlaylist<T>> playlists;
         private int index;
-        private int tempIndex;
         private bool allowNullChange;
 
         public const int PreListIndex = -1;
@@ -30,7 +29,7 @@ namespace DeadDog.Audio
                     throw new ArgumentOutOfRangeException("value");
 
                 T entry = Entry;
-                index = tempIndex = value;
+                index = value;
 
                 if (entry != Entry && EntryChanged != null)
                     EntryChanged(this, EventArgs.Empty);
@@ -54,7 +53,7 @@ namespace DeadDog.Audio
             if (allowNullChange || playlist.Entry != null)
             {
                 int listIndex = playlists.IndexOf(playlist);
-                this.index = tempIndex = listIndex;
+                this.index = listIndex;
 
                 if (EntryChanged != null)
                     EntryChanged(this, e);
@@ -65,7 +64,6 @@ namespace DeadDog.Audio
         {
             this.playlists = new List<IPlaylist<T>>();
             this.index = PreListIndex;
-            this.tempIndex = PreListIndex;
             this.allowNullChange = true;
         }
 
@@ -79,11 +77,13 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            this.index = tempIndex = PreListIndex;
+            this.index = PreListIndex;
         }
 
         public bool MoveNext()
         {
+            int tempIndex = this.index;
+
             if (tempIndex == PostListIndex)
                 return false;
             if (playlists.Count == 0)
@@ -123,6 +123,8 @@ namespace DeadDog.Audio
         {
             if (!IsIEnumerablePlaylist)
                 throw new InvalidOperationException("Cannot perform MovePrevious, as one or more inner playlists does not implement IEnumerablePlaylist.");
+
+            int tempIndex = this.index;
 
             if (tempIndex == PreListIndex)
                 return false;
