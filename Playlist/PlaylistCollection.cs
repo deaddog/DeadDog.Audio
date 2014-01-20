@@ -265,6 +265,10 @@ namespace DeadDog.Audio
             return true;
         }
 
+        public void Add(IPlaylist<T> playlist)
+        {
+            playlists.Add(playlist);
+        }
         public void Insert(int index, IPlaylist<T> playlist)
         {
             playlists.Insert(index, playlist);
@@ -273,31 +277,43 @@ namespace DeadDog.Audio
         }
         public bool Remove(IPlaylist<T> playlist)
         {
-            int i = playlists.IndexOf(playlist);
-            if (i < 0)
-                return false;
+            if (playlist == null)
+                throw new ArgumentNullException("item");
 
-            if (i == this.index)
+            int index = playlists.IndexOf(playlist);
+            if (index == -1)
+                return false;
+            else
             {
-                playlists.RemoveAt(i);
-                if (index == playlists.Count)
-                    index = PostListIndex;
+                this.RemoveAt(index);
+                return true;
+            }
+        }
+        public void RemoveAt(int index)
+        {
+            if (index < 0 || index >= playlists.Count)
+                throw new ArgumentOutOfRangeException("index");
+
+            if (index == this.index)
+            {
+                playlists.RemoveAt(index);
+                if (this.index == playlists.Count)
+                    this.index = PostListIndex;
                 else
                 {
                     allowNullChange = false;
-                    playlists[index].Reset();
+                    playlists[this.index].Reset();
                     allowNullChange = true;
                     MoveNext();
                 }
             }
-            else if (i < this.index)
+            else if (index < this.index)
             {
-                playlists.RemoveAt(i);
+                playlists.RemoveAt(index);
                 index--;
             }
             else
-                playlists.RemoveAt(i);
-            return true;
+                playlists.RemoveAt(index);
         }
 
         #region IEnumerable<T> Members
