@@ -7,7 +7,6 @@ namespace DeadDog.Audio
     public class PlayQueue<T> : IPlayQueue<T>
     {
         private List<QueueEntry<T>> queue;
-        private QueueEntry<T> lastDequeued = null;
         private QueueCompare comparer = new QueueCompare();
 
         public virtual void Enqueue(PlaylistEntry<T> entry)
@@ -19,9 +18,7 @@ namespace DeadDog.Audio
 
         public virtual PlaylistEntry<T> Dequeue()
         {
-            lastDequeued = queue[0];
-            queue.RemoveAt(0);
-            return lastDequeued.Entry;
+            return queue.RemoveAt(0);
         }
 
         public PlaylistEntry<T> Peek()
