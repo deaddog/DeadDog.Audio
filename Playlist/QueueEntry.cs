@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeadDog.Audio
+﻿namespace DeadDog.Audio
 {
     public class QueueEntry<T>
     {
         private static int nextid = 0;
         private int id;
-        private PlaylistEntry<T> entry;
+        private T entry;
 
-        public PlaylistEntry<T> Entry
+        public T Entry
         {
             get { return entry; }
         }
 
-        public QueueEntry(PlaylistEntry<T> entry)
+        public QueueEntry(T entry)
         {
             this.entry = entry;
             this.id = nextid;
@@ -37,7 +33,7 @@ namespace DeadDog.Audio
             get { return queueinfo; }
         }
 
-        public QueueEntry(PlaylistEntry<T> entry, Q queueinfo)
+        public QueueEntry(T entry, Q queueinfo)
             :base(entry)
         {
             this.queueinfo = queueinfo;
