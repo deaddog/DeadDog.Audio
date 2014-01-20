@@ -63,32 +63,6 @@ namespace DeadDog.Audio.Playback
             get { return playlist.Entry; }
         }
 
-        public bool MoveNext()
-        {
-            return moveGeneric(playlist.MoveNext, true);
-        }
-        public bool MovePrevious()
-        {
-            return moveGeneric(playlist.MovePrevious, true);
-        }
-        public bool MoveRandom()
-        {
-            return moveGeneric(playlist.MoveRandom, false);
-        }
-
-        public bool MoveToFirst()
-        {
-            return moveGeneric(playlist.MoveToFirst, false);
-        }
-        public bool MoveToLast()
-        {
-            return moveGeneric(playlist.MoveToLast, false);
-        }
-        public bool MoveToEntry(PlaylistEntry<T> entry)
-        {
-            return moveGeneric(() => playlist.MoveToEntry(entry), false);
-        }
-
         private bool moveGeneric(Func<bool> move, bool recursive)
         {
             PlayerStatus status = playback.Status;
