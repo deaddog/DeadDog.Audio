@@ -17,6 +17,7 @@ namespace DeadDog.Audio
         public EntryChangingEventArgs(T entry)
         {
             this.rejected = false;
+            this.entry = entry;
         }
 
         /// <summary>
