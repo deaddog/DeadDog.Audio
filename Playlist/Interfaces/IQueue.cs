@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeadDog.Audio
 {
-    public interface IPlayQueue<T>
+    public interface IQueue<T>
     {
         void Enqueue(PlaylistEntry<T> entry);
         PlaylistEntry<T> Dequeue();
