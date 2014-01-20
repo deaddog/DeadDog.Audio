@@ -273,12 +273,31 @@ namespace DeadDog.Audio
         }
         public bool Remove(IPlaylist<T> playlist)
         {
-            bool removed = this.playlists.Remove(playlist);
-            if (index >= playlists.Count)
-                index = -2;
+            int i = playlists.IndexOf(playlist);
+            if (i < 0)
+                return false;
+
+            if (i == this.index)
+            {
+                playlists.RemoveAt(i);
+                if (index == playlists.Count)
+                    index = PostListIndex;
+                else
+                {
+                    allowNullChange = false;
+                    playlists[index].Reset();
+                    allowNullChange = true;
+                    MoveNext();
+                }
+                return true;
+            }
+            else if (i < this.index)
+            {
+                playlists.RemoveAt(i);
+                index--;
+            }
             else
-                playlists[index].Reset();
-            return removed;
+                playlists.RemoveAt(i);
         }
 
         #region IEnumerable<T> Members
