@@ -121,24 +121,43 @@ namespace DeadDog.Audio
             if (!IsIEnumerablePlaylist)
                 throw new InvalidOperationException("Cannot perform MovePrevious, as one or more inner playlists does not implement IEnumerablePlaylist.");
 
-            if (index == -1)
+            if (index == PreListIndex)
                 return false;
-
-            else if (playlists.Count == 0)
+            if (playlists.Count == 0)
             {
-                index = -1;
+                index = PreListIndex;
                 return false;
             }
-            else if (index == -2)
+
+            allowNullChange = false;
+
+            if (index == PostListIndex)
             {
                 index = playlists.Count - 1;
                 playlists[index].Reset();
             }
 
-            if (!(playlists[index] is IEnumerablePlaylist<T>))
-                throw new InvalidOperationException("Cannot perform MovePrevious, as inner playlist does not implement IEnumerablePlaylist.");
+            bool moved = false;
 
-            throw new NotImplementedException();
+            while (index != PreListIndex && !moved)
+            {
+                moved = (playlists[index] as IEnumerablePlaylist<T>).MovePrevious();
+                if (!moved)
+                {
+                    index++;
+                    if (index >= playlists.Count)
+                        index = PostListIndex;
+                    else
+                        moved = !(playlists[index] as IEnumerablePlaylist<T>).MoveToLast();
+                }
+            }
+
+            allowNullChange = true;
+
+            if (index == PostListIndex && EntryChanged != null)
+                EntryChanged(this, EventArgs.Empty);
+
+            return true;
         }
 
         public bool MoveToFirst()
