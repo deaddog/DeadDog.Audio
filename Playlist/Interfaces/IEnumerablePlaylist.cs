@@ -9,11 +9,6 @@ namespace DeadDog.Audio
     public interface IEnumerablePlaylist<T> : IPlaylist<T>, IEnumerable<T>
     {
         /// <summary>
-        /// Moves to the next item in the playlist.
-        /// </summary>
-        /// <returns>true, if the move was successful; otherwise false.</returns>
-        bool MoveNext();
-        /// <summary>
         /// Moves the the previous item in the playlist.
         /// </summary>
         /// <returns>true, if the move was successful; otherwise false.</returns>
