@@ -118,6 +118,9 @@ namespace DeadDog.Audio
         }
         public bool MovePrevious()
         {
+            if (!IsIEnumerablePlaylist)
+                throw new InvalidOperationException("Cannot perform MovePrevious, as one or more inner playlists does not implement IEnumerablePlaylist.");
+
             if (index == -1)
                 return false;
 
@@ -154,6 +157,27 @@ namespace DeadDog.Audio
         public bool Contains(T entry)
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsIEnumerablePlaylist
+        {
+            get
+            {
+                foreach (var p in playlists)
+                    if (!(p is IEnumerablePlaylist<T>))
+                        return false;
+                return true;
+            }
+        }
+        public bool IsISeekablePlaylist
+        {
+            get
+            {
+                foreach (var p in playlists)
+                    if (!(p is ISeekablePlaylist<T>))
+                        return false;
+                return true;
+            }
         }
 
         public int Count
