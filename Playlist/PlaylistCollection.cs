@@ -217,8 +217,16 @@ namespace DeadDog.Audio
             get
             {
                 foreach (var p in playlists)
-                    if (!(p is IEnumerablePlaylist<T>))
-                        return false;
+                    if (p is PlaylistCollection<T>)
+                    {
+                        if (!(p as PlaylistCollection<T>).IsIEnumerablePlaylist)
+                            return false;
+                    }
+                    else
+                    {
+                        if (!(p is IEnumerablePlaylist<T>))
+                            return false;
+                    }
                 return true;
             }
         }
@@ -227,8 +235,16 @@ namespace DeadDog.Audio
             get
             {
                 foreach (var p in playlists)
-                    if (!(p is ISeekablePlaylist<T>))
-                        return false;
+                    if (p is PlaylistCollection<T>)
+                    {
+                        if (!(p as PlaylistCollection<T>).IsISeekablePlaylist)
+                            return false;
+                    }
+                    else
+                    {
+                        if (!(p is ISeekablePlaylist<T>))
+                            return false;
+                    }
                 return true;
             }
         }
