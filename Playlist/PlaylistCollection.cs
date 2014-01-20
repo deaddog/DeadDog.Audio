@@ -170,17 +170,29 @@ namespace DeadDog.Audio
 
         public bool MoveToFirst()
         {
-            throw new NotImplementedException();
+            if (!IsIEnumerablePlaylist)
+                throw new InvalidOperationException("Cannot perform MoveToFirst, as one or more inner playlists does not implement IEnumerablePlaylist.");
+
+            if (playlists.Count == 0)
+                return false;
+            else
+                return (playlists[0] as IEnumerablePlaylist<T>).MoveToFirst();
         }
         public bool MoveToLast()
         {
-            throw new NotImplementedException();
+            if (!IsIEnumerablePlaylist)
+                throw new InvalidOperationException("Cannot perform MoveToLast, as one or more inner playlists does not implement IEnumerablePlaylist.");
+
+            if (playlists.Count == 0)
+                return false;
+            else
+                return (playlists[playlists.Count - 1] as IEnumerablePlaylist<T>).MoveToLast();
         }
+
         public bool MoveToEntry(T entry)
         {
             throw new NotImplementedException();
         }
-
         public bool Contains(T entry)
         {
             throw new NotImplementedException();
