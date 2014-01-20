@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DeadDog.Audio
 {
-    public class QueuePlaylist<T> : IPlayQueue<T>
+    public class QueuePlaylist<T> : IPlaylist<T>
     {
         private List<QueueEntry<T>> queue;
         private QueueCompare comparer = new QueueCompare();
