@@ -24,7 +24,35 @@ namespace DeadDog.Audio
         public event EventHandler EntryChanged;
         public event EntryChangingEventHandler<T> EntryChanging;
 
-        public bool MoveNext();
+        public bool MoveNext()
+        {
+            while (queue.Count > 0)
+            {
+                T item = queue.Dequeue();
+                if (item == null)
+                    throw new NullReferenceException("The queded element cannot be null.");
+
+                if (!playlist.Contains(item))
+                    throw new KeyNotFoundException("The queued element was not found in the playlist.");
+
+                if (TryChangingEntry(item))
+                    return playlist.MoveToEntry(item);
+            }
+
+            return playlist.MoveNext();
+        }
+        public bool TryChangingEntry(T entry)
+        {
+            if (EntryChanging != null)
+            {
+                EntryChangingEventArgs<T> e = new EntryChangingEventArgs<T>(entry);
+                EntryChanging(this, e);
+                if (e.Rejected)
+                    return false;
+            }
+
+            return true;
+        }
 
         public void Reset()
         {
