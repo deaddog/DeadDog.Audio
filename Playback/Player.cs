@@ -13,6 +13,9 @@ namespace DeadDog.Audio.Playback
             this.playlist = playlist;
             this.playback = playback;
 
+            this.playlist.EntryChanging += playlist_EntryChanging;
+            this.playlist.EntryChanged += playlist_EntryChanged;
+
             this.playback.PositionChanged += playback_PositionChanged;
             this.playback.StatusChanged += playback_StatusChanged;
         }
@@ -49,6 +52,15 @@ namespace DeadDog.Audio.Playback
 
         #region TrackChanged event
 
+        private void playlist_EntryChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void playlist_EntryChanging(IPlaylist<T> sender, EntryChangingEventArgs<T> e)
+        {
+            throw new NotImplementedException();
+        }
         protected virtual void OnTrackChanged(EventArgs e)
         {
             if (TrackChanged != null)
