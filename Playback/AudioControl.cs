@@ -48,6 +48,23 @@ namespace DeadDog.Audio.Playback
         public event EventHandler StatusChanged;
         public event PositionChangedEventHandler PositionChanged;
 
+        public bool CanOpen(T element)
+        {
+            if (element == null)
+                return false;
+
+            string fullpath;
+
+            try { fullpath = System.IO.Path.GetFullPath(getFilename(element)); }
+            catch { fullpath = null; }
+
+            if (!new System.IO.FileInfo(fullpath).Exists)
+                return false;
+
+            TStreamFormat format = player.GetFileFormat(fullpath);
+            return format != TStreamFormat.sfUnknown;
+        }
+
         public bool Open(T element)
         {
             switch (plStatus)
@@ -59,14 +76,10 @@ namespace DeadDog.Audio.Playback
                     return Open(element);
 
                 case PlayerStatus.NoFileOpen:
-                    string path = getFilename(element);
-                    if (path == null)
+                    if (!CanOpen(element))
                         return false;
-                    System.IO.FileInfo file = new System.IO.FileInfo(path);
 
-                    if (!file.Exists)
-                        return false;
-                    if (!player.OpenFile(file.FullName, TStreamFormat.sfAutodetect))
+                    if (!player.OpenFile(System.IO.Path.GetFullPath(getFilename(element)), TStreamFormat.sfAutodetect))
                         return false;
 
                     player.GetStreamInfo(ref info);

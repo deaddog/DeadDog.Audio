@@ -3,6 +3,7 @@ namespace DeadDog.Audio.Playback
 {
     public interface IPlayback<T> : IDisposable
     {
+        bool CanOpen(T element);
         bool Open(T element);
         bool Close();
 

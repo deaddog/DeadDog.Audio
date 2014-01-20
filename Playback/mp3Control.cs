@@ -57,6 +57,19 @@ namespace DeadDog.Audio.Playback
         [DllImport("winmm.dll")]
         private static extern long mciSendString(string lpstrCommand, StringBuilder lpstrReturnString, int uReturnLength, int hwndCallback);
 
+        public bool CanOpen(string element)
+        {
+            if (element == null)
+                return false;
+
+            string fullpath;
+            
+            try { fullpath = System.IO.Path.GetFullPath(element); }
+            catch { fullpath = null; }
+
+            return new System.IO.FileInfo(fullpath).Exists;
+        }
+
         /// <summary>
         /// Loads a new file into this mp3Control
         /// </summary>
@@ -71,13 +84,10 @@ namespace DeadDog.Audio.Playback
                     Close();
                     return Open(element);
                 case PlayerStatus.NoFileOpen:
-                    if (element == null)
+                    if (!CanOpen(element))
                         return false;
-                    System.IO.FileInfo file = new System.IO.FileInfo(element);
 
-                    if (!file.Exists)
-                        return false;
-                    string command = "open " + "\"" + file.FullName + "\"" + " type MPEGVideo alias " + playerAlias;
+                    string command = "open " + "\"" + System.IO.Path.GetFullPath(element) + "\"" + " type MPEGVideo alias " + playerAlias;
                     long err = mciSendString(command, null, 0, 0);
                     long b = 1 + err;
 
