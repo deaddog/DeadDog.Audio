@@ -60,7 +60,7 @@ namespace DeadDog.Audio.Playback
 
         public T Track
         {
-            get { return playlist.CurrentEntry == null ? null : playlist.CurrentEntry.Track; }
+            get { return playlist.Entry; }
         }
 
         public bool MoveNext()
