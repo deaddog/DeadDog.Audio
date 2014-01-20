@@ -25,6 +25,11 @@ namespace DeadDog.Audio.Playback
         private void playback_PositionChanged(object sender, PositionChangedEventArgs e)
         {
             OnPositionChanged(e);
+            if (e.EndReached)
+            {
+                if (playlist.MoveNext())
+                    Play();
+            }
         }
         protected virtual void OnPositionChanged(PositionChangedEventArgs e)
         {
