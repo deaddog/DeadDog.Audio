@@ -221,7 +221,9 @@ namespace DeadDog.Audio
             {
                 tempIndex = index;
                 entries.RemoveAt(index);
-                if (!TrySettingEntry(entries[tempIndex]))
+                if (index == entries.Count)
+                    index = tempIndex = PostListIndex;
+                else if (!TrySettingEntry(entries[tempIndex]))
                     MoveNext();
             }
             else if (index < this.index)
