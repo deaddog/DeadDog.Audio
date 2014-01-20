@@ -191,11 +191,25 @@ namespace DeadDog.Audio
 
         public bool MoveToEntry(T entry)
         {
-            throw new NotImplementedException();
+            if (!IsISeekablePlaylist)
+                throw new InvalidOperationException("Cannot perform MoveToEntry, as one or more inner playlists does not implement ISeekablePlaylist.");
+
+            for (int i = 0; i < playlists.Count; i++)
+                if ((playlists[(i + index) % playlists.Count] as ISeekablePlaylist<T>).MoveToEntry(entry))
+                    return true;
+
+            return false;
         }
         public bool Contains(T entry)
         {
-            throw new NotImplementedException();
+            if (!IsISeekablePlaylist)
+                throw new InvalidOperationException("Cannot perform Contains, as one or more inner playlists does not implement ISeekablePlaylist.");
+
+            for (int i = 0; i < playlists.Count; i++)
+                if ((playlists[(i + index) % playlists.Count] as ISeekablePlaylist<T>).Contains(entry))
+                    return true;
+
+            return false;
         }
 
         public bool IsIEnumerablePlaylist
