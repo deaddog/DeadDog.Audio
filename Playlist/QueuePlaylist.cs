@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeadDog.Audio
 {
-    public class PlayQueue<T> : IPlayQueue<T>
+    public class QueuePlaylist<T> : IPlayQueue<T>
     {
         private List<QueueEntry<T>> queue;
         private QueueCompare comparer = new QueueCompare();
@@ -70,7 +70,7 @@ namespace DeadDog.Audio
             get { return queue.Count; }
         }
 
-        public PlayQueue()
+        public QueuePlaylist()
         {
             this.queue = new List<QueueEntry<T>>();
         }
