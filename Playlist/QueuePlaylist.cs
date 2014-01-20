@@ -14,6 +14,17 @@ namespace DeadDog.Audio
             this.playlist = fallbackPlaylist;
         }
 
+        public T Entry
+        {
+            get { return playlist.Entry; }
+        }
+
+        public event EventHandler EntryChanged;
+        public event EntryChangingEventHandler<T> EntryChanging;
+
+        public bool MoveNext();
+        public void Reset();
+
         public virtual void Enqueue(PlaylistEntry<T> entry)
         {
             QueueEntry<T> e = new QueueEntry<T>(entry);
