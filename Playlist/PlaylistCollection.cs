@@ -289,7 +289,6 @@ namespace DeadDog.Audio
                     allowNullChange = true;
                     MoveNext();
                 }
-                return true;
             }
             else if (i < this.index)
             {
@@ -298,6 +297,7 @@ namespace DeadDog.Audio
             }
             else
                 playlists.RemoveAt(i);
+            return true;
         }
 
         #region IEnumerable<T> Members
