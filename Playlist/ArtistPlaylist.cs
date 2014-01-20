@@ -9,17 +9,17 @@ namespace DeadDog.Audio
     public class ArtistPlaylist : PlaylistCollection<Track>
     {
         private Artist artist;
-        private Dictionary<Album, AlbumPlaylist> playlists;
+        private Dictionary<Album, AlbumPlaylist> lookup;
 
         public ArtistPlaylist(Artist artist)
         {
             this.artist = artist;
-            playlists = new Dictionary<Album, AlbumPlaylist>();
+            lookup = new Dictionary<Album, AlbumPlaylist>();
 
             foreach (var album in artist.Albums)
             {
                 AlbumPlaylist albumplaylist = new AlbumPlaylist(album);
-                playlists.Add(album, albumplaylist);
+                lookup.Add(album, albumplaylist);
                 addPlaylist(albumplaylist);
             }
 
@@ -30,10 +30,10 @@ namespace DeadDog.Audio
 
         void Albums_AlbumRemoved(Album.AlbumCollection collection, AlbumEventArgs e)
         {
-            if (playlists.ContainsKey(e.Album))
+            if (lookup.ContainsKey(e.Album))
             {
-                removePlaylist(playlists[e.Album]);
-                playlists.Remove(e.Album);
+                removePlaylist(lookup[e.Album]);
+                lookup.Remove(e.Album);
             }
             else throw new InvalidOperationException("Playlist was not in the ArtistPlaylist and could not be removed");
         }
@@ -41,7 +41,7 @@ namespace DeadDog.Audio
         void Albums_AlbumAdded(Album.AlbumCollection collection, AlbumEventArgs e)
         {
             AlbumPlaylist albumplaylist = new AlbumPlaylist(e.Album);
-            playlists.Add(e.Album, albumplaylist);
+            lookup.Add(e.Album, albumplaylist);
             addPlaylist(albumplaylist);
         }
     }
