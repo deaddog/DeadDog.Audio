@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DeadDog.Audio
 {
-    public interface IQueue<T>
+    public interface IQueue<T> : IEnumerable<T>
     {
-        void Enqueue(PlaylistEntry<T> entry);
-        PlaylistEntry<T> Dequeue();
+        int Count { get; }
+        bool IsReadOnly { get; }
 
-        bool Remove(PlaylistEntry<T> item);
+        void Enqueue(T entry);
+        T Dequeue();
 
         void Clear();
 
-        int Count
-        {
-            get;
-        }
+        bool Contains(T item);
+        void CopyTo(T[] array, int arrayIndex);
     }
 }
