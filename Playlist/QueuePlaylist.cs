@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DeadDog.Audio
 {
     public class QueuePlaylist<T> : IPlaylist<T>
+        where T : class
     {
-        private IPlaylist<T> playlist;
+        private ISeekablePlaylist<T> playlist;
         private IQueue<T> queue;
         private QueueCompare comparer = new QueueCompare();
 
-        public QueuePlaylist(IQueue<T> queue, IPlaylist<T> fallbackPlaylist)
+        public QueuePlaylist(IQueue<T> queue, ISeekablePlaylist<T> fallbackPlaylist)
         {
             this.queue = queue;
             this.playlist = fallbackPlaylist;
@@ -23,7 +25,11 @@ namespace DeadDog.Audio
         public event EntryChangingEventHandler<T> EntryChanging;
 
         public bool MoveNext();
-        public void Reset();
+
+        public void Reset()
+        {
+            queue.Clear();
+        }
 
         public virtual void Enqueue(PlaylistEntry<T> entry)
         {
