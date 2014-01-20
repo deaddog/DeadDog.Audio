@@ -4,8 +4,15 @@ namespace DeadDog.Audio
 {
     public class QueuePlaylist<T> : IPlaylist<T>
     {
-        private List<QueueEntry<T>> queue;
+        private IPlaylist<T> playlist;
+        private IQueue<T> queue;
         private QueueCompare comparer = new QueueCompare();
+
+        public QueuePlaylist(IQueue<T> queue, IPlaylist<T> fallbackPlaylist)
+        {
+            this.queue = queue;
+            this.playlist = fallbackPlaylist;
+        }
 
         public virtual void Enqueue(PlaylistEntry<T> entry)
         {
@@ -66,11 +73,6 @@ namespace DeadDog.Audio
         public int Count
         {
             get { return queue.Count; }
-        }
-
-        public QueuePlaylist()
-        {
-            this.queue = new List<QueueEntry<T>>();
         }
 
         private class QueueCompare : IComparer<QueueEntry<T>>
