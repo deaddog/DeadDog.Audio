@@ -78,6 +78,8 @@ namespace DeadDog.Audio.Playback
                         playback.Pause();
                         break;
                 }
+
+            OnTrackChanged(EventArgs.Empty);
         }
 
         private void playlist_EntryChanging(IPlaylist<T> sender, EntryChangingEventArgs<T> e)
