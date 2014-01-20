@@ -14,6 +14,9 @@ namespace DeadDog.Audio
         {
             this.queue = queue;
             this.playlist = fallbackPlaylist;
+
+            this.playlist.EntryChanged += playlist_EntryChanged;
+            this.playlist.EntryChanging += playlist_EntryChanging;
         }
 
         public T Entry
@@ -23,6 +26,17 @@ namespace DeadDog.Audio
 
         public event EventHandler EntryChanged;
         public event EntryChangingEventHandler<T> EntryChanging;
+
+        private void playlist_EntryChanged(object sender, EventArgs e)
+        {
+            if (EntryChanged != null)
+                EntryChanged(this, e);
+        }
+        private void playlist_EntryChanging(IPlaylist<T> sender, EntryChangingEventArgs<T> e)
+        {
+            if (EntryChanging != null)
+                EntryChanging(this, e);
+        }
 
         public bool MoveNext()
         {
