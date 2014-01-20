@@ -54,12 +54,31 @@ namespace DeadDog.Audio.Playback
 
         private void playlist_EntryChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            PlayerStatus status = playback.Status;
+
+            if (status != PlayerStatus.NoFileOpen)
+            {
+                Stop();
+                playback.Close();
+            }
+
+            if (playback.Open(playlist.Entry))
+                switch (status)
+                {
+                    case PlayerStatus.Playing:
+                        playback.Play();
+                        break;
+                    case PlayerStatus.Paused:
+                        playback.Play();
+                        playback.Pause();
+                        break;
+                }
         }
 
         private void playlist_EntryChanging(IPlaylist<T> sender, EntryChangingEventArgs<T> e)
         {
-            throw new NotImplementedException();
+            if (!playback.CanOpen(e.NewEntry))
+                e.RejectChange();
         }
         protected virtual void OnTrackChanged(EventArgs e)
         {
@@ -73,34 +92,6 @@ namespace DeadDog.Audio.Playback
         public T Track
         {
             get { return playlist.Entry; }
-        }
-
-        private bool moveGeneric(Func<bool> move, bool recursive)
-        {
-            PlayerStatus status = playback.Status;
-
-            if (status != PlayerStatus.NoFileOpen)
-            {
-                Stop();
-                playback.Close();
-            }
-
-            if (!move())
-                return false;
-            if (!playback.Open(playlist.CurrentEntry.Track))
-                return recursive ? moveGeneric(move, recursive) : false;
-
-            switch (status)
-            {
-                case PlayerStatus.Playing:
-                    playback.Play();
-                    break;
-                case PlayerStatus.Paused:
-                    playback.Play();
-                    playback.Pause();
-                    break;
-            }
-            return true;
         }
 
         public bool Play()
