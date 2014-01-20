@@ -284,12 +284,17 @@ namespace DeadDog.Audio
         public void Add(IPlaylist<T> playlist)
         {
             playlists.Add(playlist);
+            playlist.EntryChanging += list_EntryChanging;
+            playlist.EntryChanged += list_EntryChanged;
         }
         public void Insert(int index, IPlaylist<T> playlist)
         {
             playlists.Insert(index, playlist);
             if (index <= this.index)
                 this.index++;
+
+            playlist.EntryChanging += list_EntryChanging;
+            playlist.EntryChanged += list_EntryChanged;
         }
         public bool Remove(IPlaylist<T> playlist)
         {
@@ -310,6 +315,7 @@ namespace DeadDog.Audio
             if (index < 0 || index >= playlists.Count)
                 throw new ArgumentOutOfRangeException("index");
 
+            IPlaylist<T> playlist = playlists[index];
             if (index == this.index)
             {
                 playlists.RemoveAt(index);
@@ -330,6 +336,9 @@ namespace DeadDog.Audio
             }
             else
                 playlists.RemoveAt(index);
+
+            playlist.EntryChanging -= list_EntryChanging;
+            playlist.EntryChanged -= list_EntryChanged;
         }
 
         #region IEnumerable<T> Members
