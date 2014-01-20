@@ -216,7 +216,9 @@ namespace DeadDog.Audio
 
         public void RemoveAt(int index)
         {
-            T entry = entries[index];
+            if (index < 0 || index >= entries.Count)
+                throw new ArgumentOutOfRangeException("index");
+
             if (index == this.index)
             {
                 tempIndex = index;
