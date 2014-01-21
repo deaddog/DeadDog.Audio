@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 
 using DeadDog.Audio.Parsing;
+using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio.Scan
 {
@@ -19,6 +20,11 @@ namespace DeadDog.Audio.Scan
 
         private ExtensionList extensionList;
         private ExistingFilesCollection existingFiles;
+
+        public AudioScan ActiveScan
+        {
+            get { return lastScan; }
+        }
 
         public string DirectoryFullName
         {
@@ -107,11 +113,11 @@ namespace DeadDog.Audio.Scan
             set { searchoption = value; }
         }
 
-        public AudioScan RunScannerAsync()
+        public AudioScan RunScannerAsync(Library library)
         {
-            return RunScannerAsync(new string[] { });
+            return RunScannerAsync(library, new string[] { });
         }
-        public AudioScan RunScannerAsync(params string[] ignoreFiles)
+        public AudioScan RunScannerAsync(Library library, params string[] ignoreFiles)
         {
             if (!directory.Exists)
                 throw new ArgumentException("Directory must exist.", "directory");
@@ -125,9 +131,19 @@ namespace DeadDog.Audio.Scan
             ScanFileEventHandler parsed = FileParsed;
             parsed += AudioScanner_FileParsed;
 
-            return new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles,
-                parser, extensionList.ToArray(), existingFiles.ToArray(), ig,
-                parsed, ScanDone);
+            AudioScan scan = new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles, parser, parsed, ScanDone)
+            {
+                Extensions = extensionList,
+                ExistingFiles = existingFiles,
+                IgnoredFiles = ig,
+                Library = library
+            };
+
+            lastScan = scan;
+
+            scan.Start();
+
+            return scan;
         }
 
         private void AudioScanner_FileParsed(AudioScan sender, ScanFileEventArgs e)

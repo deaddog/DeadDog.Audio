@@ -5,47 +5,26 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using DeadDog.Audio.Parsing;
+using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio.Scan
 {
-    public class AudioScan
+    public partial class AudioScan
     {
-        private Thread thread;
-
-        private DirectoryInfo directory;
-        private SearchOption searchoption;
-
-        private bool parseAdd;
-        private bool parseUpdate;
-        private bool removeDeadFiles;
-
         private IDataParser parser;
+        private Library library;
 
         private string[] extensions;
         private Dictionary<FileInfo, RawTrack> existingFiles;
-
         private FileInfo[] ignoredFiles;
 
         private event ScanFileEventHandler parsed;
         private event ScanCompletedEventHandler done;
 
-        private ScannerState state;
-
-        private int added;
-        private int updated;
-        private int skipped;
-        private int error;
-        private int removed;
-        private int total;
-
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
             bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser,
-            string[] extensions, RawTrack[] existingFiles, string[] ignoredFiles,
-            ScanFileEventHandler parsed,
-            ScanCompletedEventHandler done)
+            ScanFileEventHandler parsed, ScanCompletedEventHandler done)
         {
-            this.thread = new Thread(Run);
-
             this.directory = directory;
             this.searchoption = searchoption;
 
@@ -54,106 +33,60 @@ namespace DeadDog.Audio.Scan
             this.removeDeadFiles = removeDeadFiles;
 
             this.parser = parser;
+            this.library = null;
 
-            this.extensions = extensions;
-            this.existingFiles = existingFiles.ToDictionary(rt => rt.File);
-
-            this.ignoredFiles = (from s in ignoredFiles select new FileInfo(s)).ToArray();
+            this.extensions = new string[] { };
+            this.existingFiles = new Dictionary<FileInfo, RawTrack>();
+            this.ignoredFiles = new FileInfo[] { };
 
             this.parsed = parsed;
             this.done = done;
 
-            this.state = ScannerState.NotRunning;
+            this.state = ScannerState.NotStarted;
 
             this.added = updated = skipped = error = removed = total = 0;
-
-            thread.Start();
         }
 
-        #region Properties
-
-        public DirectoryInfo Directory
+        internal Library Library
         {
-            get { return directory; }
-        }
-        public SearchOption SearchOption
-        {
-            get { return searchoption; }
+            set { this.library = value; }
         }
 
-        public bool ParseAdd
+        internal IEnumerable<string> Extensions
         {
-            get { return parseAdd; }
+            set { extensions = value.ToArray(); }
         }
-        public bool ParseUpdate
+        internal IEnumerable<RawTrack> ExistingFiles
         {
-            get { return parseUpdate; }
+            set { existingFiles = value.ToDictionary(rt => rt.File); }
         }
-        public bool RemoveDeadFiles
+        internal IEnumerable< string> IgnoredFiles
         {
-            get { return removeDeadFiles; }
-        }
-
-        public string[] FileExtensions
-        {
-            get { return extensions; }
+            set { ignoredFiles = (from s in value select new FileInfo(s)).ToArray(); }
         }
 
-        public ScannerState State
+        internal void Start()
         {
-            get { return state; }
-        }
+            new Thread(() =>
+            {
+                state = ScannerState.Scanning;
 
-        public int Added
-        {
-            get { return added; }
-        }
-        public int Updated
-        {
-            get { return updated; }
-        }
-        public int Skipped
-        {
-            get { return skipped; }
-        }
-        public int Errors
-        {
-            get { return error; }
-        }
-        public int Removed
-        {
-            get { return removed; }
-        }
-        public int Total
-        {
-            get { return total; }
-        }
+                var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
+                foreach (FileInfo file in ignoredFiles)
+                    actions[file] = Action.Skip;
 
-        public bool IsRunning
-        {
-            get { return state != ScannerState.Completed && state != ScannerState.NotRunning; }
-        }
+                total = actions.Count;
 
-        #endregion
+                state = ScannerState.Parsing;
 
-        private void Run()
-        {
-            state = ScannerState.Scanning;
+                foreach (var file in actions)
+                    ParseFile(file.Key, file.Value);
 
-            var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
-            foreach (FileInfo file in ignoredFiles)
-                actions[file] = Action.Skip;
+                state = ScannerState.Completed;
+                if (done != null)
+                    done(this, new ScanCompletedEventArgs());
+            }).Start();
 
-            total = actions.Count;
-
-            state = ScannerState.Parsing;
-
-            foreach (var file in actions)
-                ParseFile(file.Key, file.Value);
-
-            state = ScannerState.Completed;
-            if (done != null)
-                done(this, new ScanCompletedEventArgs());
         }
 
         private IEnumerable<FileInfo> ScanForFiles()
@@ -174,17 +107,12 @@ namespace DeadDog.Audio.Scan
         private IEnumerable<FileInfo> TrimForExtensions(IEnumerable<FileInfo> files)
         {
             foreach (var file in files)
-            {
-                bool ok = false;
                 foreach (string ext in extensions)
                     if (file.Extension.ToLower() == ext)
                     {
-                        ok = true;
+                        yield return file;
                         break;
                     }
-                if (ok)
-                    yield return file;
-            }
         }
 
         private Dictionary<FileInfo, Action> BuildActionDictionary(IEnumerable<FileInfo> scanFiles, IEnumerable<FileInfo> existingFiles)
@@ -284,6 +212,14 @@ namespace DeadDog.Audio.Scan
                 default: throw new InvalidOperationException("Unknown filestate.");
             }
 
+            if (library != null)
+                switch (state)
+                {
+                    case FileState.Added: library.AddTrack(track); break;
+                    case FileState.Updated: library.UpdateTrack(track); break;
+                    case FileState.Removed: library.RemoveTrack(filepath.FullName); break;
+                }
+
             if (parsed != null)
                 parsed(this, new ScanFileEventArgs(filepath.FullName, track, state));
         }
@@ -318,43 +254,10 @@ namespace DeadDog.Audio.Scan
             return false;
         }
 
-        #region Path comparison
-
-        private int ComparePath(RawTrack x, RawTrack y)
-        {
-            return x.FullFilename.CompareTo(y.FullFilename);
-        }
         private int ComparePath(FileInfo x, FileInfo y)
         {
             return x.FullName.CompareTo(y.FullName);
         }
-        private int ComparePath(RawTrack x, FileInfo y)
-        {
-            return x.FullFilename.CompareTo(y.FullName);
-        }
-        private int ComparePath(FileInfo x, RawTrack y)
-        {
-            return x.FullName.CompareTo(y.FullFilename);
-        }
-
-        private bool PathEqual(RawTrack x, RawTrack y)
-        {
-            return x.FullFilename.Equals(y.FullFilename);
-        }
-        private bool PathEqual(FileInfo x, FileInfo y)
-        {
-            return x.FullName.Equals(y.FullName);
-        }
-        private bool PathEqual(RawTrack x, FileInfo y)
-        {
-            return x.FullFilename.Equals(y.FullName);
-        }
-        private bool PathEqual(FileInfo x, RawTrack y)
-        {
-            return x.FullName.Equals(y.FullFilename);
-        }
-
-        #endregion
 
         private enum Action
         {

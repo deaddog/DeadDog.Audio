@@ -112,6 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawTrack.cs" />
     <Compile Include="Scan\AudioScanner\AudioScan.cs" />
+    <Compile Include="Scan\AudioScanner\AudioScan.state.cs" />
     <Compile Include="Scan\AudioScanner\AudioScanner.cs" />
     <Compile Include="Scan\AudioScanner\AudioScanner.static.cs" />
     <Compile Include="Scan\AudioScanner\ExistingFilesCollection.cs" />

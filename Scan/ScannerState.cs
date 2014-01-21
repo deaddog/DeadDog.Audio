@@ -12,7 +12,7 @@ namespace DeadDog.Audio.Scan
         /// <summary>
         /// The scanner is not running and has not been started.
         /// </summary>
-        NotRunning,
+        NotStarted,
         /// <summary>
         /// The scanner has been started and is retrieving a collection of files to parse.
         /// </summary>
