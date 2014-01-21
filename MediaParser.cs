@@ -23,7 +23,7 @@ namespace DeadDog.Audio
                     parsers.Add(type, GetParser(type));
         }
 
-        private IDataParser GetParser(MediaTypes type)
+        private static IDataParser GetParser(MediaTypes type)
         {
             switch (type)
             {
@@ -38,11 +38,11 @@ namespace DeadDog.Audio
 
         public RawTrack ParseTrack(string filepath)
         {
-            int dot = filepath.LastIndexOf('.');
-            if (dot == -1)
+            string ext = System.IO.Path.GetExtension(filepath);
+
+            if (ext == string.Empty)
                 throw new Exception("No file extension.");
 
-            string ext = filepath.Substring(dot + 1);
             MediaTypes type = getMediaType(ext);
             IDataParser parser = parsers[type];
 
@@ -51,7 +51,7 @@ namespace DeadDog.Audio
 
         private MediaTypes getMediaType(string extension)
         {
-            extension=extension.ToLower();
+            extension = extension.ToLower();
             switch (extension)
             {
                 case "ogg": return MediaTypes.Ogg;
