@@ -65,6 +65,46 @@ namespace DeadDog.Audio
                 throw new ArgumentException("Playlist did not contain the track");
         }
 
+        public Track Entry
+        {
+            get { return playlist.Entry; }
+        }
+
+        public event EventHandler EntryChanged;
+        public event EntryChangingEventHandler<Track> EntryChanging;
+
+        public void Reset()
+        {
+            playlist.Reset();
+        }
+
+        public bool MoveNext()
+        {
+            return playlist.MoveNext();
+        }
+        public bool MovePrevious()
+        {
+            return playlist.MovePrevious();
+        }
+
+        public bool MoveToFirst()
+        {
+            return playlist.MoveToFirst();
+        }
+        public bool MoveToLast()
+        {
+            return playlist.MoveToLast();
+        }
+
+        public bool MoveToEntry(Track entry)
+        {
+            return playlist.MoveToEntry(entry);
+        }
+        public bool Contains(Track entry)
+        {
+            return playlist.Contains(entry);
+        }
+
         #region IEnumerable<PlaylistEntry<Track>> Members
 
         IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
