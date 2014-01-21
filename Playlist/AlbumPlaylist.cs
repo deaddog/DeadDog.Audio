@@ -39,30 +39,12 @@ namespace DeadDog.Audio
 
         void Tracks_TrackAdded(Track.TrackCollection collection, TrackEventArgs e)
         {
-            int i = entries.BinarySearch(e.Track, sort);
-            if (i >= 0 && entries[i] == e.Track)
-                throw new ArgumentException("A playlist cannot contain the same track twice");
-            else if (i < 0)
-                i = ~i;
-
-            entries.Insert(i, e.Track);
-            if (i <= index)
-                index++;
+            int i = collection.IndexOf(e.Track);
+            playlist.Insert(i, e.Track);
         }
         void Tracks_TrackRemoved(Track.TrackCollection collection, TrackEventArgs e)
         {
-            int i = entries.BinarySearch(e.Track, sort);
-            if (i >= 0)
-            {
-                entries.RemoveAt(i);
-                if (i < index)
-                    index--;
-                else if (i == index)
-                    if (!trySettingEntry(entries[index]))
-                        MoveNext();
-            }
-            else
-                throw new ArgumentException("Playlist did not contain the track");
+            playlist.Remove(e.Track);
         }
 
         public Track Entry
