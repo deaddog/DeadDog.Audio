@@ -11,11 +11,21 @@ namespace DeadDog.Audio
 
         public QueuePlaylist(IQueue<T> queue, ISeekablePlaylist<T> fallbackPlaylist)
         {
+            if (queue == null)
+                throw new ArgumentNullException("queue");
+
+            if (fallbackPlaylist == null)
+                throw new ArgumentNullException("fallbackPlaylist");
+
             this.queue = queue;
             this.playlist = fallbackPlaylist;
 
             this.playlist.EntryChanged += playlist_EntryChanged;
             this.playlist.EntryChanging += playlist_EntryChanging;
+        }
+        public QueuePlaylist(Queue<T> queue, ISeekablePlaylist<T> fallbackPlaylist)
+            : this(new QueueInterfaceWrapper<T>(queue), fallbackPlaylist)
+        {
         }
 
         public T Entry
