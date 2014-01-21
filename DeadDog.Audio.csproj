@@ -101,7 +101,7 @@
     <Compile Include="Playlist\Interfaces\ISeekablePlaylist.cs" />
     <Compile Include="Playlist\PlaylistCollection.cs" />
     <Compile Include="Playlist\PlaylistEntry.cs" />
-    <Compile Include="Playlist\ItemPlaylist.cs" />
+    <Compile Include="Playlist\Playlist.cs" />
     <Compile Include="Playlist\PlayQueue.cs" />
     <Compile Include="Playlist\QueueEntry.cs" />
     <Compile Include="Playlist\QueueFactory[T, Q].cs" />

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeadDog.Audio
 {
-    public class ItemPlaylist<T> : IPlaylist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>, IList<T>
+    public class Playlist<T> : IPlaylist<T>, IEnumerablePlaylist<T>, ISeekablePlaylist<T>, IList<T>
         where T : class
     {
         private T entry;
@@ -97,7 +97,7 @@ namespace DeadDog.Audio
             return couldSet;
         }
 
-        public ItemPlaylist()
+        public Playlist()
         {
             this.entries = new List<T>();
             this.entry = null;

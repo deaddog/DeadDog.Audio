@@ -9,12 +9,12 @@ namespace DeadDog.Audio
     public class AlbumPlaylist : IPlaylist<Track>, IEnumerablePlaylist<Track>, ISeekablePlaylist<Track>
     {
         private Album album;
-        private ItemPlaylist<Track> playlist;
+        private Playlist<Track> playlist;
 
         public AlbumPlaylist(Album album)
         {
             this.album = album;
-            this.playlist = new ItemPlaylist<Track>();
+            this.playlist = new Playlist<Track>();
 
             this.playlist.EntryChanged += playlist_EntryChanged;
             this.playlist.EntryChanging += playlist_EntryChanging;
