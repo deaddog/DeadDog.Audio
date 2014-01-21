@@ -69,7 +69,7 @@ namespace DeadDog.Audio
 
         IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
         {
-            return entries.GetEnumerator();
+            return (playlist as IEnumerable<Track>).GetEnumerator();
         }
 
         #endregion
@@ -78,7 +78,7 @@ namespace DeadDog.Audio
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return entries.GetEnumerator();
+            return (playlist as System.Collections.IEnumerable).GetEnumerator();
         }
 
         #endregion
