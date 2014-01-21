@@ -38,7 +38,7 @@ namespace DeadDog.Audio
 
         public RawTrack ParseTrack(string filepath)
         {
-            string ext = System.IO.Path.GetExtension(filepath);
+            string ext = System.IO.Path.GetExtension(filepath).TrimStart('.');
 
             if (ext == string.Empty)
                 throw new Exception("No file extension.");
