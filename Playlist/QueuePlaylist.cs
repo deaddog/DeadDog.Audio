@@ -71,5 +71,63 @@ namespace DeadDog.Audio
         {
             queue.Clear();
         }
+
+        private class QueueInterfaceWrapper<T> : IQueue<T>
+        {
+            private Queue<T> queue;
+
+            public QueueInterfaceWrapper(Queue<T> queue)
+            {
+                if (queue == null)
+                    throw new ArgumentNullException("queue");
+
+                this.queue = queue;
+            }
+
+            public static implicit operator QueueInterfaceWrapper<T>(Queue<T> q)
+            {
+                return new QueueInterfaceWrapper<T>(q);
+            }
+
+            public int Count
+            {
+                get { return queue.Count; }
+            }
+            public bool IsReadOnly
+            {
+                get { return false; }
+            }
+
+            public void Enqueue(T entry)
+            {
+                queue.Enqueue(entry);
+            }
+            public T Dequeue()
+            {
+                return queue.Dequeue();
+            }
+
+            public void Clear()
+            {
+                queue.Clear();
+            }
+            public bool Contains(T item)
+            {
+                return queue.Contains(item);
+            }
+            public void CopyTo(T[] array, int arrayIndex)
+            {
+                queue.CopyTo(array, arrayIndex);
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                return queue.GetEnumerator();
+            }
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return queue.GetEnumerator();
+            }
+        }
     }
 }
