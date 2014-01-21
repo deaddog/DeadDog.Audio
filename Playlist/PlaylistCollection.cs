@@ -115,6 +115,7 @@ namespace DeadDog.Audio
             {
                 index = tempIndex;
                 EntryChanged(this, EventArgs.Empty);
+                return false;
             }
 
             return true;
@@ -163,6 +164,7 @@ namespace DeadDog.Audio
             {
                 index = tempIndex;
                 EntryChanged(this, EventArgs.Empty);
+                return false;
             }
 
             return true;
