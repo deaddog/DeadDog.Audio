@@ -99,6 +99,7 @@
     <Compile Include="Playlist\Interfaces\IQueueList.cs" />
     <Compile Include="Playlist\Interfaces\IQueuePeekable.cs" />
     <Compile Include="Playlist\Interfaces\ISeekablePlaylist.cs" />
+    <Compile Include="Playlist\LibraryPlaylist.cs" />
     <Compile Include="Playlist\Playlist.cs" />
     <Compile Include="Playlist\PlaylistCollection.cs" />
     <Compile Include="Playlist\PlaylistEntry.cs" />
