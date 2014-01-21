@@ -80,6 +80,7 @@ namespace DeadDog.Audio
         public void Reset()
         {
             queue.Clear();
+            playlist.Reset();
         }
 
         private class QueueInterfaceWrapper<T> : IQueue<T>
