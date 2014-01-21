@@ -6,28 +6,28 @@ namespace DeadDog.Audio.Playlist
 {
     public class LibraryPlaylist : IPlaylist<Track>, IEnumerablePlaylist<Track>, ISeekablePlaylist<Track>
     {
-        private Artist artist;
-        private Dictionary<Album, AlbumPlaylist> lookup;
+        private Library library;
+        private Dictionary<Artist, ArtistPlaylist> lookup;
         private PlaylistCollection<Track> playlists;
 
-        public LibraryPlaylist(Artist artist)
+        public LibraryPlaylist(Library library)
         {
-            this.artist = artist;
-            this.lookup = new Dictionary<Album, AlbumPlaylist>();
+            this.library = library;
+            this.lookup = new Dictionary<Artist, ArtistPlaylist>();
             this.playlists = new PlaylistCollection<Track>();
 
             this.playlists.EntryChanged += playlists_EntryChanged;
             this.playlists.EntryChanging += playlists_EntryChanging;
 
-            foreach (var album in artist.Albums)
+            foreach (var artist in library.Artists)
             {
-                AlbumPlaylist albumplaylist = new AlbumPlaylist(album);
-                lookup.Add(album, albumplaylist);
-                playlists.Add(albumplaylist);
+                ArtistPlaylist artistplaylist = new ArtistPlaylist(artist);
+                lookup.Add(artist, artistplaylist);
+                playlists.Add(artistplaylist);
             }
 
-            this.artist.Albums.AlbumAdded += new AlbumEventHandler(Albums_AlbumAdded);
-            this.artist.Albums.AlbumRemoved += new AlbumEventHandler(Albums_AlbumRemoved);
+            this.library.Artists.ArtistAdded += new ArtistEventHandler(Artists_ArtistAdded);
+            this.library.Artists.ArtistRemoved += new ArtistEventHandler(Artists_ArtistRemoved);
         }
 
         void playlists_EntryChanged(object sender, EventArgs e)
@@ -41,21 +41,21 @@ namespace DeadDog.Audio.Playlist
                 EntryChanging(this, e);
         }
 
-        void Albums_AlbumRemoved(Album.AlbumCollection collection, AlbumEventArgs e)
+        void Artists_ArtistRemoved(Artist.ArtistCollection collection, ArtistEventArgs e)
         {
-            if (lookup.ContainsKey(e.Album))
+            if (lookup.ContainsKey(e.Artist))
             {
-                playlists.Remove(lookup[e.Album]);
-                lookup.Remove(e.Album);
+                playlists.Remove(lookup[e.Artist]);
+                lookup.Remove(e.Artist);
             }
             else
-                throw new InvalidOperationException("Playlist was not in the ArtistPlaylist and could not be removed");
+                throw new InvalidOperationException("Playlist was not in the LibraryPlaylist and could not be removed");
         }
-        void Albums_AlbumAdded(Album.AlbumCollection collection, AlbumEventArgs e)
+        void Artists_ArtistAdded(Artist.ArtistCollection collection, ArtistEventArgs e)
         {
-            AlbumPlaylist albumplaylist = new AlbumPlaylist(e.Album);
-            lookup.Add(e.Album, albumplaylist);
-            playlists.Add(albumplaylist);
+            ArtistPlaylist artistplaylist = new ArtistPlaylist(e.Artist);
+            lookup.Add(e.Artist, artistplaylist);
+            playlists.Add(artistplaylist);
         }
 
         public Track Entry
