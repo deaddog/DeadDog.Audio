@@ -10,7 +10,7 @@ namespace DeadDog.Audio.Playlist
         private Dictionary<Album, AlbumPlaylist> lookup;
         private PlaylistCollection<Track> playlists;
 
-        public ArtistPlaylist(Artist artist)
+        public LibraryPlaylist(Artist artist)
         {
             this.artist = artist;
             this.lookup = new Dictionary<Album, AlbumPlaylist>();
