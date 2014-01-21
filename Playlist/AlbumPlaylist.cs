@@ -6,25 +6,37 @@ using DeadDog.Audio.Libraries;
 
 namespace DeadDog.Audio
 {
-    public class AlbumPlaylist : Playlist<Track>, IEnumerablePlaylist<Track>, ISeekablePlaylist<Track>
+    public class AlbumPlaylist : IPlaylist<Track>, IEnumerablePlaylist<Track>, ISeekablePlaylist<Track>
     {
-        private List<Track> entries;
-        private int index;
         private Album album;
-        private Comparison<Track> sort;
+        private ItemPlaylist<Track> playlist;
 
         public AlbumPlaylist(Album album)
         {
             this.album = album;
-            entries = new List<Track>();
+            this.playlist = new ItemPlaylist<Track>();
+
+            this.playlist.EntryChanged += playlist_EntryChanged;
+            this.playlist.EntryChanging += playlist_EntryChanging;
 
             foreach (var track in album.Tracks)
-                entries.Add(track);
+                playlist.Add(track);
 
             this.album.Tracks.TrackAdded += new TrackEventHandler(Tracks_TrackAdded);
             this.album.Tracks.TrackRemoved += new TrackEventHandler(Tracks_TrackRemoved);
 
             SetSortMethod(DefaultSort);
+        }
+
+        private void playlist_EntryChanged(object sender, EventArgs e)
+        {
+            if (EntryChanged != null)
+                EntryChanged(this, e);
+        }
+        private void playlist_EntryChanging(IPlaylist<Track> sender, EntryChangingEventArgs<Track> e)
+        {
+            if (EntryChanging != null)
+                EntryChanging(this, e);
         }
 
         public override void Reset()
