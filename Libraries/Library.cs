@@ -48,13 +48,14 @@ namespace DeadDog.Audio.Libraries
             Album album = albums[track.AlbumTitle] ?? CreateAlbum(track.AlbumTitle);
 
             Track t = new Track(track, album, artist);
-            tracks.Add(t);
-            album.Tracks.Add(t);
 
             if (album.IsUnknown && !artist.IsUnknown)
                 artist.Albums.UnknownAlbum.Tracks.Add(t);
 
             trackDict.Add(track.FullFilename, t);
+            
+            tracks.Add(t);
+            album.Tracks.Add(t);
 
             return t;
         }
