@@ -47,10 +47,27 @@ namespace DeadDog.Audio.YouTube
                 {
                     download = new Download(id, Path.Combine(directory, id.ID + ".mp3"));
                     files.Add(id, download);
-                    download.Start();
+                    download.Start(onComplete);
                 }
             }
             return download;
+        }
+        
+        private void onComplete(Download download)
+        {
+            string path = download.Path;
+            path = path.Substring(this.directory.Length).TrimStart('\\');
+
+            XElement track = new XElement("track",
+                new XAttribute("id", download.ID),
+                new XElement("path", path),
+                new XElement("title", download.Title));
+
+            lock (document)
+            {
+                document.Element("tracks").Add(track);
+                document.Save(documentPath);
+            }
         }
     }
 }

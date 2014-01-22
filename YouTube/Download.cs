@@ -49,8 +49,9 @@ namespace DeadDog.Audio.YouTube
             get { return state; }
         }
 
-        internal void Start()
+        internal void Start(Action<Download> onComplete)
         {
+            this.state = States.Loading;
             string text;
 
             URL mp3URL = getMp3URL(this.id, out text);
@@ -65,18 +66,8 @@ namespace DeadDog.Audio.YouTube
             mp3URL.GetFile(this.path);
             this.title = text;
 
-            XElement track = new XElement("track",
-                new XAttribute("id", id.ID),
-                new XElement("path", id.ID + ".mp3"),
-                new XElement("title", text));
-
-            lock (document)
-            {
-                document.Element("tracks").Add(track);
-                document.Save(documentPath);
-            }
-            lock (files)
-                files[id] = State.Loaded;
+            onComplete(this);
+            state = States.Loaded;
         }
         private URL getMp3URL(YouTubeID id, out string text)
         {
