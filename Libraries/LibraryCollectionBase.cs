@@ -89,15 +89,13 @@ namespace DeadDog.Audio.Libraries
         {
             if (_unknownElement != null)
                 yield return _unknownElement;
-            foreach (T t in list)
-                yield return t;
+            T[] array = list.ToArray();
+            for (int i = 0; i < array.Length; i++)
+                yield return array[i];
         }
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            if (_unknownElement != null)
-                yield return _unknownElement;
-            foreach (T t in list)
-                yield return t;
+            return (this as IEnumerable<T>).GetEnumerator();
         }
 
         public override string ToString()
