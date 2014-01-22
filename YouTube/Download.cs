@@ -7,12 +7,14 @@ namespace DeadDog.Audio.YouTube
         private YouTubeID id;
         private string path;
         private string title;
+        private States state;
 
         public Download(YouTubeID id, string path)
         {
             this.id = id;
             this.path = path;
             this.title = null;
+            this.state = States.None;
         }
 
         public YouTubeID ID
@@ -26,7 +28,10 @@ namespace DeadDog.Audio.YouTube
         public string Title
         {
             get { return title; }
-            internal set { title = value; }
+        }
+        public States State
+        {
+            get { return state; }
         }
 
         internal void Start()
@@ -76,7 +81,7 @@ namespace DeadDog.Audio.YouTube
             return new URL(link);
         }
 
-        public enum State
+        public enum States
         {
             None,
             Loading,
