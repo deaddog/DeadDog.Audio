@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace DeadDog.Audio.YouTube
 {
@@ -50,15 +51,10 @@ namespace DeadDog.Audio.YouTube
 
         internal void Start()
         {
-            throw new NotImplementedException();
-        }
-
-        private void performLoad(YouTubeID id)
-        {
             string text;
 
-            URL mp3URL = getMp3URL(id, out text);
-            URL infoURL = new URL("https://gdata.youtube.com/feeds/api/videos/" + id.ID + "?v=2");
+            URL mp3URL = getMp3URL(this.id, out text);
+            URL infoURL = new URL("https://gdata.youtube.com/feeds/api/videos/" + this.id.ID + "?v=2");
 
             string xml = infoURL.GetHTML(System.Text.Encoding.UTF8).Trim('\0');
             XDocument doc = XDocument.Load(new System.IO.StringReader(xml));
@@ -66,7 +62,8 @@ namespace DeadDog.Audio.YouTube
             if (doc != null)
                 text = doc.Root.Element(XName.Get("title", "http://www.w3.org/2005/Atom")).Value;
 
-            mp3URL.GetFile(Path.Combine(directory, id.ID + ".mp3"));
+            mp3URL.GetFile(this.path);
+            this.title = text;
 
             XElement track = new XElement("track",
                 new XAttribute("id", id.ID),
