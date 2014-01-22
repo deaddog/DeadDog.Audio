@@ -50,6 +50,15 @@ namespace DeadDog.Audio.YouTube
             }
         }
 
+        public void LoadExisting()
+        {
+            YouTubeID[] ids = new YouTubeID[files.Count];
+            files.Keys.CopyTo(ids, 0);
+
+            for (int i = 0; i < ids.Length; i++)
+                Load(ids[i]);
+        }
+
         public Download Load(YouTubeID id)
         {
             if (id == YouTubeID.Empty)
