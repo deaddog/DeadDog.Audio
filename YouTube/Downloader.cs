@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Xml.Linq;
+using DeadDog.Audio.Parsing;
 
 namespace DeadDog.Audio.YouTube
 {
@@ -13,10 +14,18 @@ namespace DeadDog.Audio.YouTube
         private XDocument document;
         private Dictionary<YouTubeID, Download> files;
 
+        private YouTubeParser parser;
+
         public Downloader(string directory)
+            : this(directory, null)
+        {
+        }
+        public Downloader(string directory, IDataParser parser)
         {
             this.directory = Path.GetFullPath(directory);
             this.files = new Dictionary<YouTubeID, Download>();
+
+            this.parser = new YouTubeParser(directory, parser);
 
             this.documentPath = XML.DocumentPath(directory);
             System.IO.FileInfo file = new System.IO.FileInfo(documentPath);
@@ -30,7 +39,12 @@ namespace DeadDog.Audio.YouTube
                     YouTubeID id = YouTubeID.Parse(e.Attribute("id").Value);
                     string path = Path.Combine(this.directory, e.Element("path").Value);
                     string title = e.Element("title").Value;
-                    files.Add(id, new Download(id, path, title));
+
+                    RawTrack trackinfo;
+                    if (!parser.TryParseTrack(path, out trackinfo))
+                        trackinfo = new RawTrack(path, title, null, RawTrack.TrackNumberIfUnknown, null, RawTrack.YearIfUnknown);
+
+                    files.Add(id, new Download(id, trackinfo, title));
                 }
             }
         }
@@ -52,11 +66,15 @@ namespace DeadDog.Audio.YouTube
             }
             return download;
         }
-        
+
         private void onComplete(Download download)
         {
             string path = download.Path;
             path = path.Substring(this.directory.Length).TrimStart('\\');
+
+            RawTrack trackinfo;
+            if (!parser.TryParseTrack(download.Path, out trackinfo))
+                trackinfo = new RawTrack(download.Path, download.Title, null, RawTrack.TrackNumberIfUnknown, null, RawTrack.YearIfUnknown);
 
             XElement track = new XElement("track",
                 new XAttribute("id", download.ID),

@@ -8,6 +8,7 @@ namespace DeadDog.Audio.YouTube
         private YouTubeID id;
         private string path;
         private string title;
+        private RawTrack trackinfo;
         private States state;
 
         internal Download(YouTubeID id, string path)
@@ -22,12 +23,15 @@ namespace DeadDog.Audio.YouTube
             this.title = null;
             this.state = States.None;
         }
-        internal Download(YouTubeID id, string path, string title)
-            : this(id, path)
+        internal Download(YouTubeID id, RawTrack trackinfo, string title)
+            : this(id, trackinfo.FullFilename)
         {
+            if (trackinfo == null)
+                throw new ArgumentNullException("trackinfo");
             if (title == null)
                 throw new ArgumentNullException("title");
 
+            this.trackinfo = trackinfo;
             this.title = title;
             this.state = States.Loaded;
         }
@@ -43,6 +47,11 @@ namespace DeadDog.Audio.YouTube
         public string Title
         {
             get { return title; }
+        }
+        public RawTrack TrackInfo
+        {
+            get { return trackinfo; }
+            internal set { trackinfo = value; }
         }
         public States State
         {
