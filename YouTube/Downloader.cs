@@ -64,6 +64,15 @@ namespace DeadDog.Audio.YouTube
                     files.Add(id, download);
                     download.Start(onComplete);
                 }
+                else
+                {
+                    RawTrack trackinfo;
+                    if (parser.TryParseTrack(download.Path, out trackinfo) && !trackinfo.Equals(download.TrackInfo))
+                    {
+                        download.TrackInfo = trackinfo;
+                        OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Updated));
+                    }
+                }
             }
             return download;
         }
@@ -87,6 +96,8 @@ namespace DeadDog.Audio.YouTube
                 document.Element("tracks").Add(track);
                 document.Save(documentPath);
             }
+
+            OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));
         }
 
         private void OnFileParsed(ScanFileEventArgs e)
