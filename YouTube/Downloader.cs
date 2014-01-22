@@ -69,7 +69,7 @@ namespace DeadDog.Audio.YouTube
                 {
                     download = new Download(id, Path.Combine(directory, id.ID + ".mp3"));
                     files.Add(id, download);
-                    download.Start(onComplete);
+                    new Thread(() => download.Start(onComplete)).Start();
                 }
                 else
                 {
@@ -91,13 +91,6 @@ namespace DeadDog.Audio.YouTube
             string path = download.Path;
             path = path.Substring(this.directory.Length).TrimStart('\\');
 
-            RawTrack trackinfo;
-            if (!parser.TryParseTrack(download.Path, out trackinfo))
-            {
-                OnFileParsed(new ScanFileEventArgs(download.Path, null, FileState.AddError));
-                return;
-            }
-
             XElement track = new XElement("track",
                 new XAttribute("id", download.ID),
                 new XElement("path", path),
@@ -107,6 +100,13 @@ namespace DeadDog.Audio.YouTube
             {
                 document.Element("tracks").Add(track);
                 document.Save(documentPath);
+            }
+
+            RawTrack trackinfo;
+            if (!parser.TryParseTrack(download.Path, out trackinfo))
+            {
+                OnFileParsed(new ScanFileEventArgs(download.Path, null, FileState.AddError));
+                return;
             }
 
             OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));
