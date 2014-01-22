@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DeadDog.Audio.Libraries
 {
-    public class Library
+    public class Library : IEnumerable<Track>
     {
         private Artist.ArtistCollection artists;
         public Artist.ArtistCollection Artists
@@ -132,6 +132,18 @@ namespace DeadDog.Audio.Libraries
         public void RemoveTrack(string filename)
         {
             RemoveTrack(trackDict[filename]);
+        }
+
+        IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
+        {
+            foreach (var artist in artists)
+                foreach (var album in artist.Albums)
+                    foreach (var track in album.Tracks)
+                        yield return track;
+        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return (this as IEnumerable<Track>).GetEnumerator();
         }
     }
 }
