@@ -9,12 +9,18 @@ namespace DeadDog.Audio.YouTube
         private string title;
         private States state;
 
-        public Download(YouTubeID id, string path)
+        internal Download(YouTubeID id, string path)
         {
             this.id = id;
             this.path = path;
             this.title = null;
             this.state = States.None;
+        }
+        internal Download(YouTubeID id, string path, string title)
+            : this(id, path)
+        {
+            this.title = title;
+            this.state = States.Loaded;
         }
 
         public YouTubeID ID
