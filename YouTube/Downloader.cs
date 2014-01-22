@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Xml.Linq;
 using DeadDog.Audio.Parsing;
+using DeadDog.Audio.Scan;
 
 namespace DeadDog.Audio.YouTube
 {
@@ -87,5 +88,12 @@ namespace DeadDog.Audio.YouTube
                 document.Save(documentPath);
             }
         }
+
+        private void OnFileParsed(ScanFileEventArgs e)
+        {
+            if (FileParsed != null)
+                FileParsed(this, e);
+        }
+        public event ScanFileEventHandler FileParsed;
     }
 }

@@ -146,7 +146,7 @@ namespace DeadDog.Audio.Scan
             return scan;
         }
 
-        private void AudioScanner_FileParsed(AudioScan sender, ScanFileEventArgs e)
+        private void AudioScanner_FileParsed(object sender, ScanFileEventArgs e)
         {
             switch (e.State)
             {
