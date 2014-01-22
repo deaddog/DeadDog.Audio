@@ -1,4 +1,6 @@
-﻿namespace DeadDog.Audio.YouTube
+﻿using System;
+
+namespace DeadDog.Audio.YouTube
 {
     public class Download
     {
@@ -25,6 +27,11 @@
         {
             get { return title; }
             internal set { title = value; }
+        }
+
+        internal void Start()
+        {
+            throw new NotImplementedException();
         }
 
         private void performLoad(YouTubeID id)

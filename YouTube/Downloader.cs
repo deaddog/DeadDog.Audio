@@ -30,22 +30,22 @@ namespace DeadDog.Audio.YouTube
             }
         }
 
-        public void Load(YouTubeID id)
+        public Download Load(YouTubeID id)
         {
-            if (id == null)
-                throw new ArgumentNullException("id");
+            if (id == YouTubeID.Empty)
+                throw new ArgumentException("YouTubeID.Empty is not a valid argument.");
 
+            Download download;
             lock (files)
             {
-                if (files.ContainsKey(id))
-                    return;
-                else
+                if (!files.TryGetValue(id, out download))
                 {
-                    files.Add(id, State.Loading);
-                    Thread thread = new Thread(() => performLoad(id));
-                    thread.Start();
+                    download = new Download(id, Path.Combine(directory, id.ID + ".mp3"));
+                    files.Add(id, download);
+                    download.Start();
                 }
             }
+            return download;
         }
     }
 }
