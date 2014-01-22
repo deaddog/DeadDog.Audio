@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DeadDog.Audio.Playlist
+namespace DeadDog.Audio
 {
     public class LibraryPlaylist : IPlaylist<Track>, IEnumerablePlaylist<Track>, ISeekablePlaylist<Track>
     {
