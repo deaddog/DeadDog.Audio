@@ -16,7 +16,7 @@ namespace DeadDog.Audio.YouTube
         public Downloader(string directory)
         {
             this.directory = Path.GetFullPath(directory);
-            this.files = new Dictionary<YouTubeID, State>();
+            this.files = new Dictionary<YouTubeID, Download>();
 
             this.documentPath = XML.DocumentPath(directory);
             System.IO.FileInfo file = new System.IO.FileInfo(documentPath);
@@ -26,14 +26,19 @@ namespace DeadDog.Audio.YouTube
             {
                 document = XDocument.Load(documentPath);
                 foreach (var e in document.Element("tracks").Elements("track"))
-                    files.Add(YouTubeID.Parse(e.Attribute("id").Value), State.Loaded);
+                {
+                    YouTubeID id = YouTubeID.Parse(e.Attribute("id").Value);
+                    string path = Path.Combine(this.directory, e.Element("path").Value);
+                    string title = e.Element("title").Value;
+                    files.Add(id, new Download(id, path, title));
+                }
             }
         }
 
         public Download Load(YouTubeID id)
         {
             if (id == YouTubeID.Empty)
-                throw new ArgumentException("YouTubeID.Empty is not a valid argument.");
+                throw new ArgumentException("YouTubeID.Empty is not a valid argument.", "id");
 
             Download download;
             lock (files)
