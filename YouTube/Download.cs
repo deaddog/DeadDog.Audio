@@ -11,6 +11,11 @@ namespace DeadDog.Audio.YouTube
 
         internal Download(YouTubeID id, string path)
         {
+            if (id == YouTubeID.Empty)
+                throw new ArgumentException("YouTubeID.Empty is not a valid argument.", "id");
+            if (path == null)
+                throw new ArgumentNullException("path");
+
             this.id = id;
             this.path = path;
             this.title = null;
@@ -19,6 +24,9 @@ namespace DeadDog.Audio.YouTube
         internal Download(YouTubeID id, string path, string title)
             : this(id, path)
         {
+            if (title == null)
+                throw new ArgumentNullException("title");
+
             this.title = title;
             this.state = States.Loaded;
         }
