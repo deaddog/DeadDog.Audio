@@ -11,7 +11,7 @@ namespace DeadDog.Audio.YouTube
         private string directory;
         private string documentPath;
         private XDocument document;
-        private Dictionary<YouTubeID, State> files;
+        private Dictionary<YouTubeID, Download> files;
 
         public Downloader(string directory)
         {
@@ -88,13 +88,6 @@ namespace DeadDog.Audio.YouTube
             text = html.Substring(7, html.IndexOf("<br />") - 12).Replace('_', ' ');
 
             return new URL(link);
-        }
-
-        public enum State
-        {
-            None,
-            Loading,
-            Loaded
         }
     }
 }

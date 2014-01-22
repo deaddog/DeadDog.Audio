@@ -26,5 +26,12 @@
             get { return title; }
             internal set { title = value; }
         }
+
+        public enum State
+        {
+            None,
+            Loading,
+            Loaded
+        }
     }
 }
