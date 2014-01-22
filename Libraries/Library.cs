@@ -109,6 +109,11 @@ namespace DeadDog.Audio.Libraries
             return old;
         }
 
+        public bool Contains(RawTrack track)
+        {
+            return trackDict.ContainsKey(track.FullFilename);
+        }
+
         public void RemoveTrack(Track track)
         {
             Album album = track.Album;
