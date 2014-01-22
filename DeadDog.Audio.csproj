@@ -118,6 +118,7 @@
     <Compile Include="Searching.cs" />
     <Compile Include="PredicateString.cs" />
     <Compile Include="SearchMethods.cs" />
+    <Compile Include="YouTube\Download.cs" />
     <Compile Include="YouTube\Downloader.cs" />
     <Compile Include="YouTube\URL.cs" />
     <Compile Include="YouTube\XML.cs" />
