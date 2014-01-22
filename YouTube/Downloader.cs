@@ -42,10 +42,8 @@ namespace DeadDog.Audio.YouTube
                     string title = e.Element("title").Value;
 
                     RawTrack trackinfo;
-                    if (!parser.TryParseTrack(path, out trackinfo))
-                        trackinfo = new RawTrack(path, title, null, RawTrack.TrackNumberIfUnknown, null, RawTrack.YearIfUnknown);
-
-                    files.Add(id, new Download(id, trackinfo, title));
+                    if (parser.TryParseTrack(path, out trackinfo))
+                        files.Add(id, new Download(id, trackinfo, title));
                 }
             }
         }
@@ -81,6 +79,8 @@ namespace DeadDog.Audio.YouTube
                         download.TrackInfo = trackinfo;
                         OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Updated));
                     }
+                    else
+                        OnFileParsed(new ScanFileEventArgs(download.Path, download.TrackInfo, FileState.Skipped));
                 }
             }
             return download;
@@ -93,7 +93,10 @@ namespace DeadDog.Audio.YouTube
 
             RawTrack trackinfo;
             if (!parser.TryParseTrack(download.Path, out trackinfo))
-                trackinfo = new RawTrack(download.Path, download.Title, null, RawTrack.TrackNumberIfUnknown, null, RawTrack.YearIfUnknown);
+            {
+                OnFileParsed(new ScanFileEventArgs(download.Path, null, FileState.AddError));
+                return;
+            }
 
             XElement track = new XElement("track",
                 new XAttribute("id", download.ID),
