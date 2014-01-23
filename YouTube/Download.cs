@@ -16,6 +16,8 @@ namespace DeadDog.Audio.YouTube
         private string title;
         private RawTrack trackinfo;
         private States state;
+        private long size;
+        private long completed;
 
         internal Download(YouTubeID id, string path)
         {
@@ -28,6 +30,8 @@ namespace DeadDog.Audio.YouTube
             this.path = path;
             this.title = null;
             this.state = States.None;
+            this.size = -1;
+            this.completed = -1;
         }
         internal Download(YouTubeID id, RawTrack trackinfo, string title)
             : this(id, trackinfo.FullFilename)
@@ -62,6 +66,10 @@ namespace DeadDog.Audio.YouTube
         public States State
         {
             get { return state; }
+        }
+        public double Progress
+        {
+            get { return (double)completed / (double)size; }
         }
 
         internal void Start(Action<Download> onComplete)
@@ -105,7 +113,7 @@ namespace DeadDog.Audio.YouTube
             return new URL(link);
         }
 
-        private void LoadToStream(URL url, Stream stream)
+        private void loadToStream(URL url, Stream stream)
         {
             if (!stream.CanWrite)
                 throw new ArgumentException("The stream must support writing.", "stream");
@@ -136,15 +144,19 @@ namespace DeadDog.Audio.YouTube
 
             if (response.ContentLength > int.MaxValue)
                 throw new InvalidOperationException("Cannot read files larger than 2gb (UINT32 max)");
+            size = response.ContentLength;
+            completed = 0;
 
             int count = 0;
             do
             {
                 count = resStream.Read(buf, 0, buf.Length);
+                completed += count;
                 if (count > 0)
                     stream.Write(buf, 0, count);
             }
             while (count > 0);
+            completed = size;
             resStream.Dispose();
         }
 
