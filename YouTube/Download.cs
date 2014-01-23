@@ -87,7 +87,7 @@ namespace DeadDog.Audio.YouTube
             string link = html.Substring(linkIndex + 12);
             link = link.Trim(' ', '\t', '\n', '\r', '\0');
 
-            text = html.Substring(7, html.IndexOf("<br />") - 12).Replace('_', ' ');
+            text = html.Substring(7, html.IndexOf("<br />") - 7).Replace('_', ' ').Trim();
 
             return new URL(link);
         }
