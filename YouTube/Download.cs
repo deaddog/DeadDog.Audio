@@ -63,20 +63,27 @@ namespace DeadDog.Audio.YouTube
             this.state = States.Loading;
             string text;
 
-            URL mp3URL = getMp3URL(this.id, out text);
-            URL infoURL = new URL("https://gdata.youtube.com/feeds/api/videos/" + this.id.ID + "?v=2");
+            try
+            {
+                URL mp3URL = getMp3URL(this.id, out text);
+                URL infoURL = new URL("https://gdata.youtube.com/feeds/api/videos/" + this.id.ID + "?v=2");
 
-            string xml = infoURL.GetHTML(System.Text.Encoding.UTF8).Trim('\0');
-            XDocument doc = XDocument.Load(new System.IO.StringReader(xml));
+                string xml = infoURL.GetHTML(System.Text.Encoding.UTF8).Trim('\0');
+                XDocument doc = XDocument.Load(new System.IO.StringReader(xml));
 
-            if (doc != null)
-                text = doc.Root.Element(XName.Get("title", "http://www.w3.org/2005/Atom")).Value;
+                if (doc != null)
+                    text = doc.Root.Element(XName.Get("title", "http://www.w3.org/2005/Atom")).Value;
 
-            mp3URL.GetFile(this.path);
-            this.title = text;
+                mp3URL.GetFile(this.path);
+                this.title = text;
+
+                state = States.Loaded;
+            }
+            catch { state = States.Failed; }
 
             onComplete(this);
-            state = States.Loaded;
+            if (state == States.Loaded)
+                state = States.Completed;
         }
         private URL getMp3URL(YouTubeID id, out string text)
         {
@@ -96,7 +103,9 @@ namespace DeadDog.Audio.YouTube
         {
             None,
             Loading,
-            Loaded
+            Loaded,
+            Failed,
+            Completed
         }
     }
 }

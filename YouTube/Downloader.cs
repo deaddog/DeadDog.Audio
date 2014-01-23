@@ -71,6 +71,10 @@ namespace DeadDog.Audio.YouTube
                     files.Add(id, download);
                     new Thread(() => download.Start(onComplete)).Start();
                 }
+                else if (files[id].State == Download.States.Failed)
+                {
+                    new Thread(() => download.Start(onComplete)).Start();
+                }
                 else
                 {
                     RawTrack trackinfo;
@@ -88,6 +92,12 @@ namespace DeadDog.Audio.YouTube
 
         private void onComplete(Download download)
         {
+            if (download.State == Download.States.Failed)
+            {
+                OnFileParsed(new ScanFileEventArgs(download.Path, null, FileState.AddError));
+                return;
+            }
+
             string path = download.Path;
             path = path.Substring(this.directory.Length).TrimStart('\\');
 
