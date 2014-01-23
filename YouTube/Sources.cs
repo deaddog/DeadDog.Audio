@@ -1,8 +1,19 @@
-﻿namespace DeadDog.Audio.YouTube
+﻿using System.Collections.Generic;
+
+namespace DeadDog.Audio.YouTube
 {
     internal static class Sources
     {
         public delegate URL GetYouTubeMp3URL(YouTubeID id);
+
+        public static IEnumerable<GetYouTubeMp3URL> All
+        {
+            get
+            {
+                yield return YouTubeInMp3;
+            }
+        }
+
         public static URL YouTubeInMp3(YouTubeID id)
         {
             URL mp3infoURL = new URL("http://youtubeinmp3.com/fetch/?api=advanced&video=http://www.youtube.com/watch?v=" + id.ID);
