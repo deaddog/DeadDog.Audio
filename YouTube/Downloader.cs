@@ -108,8 +108,11 @@ namespace DeadDog.Audio.YouTube
                 OnFileParsed(new ScanFileEventArgs(download.Path, null, FileState.AddError));
                 return;
             }
-
-            OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));
+            else
+            {
+                download.TrackInfo = trackinfo;
+                OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));
+            }
         }
 
         private void OnFileParsed(ScanFileEventArgs e)
