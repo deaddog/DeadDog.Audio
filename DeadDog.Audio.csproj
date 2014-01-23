@@ -120,7 +120,8 @@
     <Compile Include="SearchMethods.cs" />
     <Compile Include="YouTube\Download.cs" />
     <Compile Include="YouTube\Downloader.cs" />
-    <Compile Include="YouTube\IYouTubeSource.cs" />
+    <Compile Include="YouTube\Sources\IYouTubeSource.cs" />
+    <Compile Include="YouTube\Sources\YouTubeInMp3.cs" />
     <Compile Include="YouTube\URL.cs" />
     <Compile Include="YouTube\XML.cs" />
     <Compile Include="YouTube\YouTubeID.cs" />

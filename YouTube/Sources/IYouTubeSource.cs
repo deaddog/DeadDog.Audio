@@ -1,4 +1,4 @@
-﻿namespace DeadDog.Audio.YouTube
+﻿namespace DeadDog.Audio.YouTube.Sources
 {
     internal interface IYouTubeSource
     {
