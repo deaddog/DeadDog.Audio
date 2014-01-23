@@ -1,10 +1,16 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using System.Xml.Linq;
 
 namespace DeadDog.Audio.YouTube
 {
     public class Download
     {
+        private const int MAX_ATTEMPTS = 3;
+        private const int THREAD_SLEEP = 2000;
+        private const int BUFFER_SIZE = 8192;
+
         private YouTubeID id;
         private string path;
         private string title;
@@ -97,6 +103,49 @@ namespace DeadDog.Audio.YouTube
             text = html.Substring(7, html.IndexOf("<br />") - 7).Replace('_', ' ').Trim();
 
             return new URL(link);
+        }
+
+        private void LoadToStream(URL url, Stream stream)
+        {
+            if (!stream.CanWrite)
+                throw new ArgumentException("The stream must support writing.", "stream");
+
+            byte[] buf = new byte[BUFFER_SIZE];
+
+            HttpWebRequest request;
+            HttpWebResponse response = null;
+            Stream resStream = null;
+            int attempt = 0;
+
+            while (attempt < MAX_ATTEMPTS && resStream == null)
+                try
+                {
+                    attempt++;
+
+                    request = (HttpWebRequest)WebRequest.Create(url.Address);
+                    response = (HttpWebResponse)request.GetResponse();
+
+                    resStream = response.GetResponseStream();
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(THREAD_SLEEP);
+                    if (attempt == MAX_ATTEMPTS)
+                        throw new Exception("File could not be loaded after " + MAX_ATTEMPTS + " attempts.");
+                }
+
+            if (response.ContentLength > int.MaxValue)
+                throw new InvalidOperationException("Cannot read files larger than 2gb (UINT32 max)");
+
+            int count = 0;
+            do
+            {
+                count = resStream.Read(buf, 0, buf.Length);
+                if (count > 0)
+                    stream.Write(buf, 0, count);
+            }
+            while (count > 0);
+            resStream.Dispose();
         }
 
         public enum States
