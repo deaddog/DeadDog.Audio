@@ -8,7 +8,7 @@ namespace DeadDog.Audio.YouTube
     public class Download
     {
         private const int MAX_ATTEMPTS = 3;
-        private const int THREAD_SLEEP = 2000;
+        private const int THREAD_SLEEP = 500;
         private const int BUFFER_SIZE = 8192;
 
         private YouTubeID id;
