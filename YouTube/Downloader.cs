@@ -15,18 +15,10 @@ namespace DeadDog.Audio.YouTube
         private XDocument document;
         private Dictionary<YouTubeID, Download> files;
 
-        private YouTubeParser parser;
-
         public Downloader(string directory)
-            : this(directory, null)
-        {
-        }
-        public Downloader(string directory, IDataParser parser)
         {
             this.directory = Path.GetFullPath(directory);
             this.files = new Dictionary<YouTubeID, Download>();
-
-            this.parser = new YouTubeParser(directory, parser);
 
             this.documentPath = XML.DocumentPath(directory);
             System.IO.FileInfo file = new System.IO.FileInfo(documentPath);
@@ -41,9 +33,8 @@ namespace DeadDog.Audio.YouTube
                     string path = Path.Combine(this.directory, e.Element("path").Value);
                     string title = e.Element("title").Value;
 
-                    RawTrack trackinfo;
-                    if (parser.TryParseTrack(path, out trackinfo))
-                        files.Add(id, new Download(id, trackinfo, title));
+                    RawTrack trackinfo = YouTubeParser.ParseTrack(id, path);
+                    files.Add(id, new Download(id, trackinfo, title));
                 }
             }
         }
@@ -77,8 +68,9 @@ namespace DeadDog.Audio.YouTube
                 }
                 else
                 {
-                    RawTrack trackinfo;
-                    if (parser.TryParseTrack(download.Path, out trackinfo) && !trackinfo.Equals(download.TrackInfo))
+                    RawTrack trackinfo = YouTubeParser.ParseTrack(download.ID, download.Path);
+
+                    if (!trackinfo.Equals(download.TrackInfo))
                     {
                         download.TrackInfo = trackinfo;
                         OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Updated));
@@ -112,17 +104,8 @@ namespace DeadDog.Audio.YouTube
                 document.Save(documentPath);
             }
 
-            RawTrack trackinfo;
-            if (!parser.TryParseTrack(download.Path, out trackinfo))
-            {
-                OnFileParsed(new ScanFileEventArgs(download.Path, null, FileState.AddError));
-                return;
-            }
-            else
-            {
-                download.TrackInfo = trackinfo;
-                OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));
-            }
+            RawTrack trackinfo = YouTubeParser.ParseTrack(download.ID, download.Path);
+            OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));
         }
 
         private void OnFileParsed(ScanFileEventArgs e)
