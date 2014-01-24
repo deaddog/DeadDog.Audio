@@ -88,7 +88,8 @@ namespace DeadDog.Audio.YouTube
                 this.state = States.LoadingFile;
 
                 URL mp3URL = Sources.YouTubeInMp3(this.id);
-                mp3URL.GetFile(this.path);
+                using (FileStream fs = new FileStream(this.path, FileMode.Create, FileAccess.Write))
+                    loadToStream(mp3URL, fs);
 
                 state = States.Loaded;
             }
