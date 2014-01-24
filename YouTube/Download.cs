@@ -74,22 +74,21 @@ namespace DeadDog.Audio.YouTube
 
         internal void Start(Action<Download> onComplete)
         {
-            this.state = States.Loading;
-            string text;
+            this.state = States.LoadingTitle;
 
             try
             {
-                URL mp3URL = getMp3URL(this.id, out text);
                 URL infoURL = new URL("https://gdata.youtube.com/feeds/api/videos/" + this.id.ID + "?v=2");
 
                 string xml = infoURL.GetHTML(System.Text.Encoding.UTF8).Trim('\0');
                 XDocument doc = XDocument.Load(new System.IO.StringReader(xml));
 
-                if (doc != null)
-                    text = doc.Root.Element(XName.Get("title", "http://www.w3.org/2005/Atom")).Value;
+                this.title = doc == null ? string.Empty : doc.Root.Element(XName.Get("title", "http://www.w3.org/2005/Atom")).Value;
 
+                this.state = States.LoadingFile;
+
+                URL mp3URL = Sources.YouTubeInMp3(this.id);
                 mp3URL.GetFile(this.path);
-                this.title = text;
 
                 state = States.Loaded;
             }
@@ -98,19 +97,6 @@ namespace DeadDog.Audio.YouTube
             onComplete(this);
             if (state == States.Loaded)
                 state = States.Completed;
-        }
-        private URL getMp3URL(YouTubeID id, out string text)
-        {
-            URL mp3infoURL = new URL("http://youtubeinmp3.com/fetch/?api=advanced&video=http://www.youtube.com/watch?v=" + id.ID);
-            string html = mp3infoURL.GetHTML();
-
-            int linkIndex = html.IndexOf("<br />Link: ");
-            string link = html.Substring(linkIndex + 12);
-            link = link.Trim(' ', '\t', '\n', '\r', '\0');
-
-            text = html.Substring(7, html.IndexOf("<br />") - 7).Replace('_', ' ').Trim();
-
-            return new URL(link);
         }
 
         private void loadToStream(URL url, Stream stream)
@@ -163,7 +149,8 @@ namespace DeadDog.Audio.YouTube
         public enum States
         {
             None,
-            Loading,
+            LoadingTitle,
+            LoadingFile,
             Loaded,
             Failed,
             Completed
