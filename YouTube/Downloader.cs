@@ -11,32 +11,12 @@ namespace DeadDog.Audio.YouTube
     public class Downloader
     {
         private string directory;
-        private string documentPath;
-        private XDocument document;
         private Dictionary<YouTubeID, Download> files;
 
         public Downloader(string directory)
         {
             this.directory = Path.GetFullPath(directory);
             this.files = new Dictionary<YouTubeID, Download>();
-
-            this.documentPath = XML.DocumentPath(directory);
-            System.IO.FileInfo file = new System.IO.FileInfo(documentPath);
-            if (!file.Exists)
-                document = new XDocument(new XElement("tracks"));
-            else
-            {
-                document = XDocument.Load(documentPath);
-                foreach (var e in document.Element("tracks").Elements("track"))
-                {
-                    YouTubeID id = YouTubeID.Parse(e.Attribute("id").Value);
-                    string path = Path.Combine(this.directory, e.Element("path").Value);
-                    string title = e.Element("title").Value;
-
-                    RawTrack trackinfo = YouTubeParser.ParseTrack(id, path);
-                    files.Add(id, new Download(id, trackinfo, title));
-                }
-            }
         }
 
         public void LoadExisting()
@@ -92,17 +72,6 @@ namespace DeadDog.Audio.YouTube
 
             string path = download.Path;
             path = path.Substring(this.directory.Length).TrimStart('\\');
-
-            XElement track = new XElement("track",
-                new XAttribute("id", download.ID),
-                new XElement("path", path),
-                new XElement("title", download.Title));
-
-            lock (document)
-            {
-                document.Element("tracks").Add(track);
-                document.Save(documentPath);
-            }
 
             RawTrack trackinfo = YouTubeParser.ParseTrack(download.ID, download.Path);
             OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));

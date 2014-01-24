@@ -122,7 +122,6 @@
     <Compile Include="YouTube\Downloader.cs" />
     <Compile Include="YouTube\Sources.cs" />
     <Compile Include="YouTube\URL.cs" />
-    <Compile Include="YouTube\XML.cs" />
     <Compile Include="YouTube\YouTubeID.cs" />
     <Compile Include="YouTube\YouTubeParser.cs" />
   </ItemGroup>
