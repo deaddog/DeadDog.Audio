@@ -75,7 +75,6 @@
     <Compile Include="Libraries\Events\ArtistEventHandler.cs" />
     <Compile Include="Libraries\Events\TrackEventArgs.cs" />
     <Compile Include="Libraries\Events\TrackEventHandler.cs" />
-    <Compile Include="Libraries\ITracks.cs" />
     <Compile Include="Libraries\Library.cs" />
     <Compile Include="Libraries\Track.cs" />
     <Compile Include="Libraries\TrackCollection.cs" />
