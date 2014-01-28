@@ -25,10 +25,10 @@ namespace DeadDog.Audio.YouTube
             files.Keys.CopyTo(ids, 0);
 
             for (int i = 0; i < ids.Length; i++)
-                Load(ids[i]);
+                Load(ids[i], false);
         }
 
-        public Download Load(YouTubeID id)
+        public Download Load(YouTubeID id, bool loadAsync)
         {
             if (id == YouTubeID.Empty)
                 throw new ArgumentException("YouTubeID.Empty is not a valid argument.", "id");
@@ -44,7 +44,10 @@ namespace DeadDog.Audio.YouTube
                 }
                 else if (files[id].State == Download.States.Failed)
                 {
-                    new Thread(() => download.Start(onComplete)).Start();
+                    if (loadAsync)
+                        new Thread(() => download.Start(onComplete)).Start();
+                    else
+                        download.Start(onComplete);
                 }
                 else
                 {
