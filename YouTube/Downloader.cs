@@ -77,6 +77,7 @@ namespace DeadDog.Audio.YouTube
             path = path.Substring(this.directory.Length).TrimStart('\\');
 
             RawTrack trackinfo = YouTubeParser.ParseTrack(download.ID, download.Path);
+            download.TrackInfo = trackinfo;
             OnFileParsed(new ScanFileEventArgs(download.Path, trackinfo, FileState.Added));
         }
 
