@@ -54,6 +54,8 @@ namespace DeadDog.Audio.Scan
         private bool parseAdd = true;
         private bool removeDeadFiles = true;
 
+        private bool firstscanDone = false;
+
         public bool ParseUpdate
         {
             get { return parseUpdate; }
@@ -131,13 +133,14 @@ namespace DeadDog.Audio.Scan
             ScanFileEventHandler parsed = FileParsed;
             parsed += AudioScanner_FileParsed;
 
-            AudioScan scan = new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles, parser, parsed, ScanDone)
+            AudioScan scan = new AudioScan(directory, searchoption, parseAdd, parseUpdate, removeDeadFiles, parser, !firstscanDone, parsed, ScanDone)
             {
                 Extensions = extensionList,
                 ExistingFiles = existingFiles,
                 IgnoredFiles = ig,
                 Library = library
             };
+            firstscanDone = true;
 
             lastScan = scan;
 

@@ -18,11 +18,13 @@ namespace DeadDog.Audio.Scan
         private Dictionary<FileInfo, RawTrack> existingFiles;
         private FileInfo[] ignoredFiles;
 
+        private bool firstscan;
+
         private event ScanFileEventHandler parsed;
         private event ScanCompletedEventHandler done;
 
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
-            bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser,
+            bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser, bool firstscan,
             ScanFileEventHandler parsed, ScanCompletedEventHandler done)
         {
             this.directory = directory;
@@ -34,6 +36,8 @@ namespace DeadDog.Audio.Scan
 
             this.parser = parser;
             this.library = null;
+
+            this.firstscan = firstscan;
 
             this.extensions = new string[] { };
             this.existingFiles = new Dictionary<FileInfo, RawTrack>();
@@ -60,7 +64,7 @@ namespace DeadDog.Audio.Scan
         {
             set { existingFiles = value.ToDictionary(rt => rt.File); }
         }
-        internal IEnumerable< string> IgnoredFiles
+        internal IEnumerable<string> IgnoredFiles
         {
             set { ignoredFiles = (from s in value select new FileInfo(s)).ToArray(); }
         }
@@ -86,7 +90,6 @@ namespace DeadDog.Audio.Scan
                 if (done != null)
                     done(this, new ScanCompletedEventArgs());
             }).Start();
-
         }
 
         private IEnumerable<FileInfo> ScanForFiles()
@@ -149,7 +152,9 @@ namespace DeadDog.Audio.Scan
                 }
                 else if (compare == 0)
                 {
-                    if (parseUpdate)
+                    if (firstscan)
+                        dictionary.Add(exist[e], Action.Add);
+                    else if (parseUpdate)
                         dictionary.Add(exist[e], Action.Update);
                     else
                         dictionary.Add(exist[e], Action.Skip);
