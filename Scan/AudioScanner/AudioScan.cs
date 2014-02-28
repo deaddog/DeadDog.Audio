@@ -133,7 +133,7 @@ namespace DeadDog.Audio.Scan
 
             int s = 0;
             int e = 0;
-            while (s < scan.Count || s < exist.Count)
+            while (s < scan.Count || e < exist.Count)
             {
                 int compare = s == scan.Count ? 1 : e == exist.Count ? -1 : ComparePath(scan[s], exist[e]);
                 if (compare < 0)
