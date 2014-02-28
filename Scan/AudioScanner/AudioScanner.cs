@@ -54,7 +54,7 @@ namespace DeadDog.Audio.Scan
         private bool parseAdd = true;
         private bool removeDeadFiles = true;
 
-        private bool firstscanDone = false;
+        private bool firstscanDone = true;
 
         public bool ParseUpdate
         {
@@ -140,6 +140,8 @@ namespace DeadDog.Audio.Scan
                 IgnoredFiles = ig,
                 Library = library
             };
+            if (!firstscanDone)
+                this.existingFiles.Clear();
             firstscanDone = true;
 
             lastScan = scan;

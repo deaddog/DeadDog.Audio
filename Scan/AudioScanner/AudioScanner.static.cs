@@ -70,6 +70,8 @@ namespace DeadDog.Audio.Scan
             for (int i = 0; i < existCount; i++)
                 ac.existingFiles.Add(RawTrack.FromStream(input));
 
+            ac.firstscanDone = false;
+
             return ac;
         }
 

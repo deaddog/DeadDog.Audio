@@ -138,7 +138,7 @@ namespace DeadDog.Audio.Scan
                 int compare = s == scan.Count ? 1 : e == exist.Count ? -1 : ComparePath(scan[s], exist[e]);
                 if (compare < 0)
                 {
-                    if (parseAdd)
+                    if (parseAdd && !firstscan)
                         dictionary.Add(scan[s], Action.Add);
                     s++;
                 }
@@ -172,7 +172,9 @@ namespace DeadDog.Audio.Scan
                 case Action.Add:
                 case Action.Update:
                     RawTrack rt;
-                    if (parser.TryParseTrack(file.FullName, out rt))
+                    if (firstscan)
+                        FileParsed(file, existingFiles[file], FileState.Added);
+                    else if (parser.TryParseTrack(file.FullName, out rt))
                     {
                         if (action == Action.Add)
                             FileParsed(file, rt, FileState.Added);
