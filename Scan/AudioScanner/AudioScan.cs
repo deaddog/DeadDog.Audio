@@ -69,27 +69,28 @@ namespace DeadDog.Audio.Scan
             set { ignoredFiles = (from s in value select new FileInfo(s)).ToArray(); }
         }
 
+        internal void StartAsync()
+        {
+            new Thread(() => this.Start()).Start();
+        }
         internal void Start()
         {
-            new Thread(() =>
-            {
-                state = ScannerState.Scanning;
+            state = ScannerState.Scanning;
 
-                var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
-                foreach (FileInfo file in ignoredFiles)
-                    actions[file] = Action.Skip;
+            var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
+            foreach (FileInfo file in ignoredFiles)
+                actions[file] = Action.Skip;
 
-                total = actions.Count;
+            total = actions.Count;
 
-                state = ScannerState.Parsing;
+            state = ScannerState.Parsing;
 
-                foreach (var file in actions)
-                    ParseFile(file.Key, file.Value);
+            foreach (var file in actions)
+                ParseFile(file.Key, file.Value);
 
-                state = ScannerState.Completed;
-                if (done != null)
-                    done(this, new ScanCompletedEventArgs());
-            }).Start();
+            state = ScannerState.Completed;
+            if (done != null)
+                done(this, new ScanCompletedEventArgs());
         }
 
         private IEnumerable<FileInfo> ScanForFiles()

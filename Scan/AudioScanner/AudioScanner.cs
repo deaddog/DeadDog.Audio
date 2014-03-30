@@ -115,11 +115,25 @@ namespace DeadDog.Audio.Scan
             set { searchoption = value; }
         }
 
+        public AudioScan RunScanner(Library library)
+        {
+            return RunScanner(library, new string[] { });
+        }
+        public AudioScan RunScanner(Library library, params string[] ignoreFiles)
+        {
+            return runScanner(scan => scan.Start(), library, ignoreFiles);
+        }
+
         public AudioScan RunScannerAsync(Library library)
         {
             return RunScannerAsync(library, new string[] { });
         }
         public AudioScan RunScannerAsync(Library library, params string[] ignoreFiles)
+        {
+            return runScanner(scan => scan.StartAsync(), library, ignoreFiles);
+        }
+
+        private AudioScan runScanner(Action<AudioScan> scanStart, Library library, params string[] ignoreFiles)
         {
             if (!directory.Exists)
                 throw new ArgumentException("Directory must exist.", "directory");
@@ -146,7 +160,7 @@ namespace DeadDog.Audio.Scan
 
             lastScan = scan;
 
-            scan.Start();
+            scanStart(scan);
 
             return scan;
         }
