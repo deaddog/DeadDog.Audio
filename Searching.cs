@@ -106,6 +106,15 @@ namespace DeadDog.Audio
             return compareElement(element, ContainedInTitleArtistAlbum, method, searchstring);
         }
 
+        public static bool Match(this RawTrack element, SearchMethods method, string searchstring)
+        {
+            return compareElement(element, ContainedInTitleArtistAlbum, method, splitString(searchstring));
+        }
+        public static bool Match(this RawTrack element, SearchMethods method, params string[] searchstring)
+        {
+            return compareElement(element, ContainedInTitleArtistAlbum, method, searchstring);
+        }
+
         public static bool ContainedInTitleArtistAlbum(RawTrack track, string searchstring)
         {
             return (track.TrackTitle == null ? false : track.TrackTitle.ToLower().Contains(searchstring))
