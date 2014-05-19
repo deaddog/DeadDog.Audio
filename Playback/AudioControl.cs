@@ -28,6 +28,8 @@ namespace DeadDog.Audio.Playback
         private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
         private System.Threading.Timer timer;
 
+        private int volumeLeft = 0, volumeRight = 0;
+
         private Func<T, string> getFilename;
 
         public AudioControl(Func<T, string> getFilename)
@@ -37,6 +39,7 @@ namespace DeadDog.Audio.Playback
             this.getFilename = getFilename;
 
             this.player = new ZPlay();
+            readVolumes();
 
             this.info = new TStreamInfo();
             this.status = new TStreamStatus();
@@ -218,6 +221,40 @@ namespace DeadDog.Audio.Playback
         public uint Length
         {
             get { return info.Length.ms; }
+        }
+
+        public int LeftVolume
+        {
+            get
+            {
+                readVolumes();
+                return volumeLeft;
+            }
+            set
+            {
+                if (value < 0 || value > 100)
+                    throw new ArgumentOutOfRangeException("Volume must be in range [0-100].");
+                readVolumes(); player.SetPlayerVolume(value, volumeRight);
+            }
+        }
+        public int RightVolume
+        {
+            get
+            {
+                readVolumes();
+                return volumeRight;
+            }
+            set
+            {
+                if (value < 0 || value > 100)
+                    throw new ArgumentOutOfRangeException("Volume must be in range [0-100].");
+                readVolumes(); player.SetPlayerVolume(volumeLeft, value);
+            }
+        }
+
+        private void readVolumes()
+        {
+            this.player.GetPlayerVolume(ref volumeLeft, ref volumeRight);
         }
 
         private void update()
