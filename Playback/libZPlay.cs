@@ -1057,7 +1057,8 @@ namespace libZPlay
 
         public void GetPosition(ref TStreamTime time)
         {
-            zplay_GetPosition(objptr, ref time);
+            try { zplay_GetPosition(objptr, ref time); }
+            catch (AccessViolationException e) { }
         }
 
         public bool Seek(TTimeFormat TimeFormat, ref TStreamTime Position, TSeekMethod MoveMethod)
