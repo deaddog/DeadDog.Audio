@@ -25,5 +25,8 @@ namespace DeadDog.Audio.Playback
         PlayerStatus Status { get; }
         uint Position { get; }
         uint Length { get; }
+
+        int LeftVolume { get; set; }
+        int RightVolume { get; set; }
     }
 }
