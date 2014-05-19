@@ -32,13 +32,10 @@ namespace DeadDog.Audio
                 else
                     this.index = this.tempIndex = entries.IndexOf(value);
 
-                if (this.entry != value)
-                {
-                    this.entry = value;
+                this.entry = value;
 
-                    if (EntryChanged != null)
-                        EntryChanged(this, System.EventArgs.Empty);
-                }
+                if (EntryChanged != null)
+                    EntryChanged(this, System.EventArgs.Empty);
             }
         }
         public bool TrySettingEntry(T entry)
