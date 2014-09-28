@@ -11,6 +11,8 @@ namespace DeadDog.Audio.Tests
     [TestClass()]
     public class PlaylistTests
     {
+        #region Helpers
+
         private Playlist<T> getPlaylist<T>(params T[] elements) where T : class
         {
             Playlist<T> playlist = new Playlist<T>();
@@ -55,12 +57,19 @@ namespace DeadDog.Audio.Tests
             get { return Playlist<string>.EmptyListIndex; }
         }
 
+        #endregion
+
+        #region Constructor
+
         [TestMethod()]
         public void PlaylistTest()
         {
             Playlist<string> playlist = new Playlist<string>();
             assertState(playlist, null, EmptyListIndex);
         }
+
+        #endregion
+        #region MoveNext
 
         [TestMethod()]
         public void MoveNextEmptyTest()
@@ -85,6 +94,9 @@ namespace DeadDog.Audio.Tests
             Assert.AreEqual(false, playlist.MoveNext());
             assertState(playlist, null, PostListIndex);
         }
+
+        #endregion
+        #region MovePrevious
 
         [TestMethod()]
         public void MovePreviousEmptyTest()
@@ -119,6 +131,9 @@ namespace DeadDog.Audio.Tests
             assertState(playlist, null, PreListIndex);
         }
 
+        #endregion
+        #region MoveToLast
+
         [TestMethod()]
         public void MoveToLastEmptyTest()
         {
@@ -136,6 +151,9 @@ namespace DeadDog.Audio.Tests
             Assert.AreEqual(true, playlist.MoveToLast());
             assertState(playlist, "world", 1);
         }
+
+        #endregion
+        #region MoveToFirst
 
         [TestMethod()]
         public void MoveToFirstEmptyTest()
@@ -163,5 +181,7 @@ namespace DeadDog.Audio.Tests
             Assert.AreEqual(true, playlist.MoveToFirst());
             assertState(playlist, "hello", 0);
         }
+
+        #endregion
     }
 }
