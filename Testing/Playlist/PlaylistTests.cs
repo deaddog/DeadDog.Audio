@@ -41,6 +41,15 @@ namespace DeadDog.Audio.Tests
             Assert.AreEqual(expectedEntry, playlist.Entry);
             Assert.AreEqual(expectedIndex, playlist.Index);
         }
+        private void assertState<T>(Playlist<T> playlist, Tuple<T, int> state) where T : class
+        {
+            Assert.AreEqual(state.Item1, playlist.Entry);
+            Assert.AreEqual(state.Item2, playlist.Index);
+        }
+        private Tuple<T, int> getState<T>(Playlist<T> playlist) where T : class
+        {
+            return Tuple.Create(playlist.Entry, playlist.Index);
+        }
 
         private static int PreListIndex
         {
