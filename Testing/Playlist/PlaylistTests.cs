@@ -11,6 +11,29 @@ namespace DeadDog.Audio.Tests
     [TestClass()]
     public class PlaylistTests
     {
+        private Playlist<T> getPlaylist<T>(params T[] elements) where T : class
+        {
+            Playlist<T> playlist = new Playlist<T>();
+            foreach (var n in elements)
+                playlist.Add(n);
+            return playlist;
+        }
+
+        private Playlist<string> getEmptyPlaylist()
+        {
+            return getPlaylist<string>();
+        }
+        private Playlist<string> getHelloWorldPlaylist(bool post = false)
+        {
+            var playlist = getPlaylist("hello", "world");
+            if (post)
+            {
+                playlist.MoveToLast();
+                playlist.MoveNext();
+            }
+            return playlist;
+        }
+
         private void assertState<T>(Playlist<T> playlist, T expectedEntry, int expectedIndex) where T : class
         {
             Assert.AreEqual(expectedEntry, playlist.Entry);
