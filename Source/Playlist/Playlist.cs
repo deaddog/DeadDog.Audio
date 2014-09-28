@@ -195,6 +195,8 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
+            if (index == EmptyListIndex)
+                return;
             this.Index = PreListIndex;
         }
 
