@@ -56,5 +56,62 @@ namespace DeadDog.Audio.Tests
             Playlist<string> playlist = new Playlist<string>();
             assertState(playlist, null, PreListIndex);
         }
+
+        [TestMethod()]
+        public void MoveNextEmptyTest()
+        {
+            var playlist = getEmptyPlaylist();
+
+            Assert.AreEqual(false, playlist.MoveNext());
+            assertState(playlist, null, PostListIndex);
+        }
+
+        [TestMethod()]
+        public void MoveNextTwoEntriesTest()
+        {
+            var playlist = getHelloWorldPlaylist();
+
+            Assert.AreEqual(true, playlist.MoveNext());
+            assertState(playlist, "hello", 0);
+
+            Assert.AreEqual(true, playlist.MoveNext());
+            assertState(playlist, "world", 1);
+
+            Assert.AreEqual(false, playlist.MoveNext());
+            assertState(playlist, null, PostListIndex);
+        }
+
+        [TestMethod()]
+        public void MovePreviousEmptyTest()
+        {
+            var playlist = getEmptyPlaylist();
+
+            Assert.AreEqual(false, playlist.MovePrevious());
+            assertState(playlist, null, PreListIndex);
+        }
+
+        [TestMethod()]
+        public void MovePreviousTwoEntriesDirectTest()
+        {
+            var playlist = getHelloWorldPlaylist();
+
+            Assert.AreEqual(false, playlist.MovePrevious());
+            assertState(playlist, null, PreListIndex);
+        }
+
+        [TestMethod()]
+        public void MovePreviousTwoEntriesTest()
+        {
+            var playlist = getHelloWorldPlaylist(true);
+
+            Assert.AreEqual(true, playlist.MovePrevious());
+            assertState(playlist, "world", 1);
+
+            Assert.AreEqual(true, playlist.MovePrevious());
+            assertState(playlist, "hello", 0);
+
+            Assert.AreEqual(false, playlist.MovePrevious());
+            assertState(playlist, null, PreListIndex);
+        }
     }
 }
