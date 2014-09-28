@@ -50,11 +50,16 @@ namespace DeadDog.Audio.Tests
             get { return Playlist<string>.PostListIndex; }
         }
 
+        private static int EmptyListIndex
+        {
+            get { return Playlist<string>.EmptyListIndex; }
+        }
+
         [TestMethod()]
         public void PlaylistTest()
         {
             Playlist<string> playlist = new Playlist<string>();
-            assertState(playlist, null, PreListIndex);
+            assertState(playlist, null, EmptyListIndex);
         }
 
         [TestMethod()]
@@ -63,7 +68,7 @@ namespace DeadDog.Audio.Tests
             var playlist = getEmptyPlaylist();
 
             Assert.AreEqual(false, playlist.MoveNext());
-            assertState(playlist, null, PostListIndex);
+            assertState(playlist, null, EmptyListIndex);
         }
 
         [TestMethod()]
@@ -87,7 +92,7 @@ namespace DeadDog.Audio.Tests
             var playlist = getEmptyPlaylist();
 
             Assert.AreEqual(false, playlist.MovePrevious());
-            assertState(playlist, null, PreListIndex);
+            assertState(playlist, null, EmptyListIndex);
         }
 
         [TestMethod()]
@@ -120,7 +125,7 @@ namespace DeadDog.Audio.Tests
             var playlist = getEmptyPlaylist();
 
             Assert.AreEqual(false, playlist.MoveToLast());
-            assertState(playlist, null, PostListIndex);
+            assertState(playlist, null, EmptyListIndex);
         }
 
         [TestMethod()]
@@ -138,7 +143,7 @@ namespace DeadDog.Audio.Tests
             var playlist = getEmptyPlaylist();
 
             Assert.AreEqual(false, playlist.MoveToFirst());
-            assertState(playlist, null, PreListIndex);
+            assertState(playlist, null, EmptyListIndex);
         }
 
         [TestMethod()]
