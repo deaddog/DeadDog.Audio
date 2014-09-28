@@ -192,5 +192,65 @@ namespace DeadDog.Audio.Tests
         }
 
         #endregion
+        #region MoveToEntry
+
+        [TestMethod()]
+        public void MoveToEntryEmptyTest()
+        {
+            var playlist = getEmptyPlaylist();
+
+            Assert.AreEqual(false, playlist.MoveToEntry("hello"));
+            assertState(playlist, null, EmptyListIndex);
+        }
+
+        [TestMethod()]
+        public void MoveToEntryTwoEntriesUnknownKeyTest1()
+        {
+            var playlist = getHelloWorldPlaylist();
+
+            var state = getState(playlist);
+            Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
+            assertState(playlist, state);
+        }
+
+        [TestMethod()]
+        public void MoveToEntryTwoEntriesUnknownKeyTest2()
+        {
+            var playlist = getHelloWorldPlaylist();
+            playlist.MoveNext();
+
+            var state = getState(playlist);
+            Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
+            assertState(playlist, state);
+        }
+
+        [TestMethod()]
+        public void MoveToEntryTwoEntriesUnknownKeyTest3()
+        {
+            var playlist = getHelloWorldPlaylist(true);
+
+            var state = getState(playlist);
+            Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
+            assertState(playlist, state);
+        }
+
+        [TestMethod()]
+        public void MoveToEntryTwoEntriesWithKeyTest1()
+        {
+            var playlist = getHelloWorldPlaylist();
+
+            Assert.AreEqual(true, playlist.MoveToEntry("hello"));
+            assertState(playlist, "hello", 0);
+        }
+        [TestMethod()]
+        public void MoveToEntryTwoEntriesWithKeyTest2()
+        {
+            var playlist = getHelloWorldPlaylist();
+
+            Assert.AreEqual(true, playlist.MoveToEntry("world"));
+            assertState(playlist, "world", 1);
+        }
+
+        #endregion
     }
 }
