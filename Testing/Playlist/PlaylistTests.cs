@@ -113,5 +113,50 @@ namespace DeadDog.Audio.Tests
             Assert.AreEqual(false, playlist.MovePrevious());
             assertState(playlist, null, PreListIndex);
         }
+
+        [TestMethod()]
+        public void MoveToLastEmptyTest()
+        {
+            var playlist = getEmptyPlaylist();
+
+            Assert.AreEqual(false, playlist.MoveToLast());
+            assertState(playlist, null, PostListIndex);
+        }
+
+        [TestMethod()]
+        public void MoveToLastTwoEntriesTest()
+        {
+            var playlist = getHelloWorldPlaylist(true);
+
+            Assert.AreEqual(true, playlist.MoveToLast());
+            assertState(playlist, "world", 1);
+        }
+
+        [TestMethod()]
+        public void MoveToFirstEmptyTest()
+        {
+            var playlist = getEmptyPlaylist();
+
+            Assert.AreEqual(false, playlist.MoveToFirst());
+            assertState(playlist, null, PreListIndex);
+        }
+
+        [TestMethod()]
+        public void MoveToFirstTwoEntriesDirectTest()
+        {
+            var playlist = getHelloWorldPlaylist();
+
+            Assert.AreEqual(true, playlist.MoveToFirst());
+            assertState(playlist, "hello", 0);
+        }
+
+        [TestMethod()]
+        public void MoveToFirstTwoEntriesTest()
+        {
+            var playlist = getHelloWorldPlaylist(true);
+
+            Assert.AreEqual(true, playlist.MoveToFirst());
+            assertState(playlist, "hello", 0);
+        }
     }
 }
