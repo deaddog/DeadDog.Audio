@@ -99,8 +99,8 @@ namespace DeadDog.Audio
         {
             this.entries = new List<T>();
             this.entry = null;
-            this.index = PreListIndex;
-            this.tempIndex = PreListIndex;
+            this.index = EmptyListIndex;
+            this.tempIndex = EmptyListIndex;
         }
 
         public event System.EventHandler EntryChanged;
@@ -108,6 +108,9 @@ namespace DeadDog.Audio
 
         public bool MoveNext()
         {
+            if (index == EmptyListIndex)
+                return false;
+
             if (index == PostListIndex)
                 return false;
 
@@ -127,6 +130,9 @@ namespace DeadDog.Audio
         }
         public bool MovePrevious()
         {
+            if (index == EmptyListIndex)
+                return false;
+
             if (index == PreListIndex)
                 return false;
 
@@ -210,6 +216,8 @@ namespace DeadDog.Audio
             entries.Insert(index, item);
             if (index <= this.index)
                 this.tempIndex = this.index++;
+            else if (index == EmptyListIndex)
+                Index = PreListIndex;
         }
 
         public void RemoveAt(int index)
@@ -221,7 +229,9 @@ namespace DeadDog.Audio
             {
                 tempIndex = index;
                 entries.RemoveAt(index);
-                if (index == entries.Count)
+                if (entries.Count == 0)
+                    Index = EmptyListIndex;
+                else if (index == entries.Count)
                     index = tempIndex = PostListIndex;
                 else if (!TrySettingEntry(entries[tempIndex]))
                     MoveNext();
@@ -230,9 +240,15 @@ namespace DeadDog.Audio
             {
                 entries.RemoveAt(index);
                 tempIndex = index--;
+                if (entries.Count == 0)
+                    Index = EmptyListIndex;
             }
             else
+            {
                 entries.RemoveAt(index);
+                if (entries.Count == 0)
+                    Index = EmptyListIndex;
+            }
         }
 
         public T this[int index]
@@ -256,12 +272,15 @@ namespace DeadDog.Audio
         public void Add(T item)
         {
             entries.Add(item);
+            if (index == EmptyListIndex)
+                Index = PreListIndex;
         }
 
         public void Clear()
         {
             entries.Clear();
             Reset();
+            Index = EmptyListIndex;
         }
 
         public bool Contains(T item)
@@ -295,6 +314,8 @@ namespace DeadDog.Audio
             else
             {
                 this.RemoveAt(index);
+                if (entries.Count == 0)
+                    Index = EmptyListIndex;
                 return true;
             }
         }
