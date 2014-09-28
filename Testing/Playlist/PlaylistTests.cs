@@ -78,6 +78,7 @@ namespace DeadDog.Audio.Tests
         }
 
         #endregion
+
         #region MoveNext
 
         [TestMethod()]
@@ -249,6 +250,35 @@ namespace DeadDog.Audio.Tests
 
             Assert.AreEqual(true, playlist.MoveToEntry("world"));
             assertState(playlist, "world", 1);
+        }
+
+        #endregion
+
+        #region Reset
+
+        [TestMethod()]
+        public void ResetEmptyTest()
+        {
+            var playlist = getEmptyPlaylist();
+
+            playlist.Reset();
+            assertState(playlist, null, EmptyListIndex);
+        }
+        [TestMethod()]
+        public void ResetTwoEntriesTest1()
+        {
+            var playlist = getHelloWorldPlaylist();
+
+            playlist.Reset();
+            assertState(playlist, null, PreListIndex);
+        }
+        [TestMethod()]
+        public void ResetTwoEntriesTest2()
+        {
+            var playlist = getHelloWorldPlaylist(true);
+
+            playlist.Reset();
+            assertState(playlist, null, PreListIndex);
         }
 
         #endregion
