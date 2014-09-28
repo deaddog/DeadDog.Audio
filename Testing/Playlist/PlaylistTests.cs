@@ -49,5 +49,12 @@ namespace DeadDog.Audio.Tests
         {
             get { return Playlist<string>.PostListIndex; }
         }
+
+        [TestMethod()]
+        public void PlaylistTest()
+        {
+            Playlist<string> playlist = new Playlist<string>();
+            assertState(playlist, null, PreListIndex);
+        }
     }
 }
