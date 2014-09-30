@@ -63,5 +63,16 @@ namespace DeadDog.Audio.Tests
         }
 
         #endregion
+
+        #region Constructor
+
+        [TestMethod()]
+        public void PlaylistCollectionTest()
+        {
+            PlaylistCollection<string> playlist = new PlaylistCollection<string>();
+            assertState(playlist, null, EmptyListIndex);
+        }
+
+        #endregion
     }
 }
