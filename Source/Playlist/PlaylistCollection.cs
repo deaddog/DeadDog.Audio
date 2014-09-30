@@ -19,6 +19,7 @@ namespace DeadDog.Audio
 
         public const int PreListIndex = -1;
         public const int PostListIndex = -2;
+        public const int EmptyListIndex = -3;
 
         public int Index
         {
