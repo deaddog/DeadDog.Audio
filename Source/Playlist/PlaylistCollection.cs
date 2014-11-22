@@ -37,7 +37,7 @@ namespace DeadDog.Audio
             }
         }
 
-        private void list_EntryChanging(IPlaylist<T> sender, EntryChangingEventArgs<T> e)
+        private void list_EntryChanging(IPlayable<T> sender, EntryChangingEventArgs<T> e)
         {
             if (EntryChanging != null)
                 EntryChanging(this, e);
