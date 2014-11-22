@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DeadDog.Audio
 {
-    public class LibraryPlaylist : IPlaylist<Track>, IEnumerablePlaylist<Track>, ISeekablePlaylist<Track>
+    public class LibraryPlaylist : IPlaylist<Track>
     {
         private Library library;
         private Dictionary<Artist, ArtistPlaylist> lookup;
