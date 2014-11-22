@@ -9,7 +9,7 @@ namespace DeadDog.Audio
     /// Represents a collection of objects of which the currently active one is retrieveable through a property.
     /// </summary>
     /// <typeparam name="T">The type of elements in the playlist.</typeparam>
-    public interface IPlaylist<T>
+    public interface IPlaylist<T> : IPlayable<T>
     {
         /// <summary>
         /// Gets the currently selected entry in the playlist.
