@@ -123,9 +123,6 @@ namespace DeadDog.Audio
         }
         public bool MovePrevious()
         {
-            if (!IsIEnumerablePlaylist)
-                throw new InvalidOperationException("Cannot perform MovePrevious, as one or more inner playlists does not implement IEnumerablePlaylist.");
-
             int tempIndex = this.index;
 
             if (tempIndex == PreListIndex)
@@ -148,14 +145,14 @@ namespace DeadDog.Audio
 
             while (tempIndex != PreListIndex && !moved)
             {
-                moved = (playlists[tempIndex] as IEnumerablePlaylist<T>).MovePrevious();
+                moved = playlists[tempIndex].MovePrevious();
                 if (!moved)
                 {
                     tempIndex++;
                     if (tempIndex >= playlists.Count)
                         tempIndex = PostListIndex;
                     else
-                        moved = !(playlists[tempIndex] as IEnumerablePlaylist<T>).MoveToLast();
+                        moved = !playlists[tempIndex].MoveToLast();
                 }
             }
 
@@ -173,86 +170,37 @@ namespace DeadDog.Audio
 
         public bool MoveToFirst()
         {
-            if (!IsIEnumerablePlaylist)
-                throw new InvalidOperationException("Cannot perform MoveToFirst, as one or more inner playlists does not implement IEnumerablePlaylist.");
-
             if (playlists.Count == 0)
                 return false;
             else
-                return (playlists[0] as IEnumerablePlaylist<T>).MoveToFirst();
+                return playlists[0].MoveToFirst();
         }
         public bool MoveToLast()
         {
-            if (!IsIEnumerablePlaylist)
-                throw new InvalidOperationException("Cannot perform MoveToLast, as one or more inner playlists does not implement IEnumerablePlaylist.");
-
             if (playlists.Count == 0)
                 return false;
             else
-                return (playlists[playlists.Count - 1] as IEnumerablePlaylist<T>).MoveToLast();
+                return playlists[playlists.Count - 1].MoveToLast();
         }
 
         public bool MoveToEntry(T entry)
         {
-            if (!IsISeekablePlaylist)
-                throw new InvalidOperationException("Cannot perform MoveToEntry, as one or more inner playlists does not implement ISeekablePlaylist.");
-
             if (index == -1 || index == -2)
                 index = 0;
 
             for (int i = 0; i < playlists.Count; i++)
-                if ((playlists[(i + index) % playlists.Count] as ISeekablePlaylist<T>).Contains(entry))
-                    return (playlists[(i + index) % playlists.Count] as ISeekablePlaylist<T>).MoveToEntry(entry);
+                if (playlists[(i + index) % playlists.Count].Contains(entry))
+                    return playlists[(i + index) % playlists.Count].MoveToEntry(entry);
 
             return false;
         }
         public bool Contains(T entry)
         {
-            if (!IsISeekablePlaylist)
-                throw new InvalidOperationException("Cannot perform Contains, as one or more inner playlists does not implement ISeekablePlaylist.");
-
             for (int i = 0; i < playlists.Count; i++)
-                if ((playlists[i] as ISeekablePlaylist<T>).Contains(entry))
+                if (playlists[i].Contains(entry))
                     return true;
 
             return false;
-        }
-
-        public bool IsIEnumerablePlaylist
-        {
-            get
-            {
-                foreach (var p in playlists)
-                    if (p is PlaylistCollection<T>)
-                    {
-                        if (!(p as PlaylistCollection<T>).IsIEnumerablePlaylist)
-                            return false;
-                    }
-                    else
-                    {
-                        if (!(p is IEnumerablePlaylist<T>))
-                            return false;
-                    }
-                return true;
-            }
-        }
-        public bool IsISeekablePlaylist
-        {
-            get
-            {
-                foreach (var p in playlists)
-                    if (p is PlaylistCollection<T>)
-                    {
-                        if (!(p as PlaylistCollection<T>).IsISeekablePlaylist)
-                            return false;
-                    }
-                    else
-                    {
-                        if (!(p is ISeekablePlaylist<T>))
-                            return false;
-                    }
-                return true;
-            }
         }
 
         public int Count
@@ -352,11 +300,7 @@ namespace DeadDog.Audio
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             foreach (IPlaylist<T> playlist in playlists)
-                if (!(playlist is IEnumerablePlaylist<T>))
-                    throw new InvalidOperationException("To enumerate a PlaylistCollection, all inner playlists must implement the IEnumerablePlaylist interface.");
-
-            foreach (IPlaylist<T> playlist in playlists)
-                foreach (T t in (playlist as IEnumerablePlaylist<T>))
+                foreach (T t in playlist)
                     yield return t;
         }
 
