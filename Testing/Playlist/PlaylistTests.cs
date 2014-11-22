@@ -25,13 +25,22 @@ namespace DeadDog.Audio.Tests
         {
             return getPlaylist<string>();
         }
-        private Playlist<string> getHelloWorldPlaylist(bool post = false)
+        private Playlist<string> getHelloWorldPlaylist(int offset = 0)
         {
             var playlist = getPlaylist("hello", "world");
-            if (post)
+            if (offset < 0)
             {
                 playlist.MoveToLast();
                 playlist.MoveNext();
+
+                offset = ~offset;
+                while (offset-- > 0)
+                    playlist.MovePrevious();
+            }
+            else
+            {
+                while (offset-- > 0)
+                    playlist.MoveNext();
             }
             return playlist;
         }
@@ -129,7 +138,7 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MovePreviousTwoEntriesTest()
         {
-            var playlist = getHelloWorldPlaylist(true);
+            var playlist = getHelloWorldPlaylist(~0);
 
             Assert.AreEqual(true, playlist.MovePrevious());
             assertState(playlist, "world", 1);
@@ -156,7 +165,7 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveToLastTwoEntriesTest()
         {
-            var playlist = getHelloWorldPlaylist(true);
+            var playlist = getHelloWorldPlaylist();
 
             Assert.AreEqual(true, playlist.MoveToLast());
             assertState(playlist, "world", 1);
@@ -186,7 +195,7 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveToFirstTwoEntriesTest()
         {
-            var playlist = getHelloWorldPlaylist(true);
+            var playlist = getHelloWorldPlaylist(~0);
 
             Assert.AreEqual(true, playlist.MoveToFirst());
             assertState(playlist, "hello", 0);
@@ -217,8 +226,7 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveToEntryTwoEntriesUnknownKeyTest2()
         {
-            var playlist = getHelloWorldPlaylist();
-            playlist.MoveNext();
+            var playlist = getHelloWorldPlaylist(1);
 
             var state = getState(playlist);
             Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
@@ -228,7 +236,7 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveToEntryTwoEntriesUnknownKeyTest3()
         {
-            var playlist = getHelloWorldPlaylist(true);
+            var playlist = getHelloWorldPlaylist(~0);
 
             var state = getState(playlist);
             Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
@@ -275,7 +283,7 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void ResetTwoEntriesTest2()
         {
-            var playlist = getHelloWorldPlaylist(true);
+            var playlist = getHelloWorldPlaylist(~0);
 
             playlist.Reset();
             assertState(playlist, null, PreListIndex);
