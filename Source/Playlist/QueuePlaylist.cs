@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace DeadDog.Audio
 {
-    public class QueuePlaylist<T> : IPlaylist<T>
+    public class QueuePlaylist<T> : IPlayable<T>
         where T : class
     {
-        private ISeekablePlaylist<T> playlist;
+        private IPlaylist<T> playlist;
         private IQueue<T> queue;
 
-        public QueuePlaylist(IQueue<T> queue, ISeekablePlaylist<T> fallbackPlaylist)
+        public QueuePlaylist(IQueue<T> queue, IPlaylist<T> fallbackPlaylist)
         {
             if (queue == null)
                 throw new ArgumentNullException("queue");
@@ -23,7 +23,7 @@ namespace DeadDog.Audio
             this.playlist.EntryChanged += playlist_EntryChanged;
             this.playlist.EntryChanging += playlist_EntryChanging;
         }
-        public QueuePlaylist(Queue<T> queue, ISeekablePlaylist<T> fallbackPlaylist)
+        public QueuePlaylist(Queue<T> queue, IPlaylist<T> fallbackPlaylist)
             : this(new QueueInterfaceWrapper<T>(queue), fallbackPlaylist)
         {
         }
