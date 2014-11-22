@@ -5,10 +5,10 @@ namespace DeadDog.Audio.Playback
     public class Player<T> : IDisposable
         where T : class
     {
-        private IPlaylist<T> playlist;
+        private IPlayable<T> playlist;
         private IPlayback<T> playback;
 
-        public Player(IPlaylist<T> playlist, IPlayback<T> playback)
+        public Player(IPlayable<T> playlist, IPlayback<T> playback)
         {
             this.playlist = playlist;
             this.playback = playback;
@@ -82,7 +82,7 @@ namespace DeadDog.Audio.Playback
             OnTrackChanged(EventArgs.Empty);
         }
 
-        private void playlist_EntryChanging(IPlaylist<T> sender, EntryChangingEventArgs<T> e)
+        private void playlist_EntryChanging(IPlayable<T> sender, EntryChangingEventArgs<T> e)
         {
             if (!playback.CanOpen(e.NewEntry))
                 e.RejectChange();
