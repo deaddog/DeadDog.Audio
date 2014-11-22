@@ -13,64 +13,22 @@ namespace DeadDog.Audio
     public class PlaylistCollection<T> : IPlaylist<T>
         where T : class
     {
-        private List<IPlaylist<T>> playlists;
-        private int index;
-        private bool allowNullChange;
-
-        public const int PreListIndex = -1;
-        public const int PostListIndex = -2;
-        public const int EmptyListIndex = -3;
+        private Playlist<IPlaylist<T>> playlists;
 
         public int Index
         {
-            get { return index; }
-            set
-            {
-                if (value < 0 || value >= playlists.Count)
-                    throw new ArgumentOutOfRangeException("value");
-
-                T entry = Entry;
-                index = value;
-
-                if (entry != Entry && EntryChanged != null)
-                    EntryChanged(this, EventArgs.Empty);
-            }
-        }
-
-        private void list_EntryChanging(IPlayable<T> sender, EntryChangingEventArgs<T> e)
-        {
-            if (EntryChanging != null)
-                EntryChanging(this, e);
-        }
-        private void list_EntryChanged(object sender, EventArgs e)
-        {
-            if (!(sender is IPlaylist<T>))
-                throw new ArgumentException("Event sender must be a playlist.", "sender");
-
-            IPlaylist<T> playlist = sender as IPlaylist<T>;
-            if (!playlists.Contains(playlist))
-                throw new ArgumentException("Event sender must be a playlist contained by the PlaylistCollection.", "sender");
-
-            if (allowNullChange || playlist.Entry != null)
-            {
-                int listIndex = playlists.IndexOf(playlist);
-                this.index = listIndex;
-
-                if (EntryChanged != null)
-                    EntryChanged(this, e);
-            }
+            get { return playlists.Index; }
+            set { throw new NotImplementedException(); }
         }
 
         public PlaylistCollection()
         {
-            this.playlists = new List<IPlaylist<T>>();
-            this.index = PreListIndex;
-            this.allowNullChange = true;
+            this.playlists = new Playlist<IPlaylist<T>>();
         }
 
         public T Entry
         {
-            get { return index < 0 ? null : playlists[index].Entry; }
+            get { return playlists.Entry == null ? null : playlists.Entry.Entry; }
         }
 
         public event EventHandler EntryChanged;
@@ -78,129 +36,37 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            this.index = PreListIndex;
+            throw new NotImplementedException();
         }
 
         public bool MoveNext()
         {
-            int tempIndex = this.index;
-
-            if (tempIndex == PostListIndex)
-                return false;
-            if (playlists.Count == 0)
-            {
-                tempIndex = PostListIndex;
-                return false;
-            }
-
-            allowNullChange = false;
-
-            if (tempIndex == PreListIndex)
-            {
-                tempIndex = 0;
-                playlists[tempIndex].Reset();
-            }
-
-            while (tempIndex != PostListIndex && !playlists[tempIndex].MoveNext())
-            {
-                tempIndex++;
-                if (tempIndex >= playlists.Count)
-                    tempIndex = PostListIndex;
-                else
-                    playlists[tempIndex].Reset();
-            }
-
-            allowNullChange = true;
-
-            if (tempIndex == PostListIndex && EntryChanged != null)
-            {
-                index = tempIndex;
-                EntryChanged(this, EventArgs.Empty);
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
         public bool MovePrevious()
         {
-            int tempIndex = this.index;
-
-            if (tempIndex == PreListIndex)
-                return false;
-            if (playlists.Count == 0)
-            {
-                tempIndex = PreListIndex;
-                return false;
-            }
-
-            allowNullChange = false;
-
-            if (tempIndex == PostListIndex)
-            {
-                tempIndex = playlists.Count - 1;
-                playlists[tempIndex].Reset();
-            }
-
-            bool moved = false;
-
-            while (tempIndex != PreListIndex && !moved)
-            {
-                moved = playlists[tempIndex].MovePrevious();
-                if (!moved)
-                {
-                    tempIndex++;
-                    if (tempIndex >= playlists.Count)
-                        tempIndex = PostListIndex;
-                    else
-                        moved = !playlists[tempIndex].MoveToLast();
-                }
-            }
-
-            allowNullChange = true;
-
-            if (tempIndex == PostListIndex && EntryChanged != null)
-            {
-                index = tempIndex;
-                EntryChanged(this, EventArgs.Empty);
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         public bool MoveToFirst()
         {
-            if (playlists.Count == 0)
-                return false;
-            else
-                return playlists[0].MoveToFirst();
+            throw new NotImplementedException();
         }
         public bool MoveToLast()
         {
-            if (playlists.Count == 0)
+            if (!playlists.MoveToLast())
                 return false;
             else
-                return playlists[playlists.Count - 1].MoveToLast();
+                return playlists.Entry.MoveToLast();
         }
 
         public bool MoveToEntry(T entry)
         {
-            if (index == -1 || index == -2)
-                index = 0;
-
-            for (int i = 0; i < playlists.Count; i++)
-                if (playlists[(i + index) % playlists.Count].Contains(entry))
-                    return playlists[(i + index) % playlists.Count].MoveToEntry(entry);
-
-            return false;
+            throw new NotImplementedException();
         }
         public bool Contains(T entry)
         {
-            for (int i = 0; i < playlists.Count; i++)
-                if (playlists[i].Contains(entry))
-                    return true;
-
-            return false;
+            throw new NotImplementedException();
         }
 
         public int Count
@@ -220,35 +86,16 @@ namespace DeadDog.Audio
         }
         public bool Move(IPlaylist<T> playlist, int index)
         {
-            int i = playlists.IndexOf(playlist);
-
-            if (i == -1)
-                return false;
-
-            IPlaylist<T> selected = index < 0 ? null : playlists[this.index];
-
-            playlists.RemoveAt(i);
-            playlists.Insert(index, playlist);
-
-            if (selected != null)
-                this.index = playlists.IndexOf(selected);
-            return true;
+            throw new NotImplementedException();
         }
 
         public void Add(IPlaylist<T> playlist)
         {
-            playlists.Add(playlist);
-            playlist.EntryChanging += list_EntryChanging;
-            playlist.EntryChanged += list_EntryChanged;
+            Insert(playlists.Count, playlist);
         }
         public void Insert(int index, IPlaylist<T> playlist)
         {
-            playlists.Insert(index, playlist);
-            if (index <= this.index)
-                this.index++;
-
-            playlist.EntryChanging += list_EntryChanging;
-            playlist.EntryChanged += list_EntryChanged;
+            throw new NotImplementedException();
         }
         public bool Remove(IPlaylist<T> playlist)
         {
@@ -266,33 +113,7 @@ namespace DeadDog.Audio
         }
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= playlists.Count)
-                throw new ArgumentOutOfRangeException("index");
-
-            IPlaylist<T> playlist = playlists[index];
-            if (index == this.index)
-            {
-                playlists.RemoveAt(index);
-                if (this.index == playlists.Count)
-                    this.index = PostListIndex;
-                else
-                {
-                    allowNullChange = false;
-                    playlists[this.index].Reset();
-                    allowNullChange = true;
-                    MoveNext();
-                }
-            }
-            else if (index < this.index)
-            {
-                playlists.RemoveAt(index);
-                index--;
-            }
-            else
-                playlists.RemoveAt(index);
-
-            playlist.EntryChanging -= list_EntryChanging;
-            playlist.EntryChanged -= list_EntryChanged;
+            throw new NotImplementedException();
         }
 
         #region IEnumerable<T> Members
