@@ -91,11 +91,9 @@
     <Compile Include="Playlist\ArtistPlaylist.cs" />
     <Compile Include="Playlist\EntryChangingEventArgs.cs" />
     <Compile Include="Playlist\EntryChangingEventHandler.cs" />
-    <Compile Include="Playlist\Interfaces\IEnumerablePlaylist.cs" />
     <Compile Include="Playlist\Interfaces\IPlayable.cs" />
     <Compile Include="Playlist\Interfaces\IPlaylist.cs" />
     <Compile Include="Playlist\Interfaces\IQueue.cs" />
-    <Compile Include="Playlist\Interfaces\ISeekablePlaylist.cs" />
     <Compile Include="Playlist\LibraryPlaylist.cs" />
     <Compile Include="Playlist\Playlist.cs" />
     <Compile Include="Playlist\PlaylistCollection.cs" />
