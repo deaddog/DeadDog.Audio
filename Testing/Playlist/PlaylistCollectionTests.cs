@@ -68,17 +68,17 @@ namespace DeadDog.Audio.Tests
 
         private static int PreListIndex
         {
-            get { return PlaylistCollection<string>.PreListIndex; }
+            get { return Playlist<string>.PreListIndex; }
         }
 
         private static int PostListIndex
         {
-            get { return PlaylistCollection<string>.PostListIndex; }
+            get { return Playlist<string>.PostListIndex; }
         }
 
         private static int EmptyListIndex
         {
-            get { return PlaylistCollection<string>.EmptyListIndex; }
+            get { return Playlist<string>.EmptyListIndex; }
         }
 
         #endregion
