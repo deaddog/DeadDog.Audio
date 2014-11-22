@@ -12,26 +12,6 @@ namespace DeadDog.Audio
     public interface IPlaylist<T> : IPlayable<T>
     {
         /// <summary>
-        /// Gets the currently selected entry in the playlist.
-        /// </summary>
-        T Entry { get; }
-        
-        /// <summary>
-        /// Occurs after the <see cref="Entry"/> property is changed.
-        /// </summary>
-        event EventHandler EntryChanged;
-        /// <summary>
-        /// Occurs before the <see cref="Entry"/> property is changed.
-        /// </summary>
-        event EntryChangingEventHandler<T> EntryChanging;
-
-        /// <summary>
-        /// Moves to the next item in the playlist.
-        /// </summary>
-        /// <returns>true, if the move was successful; otherwise false.</returns>
-        bool MoveNext();
-
-        /// <summary>
         /// Resets the playlist.
         /// </summary>
         void Reset();
