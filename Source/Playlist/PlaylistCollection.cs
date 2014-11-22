@@ -41,28 +41,59 @@ namespace DeadDog.Audio
 
         public bool MoveNext()
         {
-            throw new NotImplementedException();
+            if (playlists.Entry != null && playlists.Entry.MoveNext())
+                return true;
+            else if (playlists.MoveNext())
+            {
+                if (playlists.Entry.MoveToFirst())
+                    return true;
+                else
+                    return MoveNext();
+            }
+            else
+                return false;
         }
         public bool MovePrevious()
         {
-            throw new NotImplementedException();
+            if (playlists.Entry != null && playlists.Entry.MovePrevious())
+                return true;
+            else if (playlists.MovePrevious())
+            {
+                if (playlists.Entry.MoveToLast())
+                    return true;
+                else
+                    return MovePrevious();
+            }
+            else
+                return false;
         }
 
         public bool MoveToFirst()
         {
-            throw new NotImplementedException();
+            if (playlists.MoveToFirst())
+                return playlists.Entry.MoveToFirst();
+            else
+                return false;
         }
         public bool MoveToLast()
         {
-            if (!playlists.MoveToLast())
-                return false;
-            else
+            if (playlists.MoveToLast())
                 return playlists.Entry.MoveToLast();
+            else
+                return false;
         }
 
         public bool MoveToEntry(T entry)
         {
-            throw new NotImplementedException();
+            foreach (var p in playlists)
+                if (p.Contains(entry))
+                {
+                    if (playlists.MoveToEntry(p))
+                        return p.MoveToEntry(entry);
+                    else
+                        return false;
+                }
+            return false;
         }
         public bool Contains(T entry)
         {
