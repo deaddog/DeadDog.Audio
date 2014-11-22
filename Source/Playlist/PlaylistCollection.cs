@@ -97,7 +97,10 @@ namespace DeadDog.Audio
         }
         public bool Contains(T entry)
         {
-            throw new NotImplementedException();
+            foreach (var p in playlists)
+                if (p.Contains(entry))
+                    return true;
+            return false;
         }
 
         public int Count
