@@ -129,7 +129,7 @@ namespace DeadDog.Audio
         }
         public void Insert(int index, IPlaylist<T> playlist)
         {
-            throw new NotImplementedException();
+            playlists.Insert(index, playlist);
         }
         public bool Remove(IPlaylist<T> playlist)
         {
@@ -147,7 +147,7 @@ namespace DeadDog.Audio
         }
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            playlists.RemoveAt(index);
         }
 
         #region IEnumerable<T> Members
