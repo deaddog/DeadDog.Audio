@@ -218,7 +218,7 @@ namespace DeadDog.Audio
             entries.Insert(index, item);
             if (index <= this.index)
                 this.tempIndex = this.index++;
-            else if (index == EmptyListIndex)
+            else if (this.index == EmptyListIndex)
                 Index = PreListIndex;
         }
 
