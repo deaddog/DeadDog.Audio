@@ -111,7 +111,7 @@ namespace DeadDog.Audio
         public IPlaylist<T> this[int index]
         {
             get { return playlists[index]; }
-            set { throw new NotImplementedException(); }
+            set { playlists[index] = value; }
         }
 
         public bool Contains(IPlaylist<T> playlist)
