@@ -36,7 +36,7 @@ namespace DeadDog.Audio
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            playlists.Reset();
         }
 
         public bool MoveNext()
