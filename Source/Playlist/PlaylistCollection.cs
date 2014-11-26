@@ -54,6 +54,8 @@ namespace DeadDog.Audio
 
         public bool MoveNext()
         {
+            bool startsAsNull = this.Entry == null;
+
             if (playlists.Entry != null && playlists.Entry.MoveNext())
                 return true;
             else if (playlists.MoveNext())
@@ -64,10 +66,16 @@ namespace DeadDog.Audio
                     return MoveNext();
             }
             else
+            {
+                if (!startsAsNull && EntryChanged != null)
+                    EntryChanged(this, EventArgs.Empty);
                 return false;
+            }
         }
         public bool MovePrevious()
         {
+            bool startsAsNull = this.Entry == null;
+
             if (playlists.Entry != null && playlists.Entry.MovePrevious())
                 return true;
             else if (playlists.MovePrevious())
@@ -78,7 +86,11 @@ namespace DeadDog.Audio
                     return MovePrevious();
             }
             else
+            {
+                if (!startsAsNull && EntryChanged != null)
+                    EntryChanged(this, EventArgs.Empty);
                 return false;
+            }
         }
 
         public bool MoveToFirst()
