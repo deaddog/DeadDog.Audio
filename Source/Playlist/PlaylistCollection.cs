@@ -34,6 +34,19 @@ namespace DeadDog.Audio
         public event EventHandler EntryChanged;
         public event EntryChangingEventHandler<T> EntryChanging;
 
+        private void entryChanged(object sender, EventArgs e)
+        {
+            if (sender == playlists.Entry)
+                if (this.Entry != null)
+                    if (EntryChanged != null)
+                        EntryChanged(this, e);
+        }
+        private void entryChanging(IPlayable<T> sender, EntryChangingEventArgs<T> e)
+        {
+            if (sender == playlists.Entry && EntryChanging != null)
+                EntryChanging(this, e);
+        }
+
         public void Reset()
         {
             playlists.Reset();
@@ -130,6 +143,9 @@ namespace DeadDog.Audio
         public void Insert(int index, IPlaylist<T> playlist)
         {
             playlists.Insert(index, playlist);
+
+            playlist.EntryChanged += entryChanged;
+            playlist.EntryChanging += EntryChanging;
         }
         public bool Remove(IPlaylist<T> playlist)
         {
@@ -147,7 +163,11 @@ namespace DeadDog.Audio
         }
         public void RemoveAt(int index)
         {
+            var pl = playlists[index];
             playlists.RemoveAt(index);
+
+            pl.EntryChanged -= entryChanged;
+            pl.EntryChanging -= EntryChanging;
         }
 
         #region IEnumerable<T> Members
