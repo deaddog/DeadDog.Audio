@@ -16,6 +16,13 @@ namespace DeadDog.Audio.Tests
                 playlist.Add(n);
             return playlist;
         }
+        private PlaylistCollection<T> getPlaylist<T>(params IPlaylist<T>[] playlists) where T : class
+        {
+            PlaylistCollection<T> playlist = new PlaylistCollection<T>();
+            foreach (var n in playlists)
+                playlist.Add(n);
+            return playlist;
+        }
 
         protected void LoadEmptyPlaylist()
         {
@@ -24,6 +31,30 @@ namespace DeadDog.Audio.Tests
         protected void LoadHelloWorldPlaylist(int offset = 0)
         {
             var playlist = getPlaylist("hello", "world");
+            if (offset < 0)
+            {
+                playlist.MoveToLast();
+                playlist.MoveNext();
+
+                offset = ~offset;
+                while (offset-- > 0)
+                    playlist.MovePrevious();
+            }
+            else
+            {
+                while (offset-- > 0)
+                    playlist.MoveNext();
+            }
+            this._playlist = playlist;
+        }
+
+        protected void LoadEmptyPlaylistCollection()
+        {
+            this._playlist = getPlaylist<string>();
+        }
+        protected void LoadHelloCrazyWildWorldPlaylistCollection(int offset = 0)
+        {
+            var playlist = getPlaylist<string>(getPlaylist("hello", "crazy"), getPlaylist("wild", "world"));
             if (offset < 0)
             {
                 playlist.MoveToLast();
