@@ -28,7 +28,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadEmptyPlaylistCollection();
 
-            Assert.AreEqual(false, playlist.MoveNext());
+            AssertMove(playlist.MoveNext, false, false);
             AssertState(null, EmptyListIndex);
         }
 
@@ -37,19 +37,19 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Assert.AreEqual(true, playlist.MoveNext());
+            AssertMove(playlist.MoveNext, true, true);
             AssertState("hello", 0);
 
-            Assert.AreEqual(true, playlist.MoveNext());
+            AssertMove(playlist.MoveNext, true, true);
             AssertState("crazy", 0);
 
-            Assert.AreEqual(true, playlist.MoveNext());
+            AssertMove(playlist.MoveNext, true, true);
             AssertState("wild", 1);
 
-            Assert.AreEqual(true, playlist.MoveNext());
+            AssertMove(playlist.MoveNext, true, true);
             AssertState("world", 1);
 
-            Assert.AreEqual(false, playlist.MoveNext());
+            AssertMove(playlist.MoveNext, false, true);
             AssertState(null, PostListIndex);
         }
 
@@ -61,7 +61,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadEmptyPlaylistCollection();
 
-            Assert.AreEqual(false, playlist.MovePrevious());
+            AssertMove(playlist.MovePrevious, false, false);
             AssertState(null, EmptyListIndex);
         }
 
@@ -70,7 +70,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Assert.AreEqual(false, playlist.MovePrevious());
+            AssertMove(playlist.MovePrevious, false, false);
             AssertState(null, PreListIndex);
         }
 
@@ -79,19 +79,19 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection(~0);
 
-            Assert.AreEqual(true, playlist.MovePrevious());
+            AssertMove(playlist.MovePrevious, true, true);
             AssertState("world", 1);
 
-            Assert.AreEqual(true, playlist.MovePrevious());
+            AssertMove(playlist.MovePrevious, true, true);
             AssertState("wild", 1);
 
-            Assert.AreEqual(true, playlist.MovePrevious());
+            AssertMove(playlist.MovePrevious, true, true);
             AssertState("crazy", 0);
 
-            Assert.AreEqual(true, playlist.MovePrevious());
+            AssertMove(playlist.MovePrevious, true, true);
             AssertState("hello", 0);
 
-            Assert.AreEqual(false, playlist.MovePrevious());
+            AssertMove(playlist.MovePrevious, true, false);
             AssertState(null, PreListIndex);
         }
 
@@ -103,7 +103,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadEmptyPlaylistCollection();
 
-            Assert.AreEqual(false, playlist.MoveToLast());
+            AssertMove(playlist.MoveToLast, false, false);
             AssertState(null, EmptyListIndex);
         }
 
@@ -112,7 +112,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Assert.AreEqual(true, playlist.MoveToLast());
+            AssertMove(playlist.MoveToLast, true, true);
             AssertState("world", 1);
         }
 
@@ -124,7 +124,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadEmptyPlaylistCollection();
 
-            Assert.AreEqual(false, playlist.MoveToFirst());
+            AssertMove(playlist.MoveToFirst, false, false);
             AssertState(null, EmptyListIndex);
         }
 
@@ -133,7 +133,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Assert.AreEqual(true, playlist.MoveToFirst());
+            AssertMove(playlist.MoveToFirst, true, true);
             AssertState("hello", 0);
         }
 
@@ -142,7 +142,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection(~0);
 
-            Assert.AreEqual(true, playlist.MoveToFirst());
+            AssertMove(playlist.MoveToFirst, true, true);
             AssertState("hello", 0);
         }
 
@@ -154,8 +154,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadEmptyPlaylistCollection();
 
-            Assert.AreEqual(false, playlist.MoveToEntry("hello"));
-            AssertState(null, EmptyListIndex);
+            AssertMove("hello", false, false);
         }
 
         [TestMethod()]
@@ -163,9 +162,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            var state = PlaylistState;
-            Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
-            AssertState(state);
+            AssertMove("unknown", false, false);
         }
 
         [TestMethod()]
@@ -173,9 +170,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection(1);
 
-            var state = PlaylistState;
-            Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
-            AssertState(state);
+            AssertMove("unknown", false, false);
         }
 
         [TestMethod()]
@@ -183,9 +178,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection(~0);
 
-            var state = PlaylistState;
-            Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
-            AssertState(state);
+            AssertMove("unknown", false, false);
         }
 
         [TestMethod()]
@@ -193,7 +186,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Assert.AreEqual(true, playlist.MoveToEntry("hello"));
+            AssertMove("hello", true, true);
             AssertState("hello", 0);
         }
         [TestMethod()]
@@ -201,7 +194,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Assert.AreEqual(true, playlist.MoveToEntry("wild"));
+            AssertMove("wild", true, true);
             AssertState("wild", 1);
         }
 
