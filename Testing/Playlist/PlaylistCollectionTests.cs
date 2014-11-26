@@ -8,81 +8,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DeadDog.Audio.Tests
 {
     [TestClass()]
-    public class PlaylistCollectionTests
+    public class PlaylistCollectionTests : IPlaylistTester
     {
-        #region Helpers
-
-        private PlaylistCollection<T> getPlaylist<T>(params IPlaylist<T>[] playlists) where T : class
-        {
-            PlaylistCollection<T> playlist = new PlaylistCollection<T>();
-            foreach (var n in playlists)
-                playlist.Add(n);
-            return playlist;
-        }
-
-        private Playlist<T> getPlaylist<T>(params T[] elements) where T : class
-        {
-            Playlist<T> playlist = new Playlist<T>();
-            foreach (var n in elements)
-                playlist.Add(n);
-            return playlist;
-        }
-        private PlaylistCollection<string> getEmptyPlaylist()
-        {
-            return getPlaylist<string>();
-        }
-        private PlaylistCollection<string> getHelloCrazyWildWorldPlaylist(int offset = 0)
-        {
-            var playlist = getPlaylist<string>(getPlaylist("hello", "crazy"), getPlaylist("wild", "world"));
-            if (offset < 0)
-            {
-                playlist.MoveToLast();
-                playlist.MoveNext();
-
-                offset = ~offset;
-                while (offset-- > 0)
-                    playlist.MovePrevious();
-            }
-            else
-            {
-                while (offset-- > 0)
-                    playlist.MoveNext();
-            }
-            return playlist;
-        }
-
-        private void assertState<T>(PlaylistCollection<T> playlist, T expectedEntry, int expectedIndex) where T : class
-        {
-            Assert.AreEqual(expectedEntry, playlist.Entry);
-            Assert.AreEqual(expectedIndex, playlist.Index);
-        }
-        private void assertState<T>(PlaylistCollection<T> playlist, Tuple<T, int> state) where T : class
-        {
-            Assert.AreEqual(state.Item1, playlist.Entry);
-            Assert.AreEqual(state.Item2, playlist.Index);
-        }
-        private Tuple<T, int> getState<T>(PlaylistCollection<T> playlist) where T : class
-        {
-            return Tuple.Create(playlist.Entry, playlist.Index);
-        }
-
-        private static int PreListIndex
-        {
-            get { return Playlist<string>.PreListIndex; }
-        }
-
-        private static int PostListIndex
-        {
-            get { return Playlist<string>.PostListIndex; }
-        }
-
-        private static int EmptyListIndex
-        {
-            get { return Playlist<string>.EmptyListIndex; }
-        }
-
-        #endregion
-
         #region Constructor
 
         [TestMethod()]
