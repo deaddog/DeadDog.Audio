@@ -96,6 +96,7 @@ namespace DeadDog.Audio.Tests
             else
                 throw new InvalidOperationException("Unable to assert the index on a playlist that is not Playlist or PlaylistCollection.");
         }
+
         protected void AssertState(Tuple<string, int> state)
         {
             Assert.AreEqual(state.Item1, _playlist.Entry);
@@ -118,6 +119,27 @@ namespace DeadDog.Audio.Tests
                 else
                     throw new InvalidOperationException("Unable to get the index on a playlist that is not Playlist or PlaylistCollection.");
             }
+        }
+
+        protected void AssertMove(Func<bool> move, bool expectedMove, bool expectsEvent)
+        {
+            int entryChangeCount = 0;
+            playlist.EntryChanged += (s, e) => { entryChangeCount++; };
+
+            var state = PlaylistState;
+
+            Assert.AreEqual(expectedMove, move());
+            if (expectsEvent)
+                Assert.AreEqual(1, entryChangeCount, "The EntryChanged event was not raised exactly once.");
+            else
+            {
+                AssertState(state);
+                Assert.AreEqual(0, entryChangeCount, "The EntryChanged event was raised.");
+            }
+        }
+        protected void AssertMove(string target, bool expectedMove, bool expectsEvent)
+        {
+            AssertMove(() => playlist.MoveToEntry(target), expectedMove, expectsEvent);
         }
 
         protected static int PreListIndex
