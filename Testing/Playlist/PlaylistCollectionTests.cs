@@ -15,8 +15,8 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void PlaylistCollectionTest()
         {
-            PlaylistCollection<string> playlist = new PlaylistCollection<string>();
-            assertState(playlist, null, EmptyListIndex);
+            LoadEmptyPlaylistCollection();
+            AssertState(null, EmptyListIndex);
         }
 
         #endregion
@@ -26,31 +26,31 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveNextEmptyTest()
         {
-            var playlist = getEmptyPlaylist();
+            LoadEmptyPlaylistCollection();
 
             Assert.AreEqual(false, playlist.MoveNext());
-            assertState(playlist, null, EmptyListIndex);
+            AssertState(null, EmptyListIndex);
         }
 
         [TestMethod()]
         public void MoveNextTwoEntriesTest()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
             Assert.AreEqual(true, playlist.MoveNext());
-            assertState(playlist, "hello", 0);
+            AssertState("hello", 0);
 
             Assert.AreEqual(true, playlist.MoveNext());
-            assertState(playlist, "crazy", 0);
+            AssertState("crazy", 0);
 
             Assert.AreEqual(true, playlist.MoveNext());
-            assertState(playlist, "wild", 1);
+            AssertState("wild", 1);
 
             Assert.AreEqual(true, playlist.MoveNext());
-            assertState(playlist, "world", 1);
+            AssertState("world", 1);
 
             Assert.AreEqual(false, playlist.MoveNext());
-            assertState(playlist, null, PostListIndex);
+            AssertState(null, PostListIndex);
         }
 
         #endregion
@@ -59,40 +59,40 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MovePreviousEmptyTest()
         {
-            var playlist = getEmptyPlaylist();
+            LoadEmptyPlaylistCollection();
 
             Assert.AreEqual(false, playlist.MovePrevious());
-            assertState(playlist, null, EmptyListIndex);
+            AssertState(null, EmptyListIndex);
         }
 
         [TestMethod()]
         public void MovePreviousTwoEntriesDirectTest()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
             Assert.AreEqual(false, playlist.MovePrevious());
-            assertState(playlist, null, PreListIndex);
+            AssertState(null, PreListIndex);
         }
 
         [TestMethod()]
         public void MovePreviousTwoEntriesTest()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist(~0);
+            LoadHelloCrazyWildWorldPlaylistCollection(~0);
 
             Assert.AreEqual(true, playlist.MovePrevious());
-            assertState(playlist, "world", 1);
+            AssertState("world", 1);
 
             Assert.AreEqual(true, playlist.MovePrevious());
-            assertState(playlist, "wild", 1);
+            AssertState("wild", 1);
 
             Assert.AreEqual(true, playlist.MovePrevious());
-            assertState(playlist, "crazy", 0);
+            AssertState("crazy", 0);
 
             Assert.AreEqual(true, playlist.MovePrevious());
-            assertState(playlist, "hello", 0);
+            AssertState("hello", 0);
 
             Assert.AreEqual(false, playlist.MovePrevious());
-            assertState(playlist, null, PreListIndex);
+            AssertState(null, PreListIndex);
         }
 
         #endregion
@@ -101,19 +101,19 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveToLastEmptyTest()
         {
-            var playlist = getEmptyPlaylist();
+            LoadEmptyPlaylistCollection();
 
             Assert.AreEqual(false, playlist.MoveToLast());
-            assertState(playlist, null, EmptyListIndex);
+            AssertState(null, EmptyListIndex);
         }
 
         [TestMethod()]
         public void MoveToLastTwoEntriesTest()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
             Assert.AreEqual(true, playlist.MoveToLast());
-            assertState(playlist, "world", 1);
+            AssertState("world", 1);
         }
 
         #endregion
@@ -122,28 +122,28 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveToFirstEmptyTest()
         {
-            var playlist = getEmptyPlaylist();
+            LoadEmptyPlaylistCollection();
 
             Assert.AreEqual(false, playlist.MoveToFirst());
-            assertState(playlist, null, EmptyListIndex);
+            AssertState(null, EmptyListIndex);
         }
 
         [TestMethod()]
         public void MoveToFirstTwoEntriesDirectTest()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
             Assert.AreEqual(true, playlist.MoveToFirst());
-            assertState(playlist, "hello", 0);
+            AssertState("hello", 0);
         }
 
         [TestMethod()]
         public void MoveToFirstTwoEntriesTest()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist(~0);
+            LoadHelloCrazyWildWorldPlaylistCollection(~0);
 
             Assert.AreEqual(true, playlist.MoveToFirst());
-            assertState(playlist, "hello", 0);
+            AssertState("hello", 0);
         }
 
         #endregion
@@ -152,57 +152,57 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void MoveToEntryEmptyTest()
         {
-            var playlist = getEmptyPlaylist();
+            LoadEmptyPlaylistCollection();
 
             Assert.AreEqual(false, playlist.MoveToEntry("hello"));
-            assertState(playlist, null, EmptyListIndex);
+            AssertState(null, EmptyListIndex);
         }
 
         [TestMethod()]
         public void MoveToEntryTwoEntriesUnknownKeyTest1()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
-            var state = getState(playlist);
+            var state = PlaylistState;
             Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
-            assertState(playlist, state);
+            AssertState(state);
         }
 
         [TestMethod()]
         public void MoveToEntryTwoEntriesUnknownKeyTest2()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist(1);
+            LoadHelloCrazyWildWorldPlaylistCollection(1);
 
-            var state = getState(playlist);
+            var state = PlaylistState;
             Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
-            assertState(playlist, state);
+            AssertState(state);
         }
 
         [TestMethod()]
         public void MoveToEntryTwoEntriesUnknownKeyTest3()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist(~0);
+            LoadHelloCrazyWildWorldPlaylistCollection(~0);
 
-            var state = getState(playlist);
+            var state = PlaylistState;
             Assert.AreEqual(false, playlist.MoveToEntry("unknown"));
-            assertState(playlist, state);
+            AssertState(state);
         }
 
         [TestMethod()]
         public void MoveToEntryTwoEntriesWithKeyTest1()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
             Assert.AreEqual(true, playlist.MoveToEntry("hello"));
-            assertState(playlist, "hello", 0);
+            AssertState("hello", 0);
         }
         [TestMethod()]
         public void MoveToEntryTwoEntriesWithKeyTest2()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
             Assert.AreEqual(true, playlist.MoveToEntry("wild"));
-            assertState(playlist, "wild", 1);
+            AssertState("wild", 1);
         }
 
         #endregion
@@ -212,26 +212,26 @@ namespace DeadDog.Audio.Tests
         [TestMethod()]
         public void ResetEmptyTest()
         {
-            var playlist = getEmptyPlaylist();
+            LoadEmptyPlaylistCollection();
 
             playlist.Reset();
-            assertState(playlist, null, EmptyListIndex);
+            AssertState(null, EmptyListIndex);
         }
         [TestMethod()]
         public void ResetTwoEntriesTest1()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist();
+            LoadHelloCrazyWildWorldPlaylistCollection();
 
             playlist.Reset();
-            assertState(playlist, null, PreListIndex);
+            AssertState(null, PreListIndex);
         }
         [TestMethod()]
         public void ResetTwoEntriesTest2()
         {
-            var playlist = getHelloCrazyWildWorldPlaylist(~0);
+            LoadHelloCrazyWildWorldPlaylistCollection(~0);
 
             playlist.Reset();
-            assertState(playlist, null, PreListIndex);
+            AssertState(null, PreListIndex);
         }
 
         #endregion
