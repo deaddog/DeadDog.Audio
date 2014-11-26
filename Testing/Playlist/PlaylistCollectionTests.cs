@@ -91,7 +91,7 @@ namespace DeadDog.Audio.Tests
             AssertMove(playlist.MovePrevious, true, true);
             AssertState("hello", 0);
 
-            AssertMove(playlist.MovePrevious, true, false);
+            AssertMove(playlist.MovePrevious, false, true);
             AssertState(null, PreListIndex);
         }
 
