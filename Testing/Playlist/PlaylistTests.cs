@@ -11,7 +11,7 @@ namespace DeadDog.Audio.Tests
     [TestClass()]
     public class PlaylistTests
     {
-        #region Helpers
+        #region Initialize
 
         private Playlist<T> getPlaylist<T>(params T[] elements) where T : class
         {
@@ -45,6 +45,10 @@ namespace DeadDog.Audio.Tests
             return playlist;
         }
 
+        #endregion
+
+        #region Assert
+
         private void assertState<T>(Playlist<T> playlist, T expectedEntry, int expectedIndex) where T : class
         {
             Assert.AreEqual(expectedEntry, playlist.Entry);
@@ -64,12 +68,10 @@ namespace DeadDog.Audio.Tests
         {
             get { return Playlist<string>.PreListIndex; }
         }
-
         private static int PostListIndex
         {
             get { return Playlist<string>.PostListIndex; }
         }
-
         private static int EmptyListIndex
         {
             get { return Playlist<string>.EmptyListIndex; }
