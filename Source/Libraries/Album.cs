@@ -42,7 +42,7 @@ namespace DeadDog.Audio.Libraries
 
         #endregion
 
-        public Album(string album)
+        internal Album(string album)
         {
             this.isunknown = album == null;
             this.tracks = new Track.TrackCollection(trackAdded, trackRemoved);

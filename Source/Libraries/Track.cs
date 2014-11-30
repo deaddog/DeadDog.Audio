@@ -49,7 +49,7 @@ namespace DeadDog.Audio.Libraries
 
         #endregion
 
-        public Track(RawTrack trackinfo, Album album, Artist artist)
+        internal Track(RawTrack trackinfo, Album album, Artist artist)
         {
             this.file = trackinfo.File;
             this.album = album;

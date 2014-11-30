@@ -29,7 +29,7 @@ namespace DeadDog.Audio.Libraries
 
         #endregion
 
-        public Artist(string name)
+        internal Artist(string name)
         {
             this.isunknown = name == null;
             this.albums = new Album.AlbumCollection();
