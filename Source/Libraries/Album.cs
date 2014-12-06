@@ -45,7 +45,7 @@ namespace DeadDog.Audio.Libraries
         internal Album(string album)
         {
             this.isunknown = album == null;
-            this.tracks = new Track.TrackCollection(trackAdded, trackRemoved);
+            this.tracks = new Track.TrackCollection();
 
             this.title = album ?? string.Empty;
         }
