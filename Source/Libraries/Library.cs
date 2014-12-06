@@ -44,18 +44,30 @@ namespace DeadDog.Audio.Libraries
             if (trackDict.ContainsKey(track.FullFilename))
                 throw new ArgumentException(track.FullFilename + " is already in library - use Update instead.", "track");
 
-            Artist artist = artists[track.ArtistName] ?? CreateArtist(track.ArtistName);
-            Album album = albums[track.AlbumTitle] ?? CreateAlbum(track.AlbumTitle);
+            Artist artist = getArtist(track.ArtistName);
+            Album album = getAlbum(artist, track.AlbumTitle);
 
             Track t = new Track(track, album, artist);
 
-            if (album.IsUnknown && !artist.IsUnknown)
-                artist.Albums.UnknownAlbum.Tracks.Add(t);
-
             trackDict.Add(track.FullFilename, t);
-            
+
             tracks.Add(t);
             album.Tracks.Add(t);
+
+            if (!album.IsUnknown)
+            {
+                if (album.Tracks.Count == 1)
+                {
+                    artist.Albums.Add(album);
+                    album.Artist = artist;
+                }
+                else if (album.Artist != artist && album.Artist != artists.UnknownArtist)
+                {
+                    album.Artist.Albums.Remove(album);
+                    artists.UnknownArtist.Albums.Add(album);
+                    album.Artist = artists.UnknownArtist;
+                }
+            }
 
             return t;
         }
