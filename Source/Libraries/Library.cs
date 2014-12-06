@@ -59,17 +59,31 @@ namespace DeadDog.Audio.Libraries
 
             return t;
         }
-        private Artist CreateArtist(string artistname)
+        private Artist getArtist(string artistname)
         {
-            Artist artist = new Artist(artistname);
-            artists.Add(artist);
-            return artist;
+            if (artistname == null || artistname.Length == 0)
+                return artists.UnknownArtist;
+            else if (artists.Contains(artistname))
+                return artists[artistname];
+            else
+            {
+                Artist artist = new Artist(artistname);
+                artists.Add(artist);
+                return artist;
+            }
         }
-        private Album CreateAlbum(string albumname)
+        private Album getAlbum(Artist artist, string albumname)
         {
-            Album album = new Album(albumname);
-            albums.Add(album);
-            return album;
+            if (albumname == null || albumname.Length == 0)
+                return artist.Albums.UnknownAlbum;
+            else if (albums.Contains(albumname))
+                return albums[albumname];
+            else
+            {
+                Album album = new Album(albumname);
+                albums.Add(album);
+                return album;
+            }
         }
 
         public Track UpdateTrack(RawTrack track)
