@@ -133,7 +133,8 @@ namespace DeadDog.Audio.Libraries
                 if (artistTrackCount[artist] == 0)
                 {
                     //Remove artist
-                    throw new NotImplementedException();
+                    artists.Remove(artist);
+                    artistTrackCount.Remove(artist);
                 }
             }
             track.Artist = null;
