@@ -158,7 +158,7 @@ namespace DeadDog.Audio.Libraries
                 if (album.Tracks.Count == 0)
                 {
                     //Remove album
-                    throw new NotImplementedException();
+                    albums.Remove(album);
                 }
             }
             track.Album = null;
