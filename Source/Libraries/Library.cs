@@ -26,6 +26,7 @@ namespace DeadDog.Audio.Libraries
         }
 
         private Dictionary<string, Track> trackDict;
+        private Dictionary<Artist, int> artistTrackCount;
 
         public Library()
         {
@@ -34,6 +35,7 @@ namespace DeadDog.Audio.Libraries
             this.tracks = new Track.TrackCollection();
 
             this.trackDict = new Dictionary<string, Track>();
+            this.artistTrackCount = new Dictionary<Artist, int>();
         }
 
         public Track AddTrack(RawTrack track)
@@ -50,6 +52,7 @@ namespace DeadDog.Audio.Libraries
             Track t = new Track(track, album, artist);
 
             trackDict.Add(track.FullFilename, t);
+            artistTrackCount[artist]++;
 
             tracks.Add(t);
             album.Tracks.Add(t);
@@ -81,6 +84,7 @@ namespace DeadDog.Audio.Libraries
             {
                 Artist artist = new Artist(artistname);
                 artists.Add(artist);
+                artistTrackCount.Add(artist, 0);
                 return artist;
             }
         }
@@ -113,10 +117,49 @@ namespace DeadDog.Audio.Libraries
 
         public void RemoveTrack(Track track)
         {
+            if (track == null)
+                throw new ArgumentNullException("track");
+
             if (!trackDict.ContainsKey(track.FilePath))
                 throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
 
-            throw new NotImplementedException();
+            Artist artist = track.Artist;
+            Album album = track.Album;
+
+            trackDict.Remove(track.FilePath);
+            if (!artist.IsUnknown)
+            {
+                artistTrackCount[artist]--;
+                if (artistTrackCount[artist] == 0)
+                {
+                    //Remove artist
+                    throw new NotImplementedException();
+                }
+            }
+            track.Artist = null;
+
+            tracks.Remove(track);
+            album.Tracks.Remove(track);
+            if (!album.IsUnknown)
+            {
+                if (album.Tracks.Count == 0)
+                {
+                    //Remove album
+                    throw new NotImplementedException();
+                }
+                else if (album.Tracks.Count == 1)
+                {
+                    artist.Albums.Add(album);
+                    album.Artist = artist;
+                }
+                else if (album.Artist != artist && album.Artist != artists.UnknownArtist)
+                {
+                    album.Artist.Albums.Remove(album);
+                    artists.UnknownArtist.Albums.Add(album);
+                    album.Artist = artists.UnknownArtist;
+                }
+            }
+            track.Album = null;
         }
         public void RemoveTrack(string filename)
         {
