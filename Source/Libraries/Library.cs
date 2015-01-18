@@ -100,39 +100,10 @@ namespace DeadDog.Audio.Libraries
 
         public Track UpdateTrack(RawTrack track)
         {
-            Track old;
-            if (!trackDict.TryGetValue(track.FullFilename, out old))
-                throw new ArgumentException(track.FullFilename + " was not found in library - use Add instead.", "track");
+            if (!trackDict.ContainsKey(track.FullFilename))
+                throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
 
-            old.Title = track.TrackTitle;
-            old.Tracknumber = track.TrackNumberUnknown ? (int?)null : track.TrackNumber;
-            
-            Album album = albums[track.AlbumTitle] ?? CreateAlbum(track.AlbumTitle);
-            if (album != old.Album)
-            {
-                old.Album.Tracks.Remove(old);
-                if (old.Album.Tracks.Count == 0 && !old.Album.IsUnknown)
-                    albums.Remove(old.Album);
-
-                old.Album = album;
-                album.Tracks.Add(old);
-            }
-            else
-                album.Tracks.Reposition(old);
-
-            Artist artist = artists[track.ArtistName] ?? CreateArtist(track.ArtistName);
-            if (artist != old.Artist)
-            {
-                Artist oldArtist = old.Artist;
-                old.Artist = artist;
-
-                old.Album.Tracks.Remove(old);
-                old.Album.Tracks.Add(old);
-                if (oldArtist.Albums.Count == 0 && oldArtist.Albums.UnknownAlbum.Tracks.Count == 0)
-                    artists.Remove(oldArtist);
-            }
-
-            return old;
+            throw new NotImplementedException();
         }
 
         public bool Contains(RawTrack track)
@@ -142,24 +113,10 @@ namespace DeadDog.Audio.Libraries
 
         public void RemoveTrack(Track track)
         {
-            Album album = track.Album;
-            Artist artist = track.Artist;
+            if (!trackDict.ContainsKey(track.FilePath))
+                throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
 
-            tracks.Remove(track);
-            if (album != null)
-            {
-                album.Tracks.Remove(track);
-                if (album.Tracks.Count == 0 && !album.IsUnknown)
-                    albums.Remove(album);
-            }
-
-            if (artist != null)
-            {
-                if (artist.Albums.Count == 0 && artist.Albums.UnknownAlbum.Tracks.Count == 0)
-                    artists.Remove(artist);
-            }
-
-            trackDict.Remove(track.FilePath);
+            throw new NotImplementedException();
         }
         public void RemoveTrack(string filename)
         {
