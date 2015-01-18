@@ -143,12 +143,7 @@ namespace DeadDog.Audio.Libraries
             album.Tracks.Remove(track);
             if (!album.IsUnknown)
             {
-                if (album.Tracks.Count == 0)
-                {
-                    //Remove album
-                    throw new NotImplementedException();
-                }
-                else if (album.Tracks.Count == 1)
+                if (album.Tracks.Count == 1)
                 {
                     artist.Albums.Add(album);
                     album.Artist = artist;
@@ -158,6 +153,12 @@ namespace DeadDog.Audio.Libraries
                     album.Artist.Albums.Remove(album);
                     artists.UnknownArtist.Albums.Add(album);
                     album.Artist = artists.UnknownArtist;
+                }
+
+                if (album.Tracks.Count == 0)
+                {
+                    //Remove album
+                    throw new NotImplementedException();
                 }
             }
             track.Album = null;
