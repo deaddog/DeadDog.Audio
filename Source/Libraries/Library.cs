@@ -126,7 +126,9 @@ namespace DeadDog.Audio.Libraries
             Artist artist = track.Artist;
             Album album = track.Album;
 
+            tracks.Remove(track);
             trackDict.Remove(track.FilePath);
+
             if (!artist.IsUnknown)
             {
                 artistTrackCount[artist]--;
@@ -139,7 +141,6 @@ namespace DeadDog.Audio.Libraries
             }
             track.Artist = null;
 
-            tracks.Remove(track);
             album.Tracks.Remove(track);
             if (!album.IsUnknown)
             {
