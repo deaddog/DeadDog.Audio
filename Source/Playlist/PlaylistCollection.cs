@@ -60,6 +60,7 @@ namespace DeadDog.Audio
                 return true;
             else if (playlists.MoveNext())
             {
+                playlists.Entry.Reset();
                 if (playlists.Entry.MoveToFirst())
                     return true;
                 else
@@ -80,6 +81,7 @@ namespace DeadDog.Audio
                 return true;
             else if (playlists.MovePrevious())
             {
+                playlists.Entry.Reset();
                 if (playlists.Entry.MoveToLast())
                     return true;
                 else
@@ -96,14 +98,20 @@ namespace DeadDog.Audio
         public bool MoveToFirst()
         {
             if (playlists.MoveToFirst())
+            {
+                playlists.Entry.Reset();
                 return playlists.Entry.MoveToFirst();
+            }
             else
                 return false;
         }
         public bool MoveToLast()
         {
             if (playlists.MoveToLast())
+            {
+                playlists.Entry.Reset();
                 return playlists.Entry.MoveToLast();
+            }
             else
                 return false;
         }
@@ -114,7 +122,10 @@ namespace DeadDog.Audio
                 if (p.Contains(entry))
                 {
                     if (playlists.MoveToEntry(p))
+                    {
+                        playlists.Entry.Reset();
                         return p.MoveToEntry(entry);
+                    }
                     else
                         return false;
                 }
