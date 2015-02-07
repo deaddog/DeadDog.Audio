@@ -10,6 +10,13 @@ namespace DeadDog.Audio.Libraries.Tests
     [TestClass()]
     public class LibraryTests
     {
+        private readonly RawTrack rawTrack1 = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
+
+        private RawTrack getRawTrackWithTrackTitle(RawTrack origin, string title)
+        {
+            return new RawTrack(origin.FullFilename, title, origin.AlbumTitle, origin.TrackNumber, origin.ArtistName, origin.Year);
+        }
+
         private Library library;
 
         [TestInitialize]
@@ -48,17 +55,16 @@ namespace DeadDog.Audio.Libraries.Tests
         [TestMethod()]
         public void AddTrackTest1()
         {
-            RawTrack rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
-            var track = library.AddTrack(rawTrack);
+            var track = library.AddTrack(rawTrack1);
 
             assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            assertTrack(rawTrack1, track);
         }
 
         [TestMethod()]
         public void AddTrackTest2()
         {
-            RawTrack rawTrack = new RawTrack("C:\\1.mp3", null, "Metallica", 1, "Metallica", 1991);
+            var rawTrack = getRawTrackWithTrackTitle(rawTrack1, null);
             var track = library.AddTrack(rawTrack);
 
             assertCounts(1, 1, 1);
@@ -72,14 +78,11 @@ namespace DeadDog.Audio.Libraries.Tests
         [TestMethod()]
         public void UpdateNothingTest()
         {
-            RawTrack rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
-            var track = library.AddTrack(rawTrack);
-
-            rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
-            Assert.AreSame(track, library.UpdateTrack(rawTrack));
+            var track = library.AddTrack(rawTrack1);
+            Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
             assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            assertTrack(rawTrack1, track);
         }
 
         #endregion
