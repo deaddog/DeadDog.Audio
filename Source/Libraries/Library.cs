@@ -104,10 +104,11 @@ namespace DeadDog.Audio.Libraries
 
         public Track UpdateTrack(RawTrack track)
         {
-            if (!trackDict.ContainsKey(track.FullFilename))
+            Track item;
+            if (!trackDict.TryGetValue(track.FullFilename, out item))
                 throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
 
-            throw new NotImplementedException();
+            return item;
         }
 
         public bool Contains(RawTrack track)
