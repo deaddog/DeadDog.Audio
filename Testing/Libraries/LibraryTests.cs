@@ -76,7 +76,7 @@ namespace DeadDog.Audio.Libraries.Tests
             var track = library.AddTrack(rawTrack);
 
             rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
-            library.UpdateTrack(rawTrack);
+            Assert.AreSame(track, library.UpdateTrack(rawTrack));
 
             assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
