@@ -18,6 +18,17 @@ namespace DeadDog.Audio.Libraries.Tests
             library = new Library();
         }
 
+        private void assertTrack(RawTrack expected, Track actual)
+        {
+            Assert.AreEqual(expected.FullFilename, actual.FilePath);
+            Assert.AreEqual(expected.TrackTitle, actual.Title);
+            Assert.AreEqual(expected.AlbumTitle, actual.Album.Title);
+            Assert.AreEqual(expected.ArtistName, actual.Artist.Name);
+            Assert.AreEqual(expected.TrackNumberUnknown, !actual.Tracknumber.HasValue);
+            if (!expected.TrackNumberUnknown)
+                Assert.AreEqual(expected.TrackNumber, actual.Tracknumber.Value);
+        }
+
         [TestMethod()]
         public void LibraryTest()
         {
@@ -38,12 +49,7 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.AreEqual(1, library.Artists.Count);
             Assert.AreEqual(1, library.Albums.Count);
 
-            Assert.AreEqual(rawTrack.FullFilename, track.FilePath);
-            Assert.AreEqual(rawTrack.TrackTitle, track.Title);
-            Assert.AreEqual(rawTrack.AlbumTitle, track.Album.Title);
-            Assert.AreEqual(rawTrack.ArtistName, track.Artist.Name);
-            Assert.AreEqual(rawTrack.TrackNumberUnknown, false);
-            Assert.AreEqual(rawTrack.TrackNumber, track.Tracknumber);
+            assertTrack(rawTrack, track);
         }
 
         [TestMethod()]
@@ -56,12 +62,7 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.AreEqual(1, library.Artists.Count);
             Assert.AreEqual(1, library.Albums.Count);
 
-            Assert.AreEqual(rawTrack.FullFilename, track.FilePath);
-            Assert.AreEqual(rawTrack.TrackTitle, track.Title);
-            Assert.AreEqual(rawTrack.AlbumTitle, track.Album.Title);
-            Assert.AreEqual(rawTrack.ArtistName, track.Artist.Name);
-            Assert.AreEqual(rawTrack.TrackNumberUnknown, false);
-            Assert.AreEqual(rawTrack.TrackNumber, track.Tracknumber);
+            assertTrack(rawTrack, track);
         }
     }
 }
