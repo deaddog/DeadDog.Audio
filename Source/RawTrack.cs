@@ -123,22 +123,16 @@ namespace DeadDog.Audio
                 throw new ArgumentException("An error occured from the passed filepath", "filepath", e);
             }
 
-            if (tracktitle == null || tracktitle == "")
-                track = null;
-            else
-                track = tracktitle.Trim();
+            tracktitle = tracktitle == null ? null : tracktitle.Trim();
+            track = tracktitle == "" ? null : tracktitle;
 
-            if (albumtitle == null || albumtitle == "")
-                album = null;
-            else
-                album = albumtitle.Trim();
+            albumtitle = albumtitle == null ? null : albumtitle.Trim();
+            album = albumtitle == "" ? null : albumtitle;
 
             this.number = tracknumber;
 
-            if (artistname == null || artistname == "")
-                artist = null;
-            else
-                artist = artistname.Trim();
+            artistname = artistname == null ? null : artistname.Trim();
+            artist = artistname == "" ? null : artistname;
 
             this.year = year;
         }
