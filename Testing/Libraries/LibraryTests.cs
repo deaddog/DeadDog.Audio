@@ -95,6 +95,42 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack1, track);
         }
 
+        [TestMethod()]
+        public void UpdateTitleTest()
+        {
+            RawTrack rawTrack = getRawTrackWithTrackTitle(rawTrack1, "Wrong Title");
+            var track = addTrack(rawTrack);
+
+            Assert.AreSame(track, library.UpdateTrack(rawTrack1));
+
+            assertCounts(1, 1, 1);
+            assertTrack(rawTrack1, track);
+        }
+
+        [TestMethod()]
+        public void UpdateTitleAddTest()
+        {
+            RawTrack rawTrack = getRawTrackWithTrackTitle(rawTrack1, null);
+            var track = addTrack(rawTrack);
+
+            Assert.AreSame(track, library.UpdateTrack(rawTrack1));
+
+            assertCounts(1, 1, 1);
+            assertTrack(rawTrack1, track);
+        }
+
+        [TestMethod()]
+        public void UpdateTitleRemoveTest()
+        {
+            var track = addTrack(rawTrack1);
+
+            RawTrack rawTrack = getRawTrackWithTrackTitle(rawTrack1, null);
+            Assert.AreSame(track, library.UpdateTrack(rawTrack));
+
+            assertCounts(1, 1, 1);
+            assertTrack(rawTrack, track);
+        }
+
         #endregion
     }
 }
