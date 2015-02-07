@@ -39,6 +39,8 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.AreEqual(0, library.Albums.Count);
         }
 
+        #region Adding
+
         [TestMethod()]
         public void AddTrackTest1()
         {
@@ -64,5 +66,27 @@ namespace DeadDog.Audio.Libraries.Tests
 
             assertTrack(rawTrack, track);
         }
+
+        #endregion
+
+        #region Updating
+
+        [TestMethod()]
+        public void UpdateNothingTest()
+        {
+            RawTrack rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
+            var track = library.AddTrack(rawTrack);
+
+            rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
+            library.UpdateTrack(rawTrack);
+
+            Assert.AreEqual(1, library.Tracks.Count);
+            Assert.AreEqual(1, library.Artists.Count);
+            Assert.AreEqual(1, library.Albums.Count);
+
+            assertTrack(rawTrack, track);
+        }
+
+        #endregion
     }
 }
