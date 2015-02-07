@@ -28,15 +28,19 @@ namespace DeadDog.Audio.Libraries.Tests
             if (!expected.TrackNumberUnknown)
                 Assert.AreEqual(expected.TrackNumber, actual.Tracknumber.Value);
         }
+        private void assertCounts(int artistCount, int albumCount, int trackCount)
+        {
+            Assert.AreEqual(artistCount, library.Artists.Count);
+            Assert.AreEqual(albumCount, library.Albums.Count);
+            Assert.AreEqual(trackCount, library.Tracks.Count);
+        }
 
         [TestMethod()]
         public void LibraryTest()
         {
             Library library = new Library();
 
-            Assert.AreEqual(0, library.Tracks.Count);
-            Assert.AreEqual(0, library.Artists.Count);
-            Assert.AreEqual(0, library.Albums.Count);
+            assertCounts(0, 0, 0);
         }
 
         #region Adding
@@ -47,10 +51,7 @@ namespace DeadDog.Audio.Libraries.Tests
             RawTrack rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
             var track = library.AddTrack(rawTrack);
 
-            Assert.AreEqual(1, library.Tracks.Count);
-            Assert.AreEqual(1, library.Artists.Count);
-            Assert.AreEqual(1, library.Albums.Count);
-
+            assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
         }
 
@@ -60,10 +61,7 @@ namespace DeadDog.Audio.Libraries.Tests
             RawTrack rawTrack = new RawTrack("C:\\1.mp3", null, "Metallica", 1, "Metallica", 1991);
             var track = library.AddTrack(rawTrack);
 
-            Assert.AreEqual(1, library.Tracks.Count);
-            Assert.AreEqual(1, library.Artists.Count);
-            Assert.AreEqual(1, library.Albums.Count);
-
+            assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
         }
 
@@ -80,10 +78,7 @@ namespace DeadDog.Audio.Libraries.Tests
             rawTrack = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
             library.UpdateTrack(rawTrack);
 
-            Assert.AreEqual(1, library.Tracks.Count);
-            Assert.AreEqual(1, library.Artists.Count);
-            Assert.AreEqual(1, library.Albums.Count);
-
+            assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
         }
 
