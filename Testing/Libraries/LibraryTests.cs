@@ -42,6 +42,16 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.AreEqual(trackCount, library.Tracks.Count);
         }
 
+        /// <summary>
+        /// Adds a track to the library. 
+        /// This method should be used by all methods for setting up the testing library.
+        /// This method should never be used for testing the Add method.
+        /// </summary>
+        private Track addTrack(RawTrack rawTrack)
+        {
+            return library.AddTrack(rawTrack);
+        }
+
         [TestMethod()]
         public void LibraryTest()
         {
@@ -78,7 +88,7 @@ namespace DeadDog.Audio.Libraries.Tests
         [TestMethod()]
         public void UpdateNothingTest()
         {
-            var track = library.AddTrack(rawTrack1);
+            var track = addTrack(rawTrack1);
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
             assertCounts(1, 1, 1);
