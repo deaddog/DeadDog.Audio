@@ -72,7 +72,7 @@ namespace DeadDog.Audio.Libraries.Tests
         #region Adding
 
         [TestMethod()]
-        public void AddTrackTest1()
+        public void AddTrackTest()
         {
             var track = library.AddTrack(rawTrack1);
 
@@ -81,7 +81,7 @@ namespace DeadDog.Audio.Libraries.Tests
         }
 
         [TestMethod()]
-        public void AddTrackTest2()
+        public void AddTrackNoTitleTest()
         {
             var rawTrack = getRawTrackWithTrackTitle(rawTrack1, null);
             var track = library.AddTrack(rawTrack);
