@@ -16,6 +16,10 @@ namespace DeadDog.Audio.Libraries.Tests
         {
             return new RawTrack(origin.FullFilename, title, origin.AlbumTitle, origin.TrackNumber, origin.ArtistName, origin.Year);
         }
+        private RawTrack getRawTrackWithAlbumTitle(RawTrack origin, string title)
+        {
+            return new RawTrack(origin.FullFilename, origin.TrackTitle, title, origin.TrackNumber, origin.ArtistName, origin.Year);
+        }
 
         private Library library;
 
@@ -87,6 +91,16 @@ namespace DeadDog.Audio.Libraries.Tests
             var track = library.AddTrack(rawTrack);
 
             assertCounts(1, 1, 1);
+            assertTrack(rawTrack, track);
+        }
+
+        [TestMethod()]
+        public void AddTrackNoAlbumTest()
+        {
+            var rawTrack = getRawTrackWithAlbumTitle(rawTrack1, null);
+            var track = library.AddTrack(rawTrack);
+
+            assertCounts(1, 0, 1);
             assertTrack(rawTrack, track);
         }
 
