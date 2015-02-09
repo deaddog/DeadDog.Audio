@@ -31,28 +31,28 @@ namespace DeadDog.Audio.Libraries.Tests
 
         private void assertTrack(RawTrack expected, Track actual)
         {
-            Assert.AreEqual(expected.FullFilename, actual.FilePath);
-            Assert.AreEqual(expected.TrackTitle, actual.Title);
+            Assert.AreEqual(expected.FullFilename, actual.FilePath, "Different file paths, probable error in test.");
+            Assert.AreEqual(expected.TrackTitle, actual.Title, "Title mismatch.");
 
             if (expected.AlbumTitle == null)
-                Assert.IsTrue(actual.Album.IsUnknown);
+                Assert.IsTrue(actual.Album.IsUnknown, "Expected unknown album.");
             else
-                Assert.AreEqual(expected.AlbumTitle, actual.Album.Title);
+                Assert.AreEqual(expected.AlbumTitle, actual.Album.Title, "Album title mismatch.");
 
             if (expected.ArtistName == null)
-                Assert.IsTrue(actual.Artist.IsUnknown);
+                Assert.IsTrue(actual.Artist.IsUnknown, "Expected unknown artist.");
             else
-                Assert.AreEqual(expected.ArtistName, actual.Artist.Name);
+                Assert.AreEqual(expected.ArtistName, actual.Artist.Name, "Artist name mismatch.");
 
-            Assert.AreEqual(expected.TrackNumberUnknown, !actual.Tracknumber.HasValue);
+            Assert.AreEqual(expected.TrackNumberUnknown, !actual.Tracknumber.HasValue, "Availability of track number mismatch.");
             if (!expected.TrackNumberUnknown)
-                Assert.AreEqual(expected.TrackNumber, actual.Tracknumber.Value);
+                Assert.AreEqual(expected.TrackNumber, actual.Tracknumber.Value, "Track number mismatch.");
         }
         private void assertCounts(int artistCount, int albumCount, int trackCount)
         {
-            Assert.AreEqual(artistCount, library.Artists.Count);
-            Assert.AreEqual(albumCount, library.Albums.Count);
-            Assert.AreEqual(trackCount, library.Tracks.Count);
+            Assert.AreEqual(artistCount, library.Artists.Count, "Artist count mismatch.");
+            Assert.AreEqual(albumCount, library.Albums.Count, "Album count mismatch.");
+            Assert.AreEqual(trackCount, library.Tracks.Count, "Track count mismatch.");
         }
 
         /// <summary>
