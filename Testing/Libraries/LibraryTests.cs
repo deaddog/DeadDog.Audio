@@ -129,7 +129,6 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-
         [TestMethod()]
         public void UpdateTitleAddTest()
         {
@@ -141,7 +140,6 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-
         [TestMethod()]
         public void UpdateTitleRemoveTest()
         {
@@ -151,6 +149,40 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
 
             assertCounts(1, 1, 1);
+            assertTrack(rawTrack, track);
+        }
+
+        [TestMethod()]
+        public void UpdateAlbumTest()
+        {
+            RawTrack rawTrack = getRawTrackWithAlbumTitle(rawTrack1, "Wrong Title");
+            var track = addTrack(rawTrack);
+
+            Assert.AreSame(track, library.UpdateTrack(rawTrack1));
+
+            assertCounts(1, 1, 1);
+            assertTrack(rawTrack1, track);
+        }
+        [TestMethod()]
+        public void UpdateAlbumAddTest()
+        {
+            RawTrack rawTrack = getRawTrackWithAlbumTitle(rawTrack1, null);
+            var track = addTrack(rawTrack);
+
+            Assert.AreSame(track, library.UpdateTrack(rawTrack1));
+
+            assertCounts(1, 1, 1);
+            assertTrack(rawTrack1, track);
+        }
+        [TestMethod()]
+        public void UpdateAlbumRemoveTest()
+        {
+            var track = addTrack(rawTrack1);
+
+            RawTrack rawTrack = getRawTrackWithAlbumTitle(rawTrack1, null);
+            Assert.AreSame(track, library.UpdateTrack(rawTrack));
+
+            assertCounts(1, 0, 1);
             assertTrack(rawTrack, track);
         }
 
