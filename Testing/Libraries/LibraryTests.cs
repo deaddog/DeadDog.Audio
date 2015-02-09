@@ -29,8 +29,17 @@ namespace DeadDog.Audio.Libraries.Tests
         {
             Assert.AreEqual(expected.FullFilename, actual.FilePath);
             Assert.AreEqual(expected.TrackTitle, actual.Title);
-            Assert.AreEqual(expected.AlbumTitle, actual.Album.Title);
-            Assert.AreEqual(expected.ArtistName, actual.Artist.Name);
+
+            if (expected.AlbumTitle == null)
+                Assert.IsTrue(actual.Album.IsUnknown);
+            else
+                Assert.AreEqual(expected.AlbumTitle, actual.Album.Title);
+
+            if (expected.ArtistName == null)
+                Assert.IsTrue(actual.Artist.IsUnknown);
+            else
+                Assert.AreEqual(expected.ArtistName, actual.Artist.Name);
+
             Assert.AreEqual(expected.TrackNumberUnknown, !actual.Tracknumber.HasValue);
             if (!expected.TrackNumberUnknown)
                 Assert.AreEqual(expected.TrackNumber, actual.Tracknumber.Value);
