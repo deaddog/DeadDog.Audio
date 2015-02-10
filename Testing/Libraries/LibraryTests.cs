@@ -198,5 +198,19 @@ namespace DeadDog.Audio.Libraries.Tests
         }
 
         #endregion
+
+        [TestMethod]
+        [Description("Tests that removing a track does not double-add an album to an artist.")]
+        public void DoubleAlbumErrorTest()
+        {
+            var t1 = addTrack(rawTrack1);
+            var t2 = addTrack(rawTrack2);
+
+            library.RemoveTrack(t2);
+
+            assertCounts(1, 1, 1);
+            assertTrack(rawTrack1, t1);
+            Assert.AreEqual(1, t1.Artist.Albums.Count);
+        }
     }
 }
