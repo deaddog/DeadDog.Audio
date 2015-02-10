@@ -33,18 +33,27 @@ namespace DeadDog.Audio.Libraries.Tests
 
         private void assertTrack(RawTrack expected, Track actual)
         {
+            Assert.IsTrue(library.Contains(expected), "Track path \"" + expected.FullFilename + "\" not found in library.");
+            Assert.IsTrue(library.Tracks.Contains(actual), "Track instance not found in library.");
+
             Assert.AreEqual(expected.FullFilename, actual.FilePath, "Different file paths, probable error in test.");
             Assert.AreEqual(expected.TrackTitle, actual.Title, "Title mismatch.");
 
             if (expected.AlbumTitle == null)
                 Assert.IsTrue(actual.Album.IsUnknown, "Expected unknown album.");
             else
+            {
+                Assert.IsTrue(library.Albums.Contains(actual.Album), "Album instance not found in library.");
                 Assert.AreEqual(expected.AlbumTitle, actual.Album.Title, "Album title mismatch.");
+            }
 
             if (expected.ArtistName == null)
                 Assert.IsTrue(actual.Artist.IsUnknown, "Expected unknown artist.");
             else
+            {
+                Assert.IsTrue(library.Artists.Contains(actual.Artist), "Artist instance not found in library.");
                 Assert.AreEqual(expected.ArtistName, actual.Artist.Name, "Artist name mismatch.");
+            }
 
             Assert.AreEqual(expected.TrackNumberUnknown, !actual.Tracknumber.HasValue, "Availability of track number mismatch.");
             if (!expected.TrackNumberUnknown)
