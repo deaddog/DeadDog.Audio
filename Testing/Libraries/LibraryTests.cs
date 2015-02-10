@@ -10,7 +10,9 @@ namespace DeadDog.Audio.Libraries.Tests
     [TestClass()]
     public class LibraryTests
     {
-        private readonly RawTrack rawTrack1 = new RawTrack("C:\\1.mp3", "Enter Sandman", "Metallica", 1, "Metallica", 1991);
+        private readonly RawTrack rawTrack1 = new RawTrack("C:\\1.mp3", "Ain't My Bitch", "Load", 1, "Metallica", 1991);
+        private readonly RawTrack rawTrack2 = new RawTrack("C:\\2.mp3", "2 X 4", "Load", 2, "Metallica", 1991);
+        private readonly RawTrack rawTrack3 = new RawTrack("C:\\3.mp3", "The House Jack Built", "Load", 3, "Metallica", 1991);
 
         private RawTrack getRawTrackWithTrackTitle(RawTrack origin, string title)
         {
