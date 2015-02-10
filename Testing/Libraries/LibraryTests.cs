@@ -22,6 +22,10 @@ namespace DeadDog.Audio.Libraries.Tests
         {
             return new RawTrack(origin.FullFilename, origin.TrackTitle, title, origin.TrackNumber, origin.ArtistName, origin.Year);
         }
+        private RawTrack getRawTrackWithArtistName(RawTrack origin, string name)
+        {
+            return new RawTrack(origin.FullFilename, origin.TrackTitle, origin.AlbumTitle, origin.TrackNumber, name, origin.Year);
+        }
 
         private Library library;
 
@@ -211,6 +215,23 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, t1);
             Assert.AreEqual(1, t1.Artist.Albums.Count);
+        }
+
+        [TestMethod]
+        [Description("Tests that removing a track from an album such that all tracks have same artist will set the artist of the album.")]
+        public void ResetAlbumArtistErrorTest()
+        {
+            var t1 = addTrack(rawTrack1);
+            var t2 = addTrack(rawTrack2);
+            var t3 = addTrack(getRawTrackWithArtistName(rawTrack3, "Different Name"));
+
+            Assert.IsTrue(t1.Album.Artist.IsUnknown, "Various artists album should have unknown artist.");
+
+            library.RemoveTrack(t3);
+
+            Assert.IsFalse(t1.Album.Artist.IsUnknown, "Album should no longer have various artists.");
+            Assert.AreSame(t1.Artist, t1.Album.Artist, "Album artist does not match track artist.");
+            Assert.IsTrue(t1.Artist.Albums.Contains(t1.Album), "Artist does not contain album.");
         }
     }
 }
