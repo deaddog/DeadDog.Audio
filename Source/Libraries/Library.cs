@@ -148,16 +148,18 @@ namespace DeadDog.Audio.Libraries
             album.Tracks.Remove(track);
             if (!album.IsUnknown)
             {
-                if (album.Tracks.Count == 1)
+                if (!album.IsUnknown && album.Artist.IsUnknown)
                 {
-                    artist.Albums.Add(album);
-                    album.Artist = artist;
-                }
-                else if (album.Artist != artist && album.Artist != artists.UnknownArtist)
-                {
-                    album.Artist.Albums.Remove(album);
-                    artists.UnknownArtist.Albums.Add(album);
-                    album.Artist = artists.UnknownArtist;
+                    Artist a = album.Tracks[0].Artist;
+                    for (int i = 1; i < album.Tracks.Count; i++)
+                        if (a != album.Tracks[i].Artist)
+                            a = artists.UnknownArtist;
+                    if (album.Artist != a)
+                    {
+                        album.Artist.Albums.Remove(album);
+                        a.Albums.Add(album);
+                        album.Artist = a;
+                    }
                 }
 
                 if (album.Tracks.Count == 0)
