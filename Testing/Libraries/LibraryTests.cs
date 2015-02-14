@@ -43,7 +43,9 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.AreEqual(expected.FullFilename, actual.FilePath, "Different file paths, probable error in test.");
             Assert.AreEqual(expected.TrackTitle, actual.Title, "Title mismatch.");
 
-            if (expected.AlbumTitle == null)
+            if (actual.Album == null)
+                Assert.Fail("Track does not have an album.");
+            else if (expected.AlbumTitle == null)
                 Assert.IsTrue(actual.Album.IsUnknown, "Expected unknown album.");
             else
             {
@@ -51,7 +53,9 @@ namespace DeadDog.Audio.Libraries.Tests
                 Assert.AreEqual(expected.AlbumTitle, actual.Album.Title, "Album title mismatch.");
             }
 
-            if (expected.ArtistName == null)
+            if (actual.Artist == null)
+                Assert.Fail("Track does not have an artist.");
+            else if (expected.ArtistName == null)
                 Assert.IsTrue(actual.Artist.IsUnknown, "Expected unknown artist.");
             else
             {
