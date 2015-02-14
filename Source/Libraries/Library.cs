@@ -165,7 +165,7 @@ namespace DeadDog.Audio.Libraries
             album.Tracks.Remove(track);
             if (!album.IsUnknown)
             {
-                if (!album.IsUnknown && album.Artist.IsUnknown)
+                if (album.Artist.IsUnknown)
                 {
                     Artist a = album.Tracks[0].Artist;
                     for (int i = 1; i < album.Tracks.Count; i++)
