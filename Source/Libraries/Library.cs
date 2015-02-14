@@ -183,6 +183,11 @@ namespace DeadDog.Audio.Libraries
                 {
                     //Remove album
                     albums.Remove(album);
+                    if (!album.Artist.IsUnknown)
+                    {
+                        album.Artist.Albums.Remove(album);
+                        album.Artist = null;
+                    }
                 }
             }
             track.Album = null;
