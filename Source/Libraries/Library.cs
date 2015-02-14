@@ -55,22 +55,8 @@ namespace DeadDog.Audio.Libraries
             artistTrackCount[artist]++;
 
             tracks.Add(t);
-            album.Tracks.Add(t);
 
-            if (!album.IsUnknown)
-            {
-                if (album.Tracks.Count == 1)
-                {
-                    artist.Albums.Add(album);
-                    album.Artist = artist;
-                }
-                else if (album.Artist != artist && album.Artist != artists.UnknownArtist)
-                {
-                    album.Artist.Albums.Remove(album);
-                    artists.UnknownArtist.Albums.Add(album);
-                    album.Artist = artists.UnknownArtist;
-                }
-            }
+            addTrackToAlbum(t, album);
 
             return t;
         }
@@ -145,6 +131,37 @@ namespace DeadDog.Audio.Libraries
             }
             track.Artist = null;
 
+            removeTrackFromAlbum(track);
+        }
+        public void RemoveTrack(string filename)
+        {
+            RemoveTrack(trackDict[filename]);
+        }
+
+        private void addTrackToAlbum(Track track, Album album)
+        {
+            var artist = track.Artist;
+
+            album.Tracks.Add(track);
+            if (!album.IsUnknown)
+            {
+                if (album.Tracks.Count == 1)
+                {
+                    artist.Albums.Add(album);
+                    album.Artist = artist;
+                }
+                else if (album.Artist != artist && album.Artist != artists.UnknownArtist)
+                {
+                    album.Artist.Albums.Remove(album);
+                    artists.UnknownArtist.Albums.Add(album);
+                    album.Artist = artists.UnknownArtist;
+                }
+            }
+        }
+        private void removeTrackFromAlbum(Track track)
+        {
+            var album = track.Album;
+
             album.Tracks.Remove(track);
             if (!album.IsUnknown)
             {
@@ -169,10 +186,6 @@ namespace DeadDog.Audio.Libraries
                 }
             }
             track.Album = null;
-        }
-        public void RemoveTrack(string filename)
-        {
-            RemoveTrack(trackDict[filename]);
         }
 
         IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
