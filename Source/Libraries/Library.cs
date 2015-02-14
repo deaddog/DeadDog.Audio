@@ -92,10 +92,18 @@ namespace DeadDog.Audio.Libraries
         {
             Track item;
             if (!trackDict.TryGetValue(track.FullFilename, out item))
-                throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
+                throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be updated by it.");
 
             if (item.Title != track.TrackTitle)
                 item.Title = track.TrackTitle;
+
+            if (item.Album.Title != track.AlbumTitle)
+            {
+                removeTrackFromAlbum(item);
+                var album = getAlbum(item.Artist, track.AlbumTitle);
+                addTrackToAlbum(item, album);
+                item.Album = album;
+            }
 
             return item;
         }
