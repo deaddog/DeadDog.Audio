@@ -98,6 +98,7 @@
     <Compile Include="Playlist\Playlist.cs" />
     <Compile Include="Playlist\PlaylistCollection.cs" />
     <Compile Include="Playlist\QueuePlaylist.cs" />
+    <Compile Include="Playlist\RepeatPlaylist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawTrack.cs" />
     <Compile Include="Scan\AudioScanner\AudioScan.cs" />
