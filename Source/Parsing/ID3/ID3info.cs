@@ -30,7 +30,7 @@ namespace DeadDog.Audio.Parsing.ID3
         {
             this.file = new FileInfo(filename);
 
-            using (FileStream fs = new FileStream(filename, FileMode.Open))
+            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 UpdateValues(fs);
         }
         /// <summary>
