@@ -123,6 +123,16 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack, track);
         }
 
+        [TestMethod()]
+        public void AddTrackNoArtistTest()
+        {
+            var rawTrack = getRawTrackWithArtistName(rawTrack1, null);
+            var track = library.AddTrack(rawTrack);
+
+            assertCounts(0, 1, 1);
+            assertTrack(rawTrack, track);
+        }
+
         #endregion
 
         #region Updating
