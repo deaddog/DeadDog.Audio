@@ -52,7 +52,8 @@ namespace DeadDog.Audio.Libraries
             Track t = new Track(track, album, artist);
 
             trackDict.Add(track.FullFilename, t);
-            artistTrackCount[artist]++;
+            if (!artist.IsUnknown)
+                artistTrackCount[artist]++;
 
             tracks.Add(t);
 
