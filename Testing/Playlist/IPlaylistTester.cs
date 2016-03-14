@@ -1,9 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeadDog.Audio.Tests
 {
@@ -16,7 +12,7 @@ namespace DeadDog.Audio.Tests
                 playlist.Add(n);
             return playlist;
         }
-        private PlaylistCollection<T> getPlaylist<T>(params IPlaylist<T>[] playlists) where T : class
+        private PlaylistCollection<T> getPlaylists<T>(params IPlaylist<T>[] playlists) where T : class
         {
             PlaylistCollection<T> playlist = new PlaylistCollection<T>();
             foreach (var n in playlists)
@@ -50,11 +46,11 @@ namespace DeadDog.Audio.Tests
 
         protected void LoadEmptyPlaylistCollection()
         {
-            this._playlist = getPlaylist<string>();
+            this._playlist = getPlaylists<string>();
         }
         protected void LoadHelloCrazyWildWorldPlaylistCollection(int offset = 0)
         {
-            var playlist = getPlaylist<string>(getPlaylist("hello", "crazy"), getPlaylist("wild", "world"));
+            var playlist = getPlaylists<string>(getPlaylist("hello", "crazy"), getPlaylist("wild", "world"));
             if (offset < 0)
             {
                 playlist.MoveToLast();
