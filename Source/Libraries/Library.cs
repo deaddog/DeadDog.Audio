@@ -103,7 +103,6 @@ namespace DeadDog.Audio.Libraries
                 removeTrackFromAlbum(item);
                 var album = getAlbum(item.Artist, track.AlbumTitle);
                 addTrackToAlbum(item, album);
-                item.Album = album;
             }
 
             return item;
@@ -173,6 +172,8 @@ namespace DeadDog.Audio.Libraries
                     album.Artist = artists.UnknownArtist;
                 }
             }
+
+            track.Album = album;
         }
         private void removeTrackFromAlbum(Track track)
         {
