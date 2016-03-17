@@ -49,11 +49,11 @@ namespace DeadDog.Audio.Libraries
 
         #endregion
 
-        internal Track(RawTrack trackinfo, Album album, Artist artist)
+        internal Track(RawTrack trackinfo)
         {
             this.file = trackinfo.File;
-            this.album = album;
-            this.artist = artist;
+            this.album = null;
+            this.artist = null;
             this.title = trackinfo.TrackTitle;
             this.tracknumber = trackinfo.TrackNumberUnknown ? (int?)null : trackinfo.TrackNumber;
         }
