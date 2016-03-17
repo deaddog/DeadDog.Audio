@@ -52,12 +52,9 @@ namespace DeadDog.Audio.Libraries
             Track t = new Track(track, album, artist);
 
             trackDict.Add(track.FullFilename, t);
-            if (!artist.IsUnknown)
-                artistTrackCount[artist]++;
-
-            tracks.Add(t);
-
+            addTrackToArtist(t, artist);
             addTrackToAlbum(t, album);
+            tracks.Add(t);
 
             return t;
         }
@@ -105,6 +102,13 @@ namespace DeadDog.Audio.Libraries
                 addTrackToAlbum(item, album);
             }
 
+            if (item.Artist.Name != track.ArtistName)
+            {
+                removeTrackFromArtist(item);
+                var artist = getArtist(track.ArtistName);
+                addTrackToArtist(item, artist);
+            }
+
             return item;
         }
 
@@ -127,19 +131,8 @@ namespace DeadDog.Audio.Libraries
             tracks.Remove(track);
             trackDict.Remove(track.FilePath);
 
-            if (!artist.IsUnknown)
-            {
-                artistTrackCount[artist]--;
-                if (artistTrackCount[artist] == 0)
-                {
-                    //Remove artist
-                    artists.Remove(artist);
-                    artistTrackCount.Remove(artist);
-                }
-            }
-            track.Artist = null;
-
             removeTrackFromAlbum(track);
+            removeTrackFromArtist(track);
         }
         public void RemoveTrack(string filename)
         {
