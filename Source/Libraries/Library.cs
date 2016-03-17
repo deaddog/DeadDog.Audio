@@ -209,6 +209,31 @@ namespace DeadDog.Audio.Libraries
             track.Album = null;
         }
 
+        private void addTrackToArtist(Track track, Artist artist)
+        {
+            track.Artist = artist;
+
+            if (!artist.IsUnknown)
+                artistTrackCount[artist]++;
+        }
+        private void removeTrackFromArtist(Track track)
+        {
+            var artist = track.Artist;
+
+            if (!artist.IsUnknown)
+            {
+                artistTrackCount[artist]--;
+                if (artistTrackCount[artist] == 0)
+                {
+                    //Remove artist
+                    artists.Remove(artist);
+                    artistTrackCount.Remove(artist);
+                }
+            }
+
+            track.Artist = null;
+        }
+
         IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
         {
             foreach (var artist in artists)
