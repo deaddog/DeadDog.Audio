@@ -144,7 +144,14 @@ namespace DeadDog.Audio.Libraries
         }
         public void RemoveTrack(string filename)
         {
-            RemoveTrack(trackDict[filename]);
+            if (filename == null)
+                throw new ArgumentNullException("track");
+
+            Track track;
+            if (!trackDict.TryGetValue(filename, out track))
+                throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
+
+            RemoveTrack(track);
         }
 
         private void addTrackToAlbum(Track track, Album album)
