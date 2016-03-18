@@ -16,6 +16,25 @@ namespace DeadDog.Audio.Playback
     /// </remarks>
     public class mp3Control : IFilePlayback
     {
+        private static class Mci
+        {
+            [DllImport("winmm.dll")]
+            private static extern long mciSendString(string lpstrCommand, StringBuilder lpstrReturnString, int uReturnLength, int hwndCallback);
+
+            public static long Send(string command)
+            {
+                return mciSendString(command, null, 0, 0);
+            }
+            public static string GetResponse(string command, int resultBufferSize)
+            {
+                StringBuilder sb = new StringBuilder(resultBufferSize);
+
+                mciSendString(command, sb, resultBufferSize, 0);
+
+                return sb.ToString();
+            }
+        }
+
         private string playerAlias;
         private PlayerStatus plStatus;
         private uint position;
@@ -53,9 +72,6 @@ namespace DeadDog.Audio.Playback
 
         public event EventHandler StatusChanged;
         public event PositionChangedEventHandler PositionChanged;
-
-        [DllImport("winmm.dll")]
-        private static extern long mciSendString(string lpstrCommand, StringBuilder lpstrReturnString, int uReturnLength, int hwndCallback);
 
         public bool CanOpen(string element)
         {
