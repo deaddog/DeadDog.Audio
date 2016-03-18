@@ -29,14 +29,8 @@ namespace DeadDog.Audio.Playback
 
         private int volumeLeft = 0, volumeRight = 0;
 
-        private Func<T, string> getFilename;
-
-        public AudioControl(Func<T, string> getFilename)
+        public AudioControl()
         {
-            if (getFilename == null)
-                throw new ArgumentNullException("getFilename");
-            this.getFilename = getFilename;
-
             this.player = new ZPlay();
             readVolumes();
 
