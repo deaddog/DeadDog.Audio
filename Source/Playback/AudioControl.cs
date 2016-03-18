@@ -207,13 +207,18 @@ namespace DeadDog.Audio.Playback
                     StatusChanged(this, EventArgs.Empty);
             }
         }
-        public uint Position
+
+        public uint GetTrackLength()
         {
-            get { return time.ms; }
+            TStreamInfo info = new TStreamInfo();
+            player.GetStreamInfo(ref info);
+            return info.Length.ms;
         }
-        public uint Length
+        public uint GetTrackPosition()
         {
-            get { return info.Length.ms; }
+            TStreamTime time = new TStreamTime();
+            player.GetPosition(ref time);
+            return time.ms;
         }
 
         public int LeftVolume

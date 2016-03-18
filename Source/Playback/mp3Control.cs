@@ -79,7 +79,7 @@ namespace DeadDog.Audio.Playback
                 return false;
 
             string fullpath;
-            
+
             try { fullpath = System.IO.Path.GetFullPath(element); }
             catch { fullpath = null; }
 
@@ -230,14 +230,7 @@ namespace DeadDog.Audio.Playback
             if (plStatus != old && StatusChanged != null)
                 StatusChanged(this, EventArgs.Empty);
         }
-
-        /// <summary>
-        /// Gets the position, in milliseconds, in the currently loaded file.
-        /// </summary>
-        public uint Position
-        {
-            get { return position; }
-        }
+        
         private void updatePosition()
         {
             StringBuilder buffer = new StringBuilder(128);
@@ -250,12 +243,23 @@ namespace DeadDog.Audio.Playback
             if (PositionChanged != null)
                 PositionChanged(this, new PositionChangedEventArgs(endreached));
         }
-        /// <summary>
-        /// Gets the length, in milliseconds, of the currently loaded file.
-        /// </summary>
-        public uint Length
+        
+        public uint GetTrackLength()
         {
-            get { return length; }
+            string response = Mci.GetResponse($"status {playerAlias} length", 128);
+
+            if (response.Length == 0)
+                return 0;
+            else
+                return uint.Parse(response);
+        }
+        public uint GetTrackPosition()
+        {
+            string response = Mci.GetResponse($"status {playerAlias} position", 128);
+            if (response.Length == 0)
+                return 0;
+            else
+                return uint.Parse(response);
         }
 
         /// <summary>
