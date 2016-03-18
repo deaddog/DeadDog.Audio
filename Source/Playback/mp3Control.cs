@@ -14,7 +14,7 @@ namespace DeadDog.Audio.Playback
     /// You can find more info about the functionalities of winmm.dll here: http://msdn2.microsoft.com/en-us/library/ms712636.aspx .
     /// The mp3Control includes a System.Windows.Forms.Timer object from the .NET 2.0 framework, though it has no included UI.
     /// </remarks>
-    public class mp3Control : IPlayback<string>
+    public class mp3Control : IFilePlayback
     {
         private string playerAlias;
         private PlayerStatus plStatus;

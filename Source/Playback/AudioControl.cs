@@ -13,8 +13,7 @@ namespace DeadDog.Audio.Playback
     /// <remarks>
     /// libzplay is developed by Zoran Cindori, see http://libzplay.sourceforge.net/ for more.
     /// </remarks>
-    public class AudioControl<T> : IPlayback<T>
-        where T : class
+    public class AudioControl : IFilePlayback
     {
         private ZPlay player;
 
