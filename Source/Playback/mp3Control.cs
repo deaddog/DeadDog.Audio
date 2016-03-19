@@ -43,15 +43,8 @@ namespace DeadDog.Audio.Playback
         private int vol = 1000, right = 1000, left = 1000, bass = 1000, treble = 1000;
         private int pubLeft = 1000, pubRight = 1000;
 
-        private int TIMER_INTERVAL = 100;
-        private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
-        private System.Threading.Timer timer;
-
         private mp3Control()
         {
-            timer = new System.Threading.Timer(obj => updatePosition(), null, TIMER_INFINITE, TIMER_INFINITE);
-            timer.Change(TIMER_INFINITE, TIMER_INFINITE);
-
             playerAlias = "MediaFile";
             plStatus = PlayerStatus.NoFileOpen;
             position = 0;
@@ -68,8 +61,6 @@ namespace DeadDog.Audio.Playback
                 return instance;
             }
         }
-        
-        public event PositionChangedEventHandler PositionChanged;
 
         public bool CanOpen(string filepath)
         {
@@ -192,19 +183,6 @@ namespace DeadDog.Audio.Playback
                 default:
                     throw new Exception("Unknown PlayerStatus.");
             }
-        }
-        
-        private void updatePosition()
-        {
-            StringBuilder buffer = new StringBuilder(128);
-            mciSendString("status " + playerAlias + " position", buffer, 128, 0);
-            if (buffer.Length == 0)
-                position = 0;
-
-            position = uint.Parse(buffer.ToString());
-            bool endreached = length > 0 && position == length && plStatus == PlayerStatus.Playing;
-            if (PositionChanged != null)
-                PositionChanged(this, new PositionChangedEventArgs(endreached));
         }
         
         public uint GetTrackLength()

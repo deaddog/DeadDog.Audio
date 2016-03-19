@@ -20,10 +20,6 @@ namespace DeadDog.Audio.Playback
         private TStreamInfo info;
         private TStreamTime time;
 
-        private int TIMER_INTERVAL = 100;
-        private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
-        private System.Threading.Timer timer;
-
         private int volumeLeft = 0, volumeRight = 0;
 
         public AudioControl()
@@ -33,11 +29,7 @@ namespace DeadDog.Audio.Playback
 
             this.info = new TStreamInfo();
             this.time = new TStreamTime();
-
-            this.timer = new System.Threading.Timer(obj => update(), null, 0, 0);
         }
-        
-        public event PositionChangedEventHandler PositionChanged;
 
         public bool CanOpen(string filepath)
         {
@@ -232,27 +224,7 @@ namespace DeadDog.Audio.Playback
         {
             this.player.GetPlayerVolume(ref volumeLeft, ref volumeRight);
         }
-
-        private void update()
-        {
-            player.GetStatus(ref status);
-            player.GetPosition(ref time);
-
-            bool endreached = false;
-
-            if (plStatus == PlayerStatus.Playing && !status.fPlay
-                && Position == 0 && Length > 0)
-            {
-                Status = PlayerStatus.Stopped;
-                timer.Change(TIMER_INFINITE, TIMER_INFINITE);
-
-                endreached = true;
-            }
-
-            if (PositionChanged != null)
-                PositionChanged(this, new PositionChangedEventArgs(endreached));
-        }
-
+        
         public void Dispose()
         {
             Stop();

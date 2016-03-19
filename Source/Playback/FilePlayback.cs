@@ -12,6 +12,10 @@ namespace DeadDog.Audio.Playback
         private uint trackLength;
         private uint trackPosition;
 
+        private const int TIMER_INTERVAL = 100;
+        private const int TIMER_INFINITE = System.Threading.Timeout.Infinite;
+        private System.Threading.Timer timer;
+
         public FilePlayback(IFilePlayback playback, Func<T, string> getFilename)
         {
             if (playback == null)
@@ -26,9 +30,12 @@ namespace DeadDog.Audio.Playback
 
             this.trackLength = 0;
             this.trackPosition = 0;
+
+            this.timer = new System.Threading.Timer(obj => update(), null, 0, 0);
         }
 
         public event EventHandler StatusChanged;
+        public event PositionChangedEventHandler PositionChanged;
 
         public bool CanOpen(T element)
         {
@@ -56,6 +63,25 @@ namespace DeadDog.Audio.Playback
         }
         public uint Length => trackLength;
         public uint Position => trackPosition;
+
+        private void update()
+        {
+            trackPosition = playback.GetTrackPosition();
+            bool isPlaying = playback.GetIsPlaying();
+
+            bool endreached = false;
+
+            if (status == PlayerStatus.Playing && !isPlaying
+                && Position == 0 && Length > 0)
+            {
+                Status = PlayerStatus.Stopped;
+                timer.Change(TIMER_INFINITE, TIMER_INFINITE);
+
+                endreached = true;
+            }
+
+            PositionChanged?.Invoke(this, new PositionChangedEventArgs(endreached));
+        }
 
         void IDisposable.Dispose()
         {
