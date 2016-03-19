@@ -18,7 +18,6 @@ namespace DeadDog.Audio.Playback
         private ZPlay player;
 
         private TStreamInfo info;
-        private TStreamStatus status;
         private TStreamTime time;
 
         private int TIMER_INTERVAL = 100;
@@ -33,7 +32,6 @@ namespace DeadDog.Audio.Playback
             readVolumes();
 
             this.info = new TStreamInfo();
-            this.status = new TStreamStatus();
             this.time = new TStreamTime();
 
             this.timer = new System.Threading.Timer(obj => update(), null, 0, 0);
@@ -193,6 +191,12 @@ namespace DeadDog.Audio.Playback
             TStreamTime time = new TStreamTime();
             player.GetPosition(ref time);
             return time.ms;
+        }
+        public bool GetIsPlaying()
+        {
+            TStreamStatus status = new TStreamStatus();
+            player.GetStatus(ref status);
+            return status.fPlay;
         }
 
         public int LeftVolume

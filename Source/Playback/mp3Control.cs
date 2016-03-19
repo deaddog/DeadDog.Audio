@@ -194,26 +194,6 @@ namespace DeadDog.Audio.Playback
             }
         }
         
-        private void updateStatus()
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder(128);
-            mciSendString("status " + playerAlias + " mode", buffer, 128, 0);
-            string status = buffer.ToString();
-
-            PlayerStatus old = plStatus;
-
-            switch (status)
-            {
-                case "playing": plStatus = PlayerStatus.Playing; break;
-                case "paused": plStatus = PlayerStatus.Paused; break;
-                case "stopped": plStatus = PlayerStatus.Stopped; break;
-                default: plStatus = PlayerStatus.NoFileOpen; break;
-            }
-
-            if (plStatus != old && StatusChanged != null)
-                StatusChanged(this, EventArgs.Empty);
-        }
-        
         private void updatePosition()
         {
             StringBuilder buffer = new StringBuilder(128);
@@ -243,6 +223,11 @@ namespace DeadDog.Audio.Playback
                 return 0;
             else
                 return uint.Parse(response);
+        }
+        public bool GetIsPlaying()
+        {
+            string response = Mci.GetResponse($"status {playerAlias} mode", 128);
+            return response.Equals("playing");
         }
 
         /// <summary>
