@@ -7,6 +7,8 @@ namespace DeadDog.Audio.Playback
         private readonly IFilePlayback playback;
         private readonly Func<T, string> getFilename;
 
+        private PlayerStatus status;
+
         private uint trackLength;
         private uint trackPosition;
 
@@ -20,9 +22,13 @@ namespace DeadDog.Audio.Playback
             this.playback = playback;
             this.getFilename = getFilename;
 
+            this.status = PlayerStatus.NoFileOpen;
+
             this.trackLength = 0;
             this.trackPosition = 0;
         }
+
+        public event EventHandler StatusChanged;
 
         public bool CanOpen(T element)
         {
@@ -39,6 +45,15 @@ namespace DeadDog.Audio.Playback
             return playback.CanOpen(fullpath);
         }
 
+        public PlayerStatus Status
+        {
+            get { return status; }
+            private set
+            {
+                status = value;
+                StatusChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
         public uint Length => trackLength;
         public uint Position => trackPosition;
     }

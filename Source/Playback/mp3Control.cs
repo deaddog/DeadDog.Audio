@@ -36,7 +36,6 @@ namespace DeadDog.Audio.Playback
         }
 
         private string playerAlias;
-        private PlayerStatus plStatus;
         private uint position;
         private uint length;
 
@@ -69,8 +68,7 @@ namespace DeadDog.Audio.Playback
                 return instance;
             }
         }
-
-        public event EventHandler StatusChanged;
+        
         public event PositionChangedEventHandler PositionChanged;
 
         public bool CanOpen(string filepath)
@@ -195,14 +193,7 @@ namespace DeadDog.Audio.Playback
                     throw new Exception("Unknown PlayerStatus.");
             }
         }
-
-        /// <summary>
-        /// Getter of the mp3Control status.
-        /// </summary>
-        public PlayerStatus Status
-        {
-            get { return plStatus; }
-        }
+        
         private void updateStatus()
         {
             System.Text.StringBuilder buffer = new System.Text.StringBuilder(128);

@@ -17,8 +17,6 @@ namespace DeadDog.Audio.Playback
     {
         private ZPlay player;
 
-        private PlayerStatus plStatus = PlayerStatus.NoFileOpen;
-
         private TStreamInfo info;
         private TStreamStatus status;
         private TStreamTime time;
@@ -40,8 +38,7 @@ namespace DeadDog.Audio.Playback
 
             this.timer = new System.Threading.Timer(obj => update(), null, 0, 0);
         }
-
-        public event EventHandler StatusChanged;
+        
         public event PositionChangedEventHandler PositionChanged;
 
         public bool CanOpen(string filepath)
@@ -184,18 +181,7 @@ namespace DeadDog.Audio.Playback
                     return default(TSeekMethod);
             }
         }
-
-        public PlayerStatus Status
-        {
-            get { return plStatus; }
-            private set
-            {
-                plStatus = value;
-                if (StatusChanged != null)
-                    StatusChanged(this, EventArgs.Empty);
-            }
-        }
-
+        
         public uint GetTrackLength()
         {
             TStreamInfo info = new TStreamInfo();
