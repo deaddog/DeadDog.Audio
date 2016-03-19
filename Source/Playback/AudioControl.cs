@@ -17,17 +17,11 @@ namespace DeadDog.Audio.Playback
     {
         private ZPlay player;
 
-        private TStreamInfo info;
-        private TStreamTime time;
-
         private const double MAXVOLUME = 100;
 
         public AudioControl()
         {
             this.player = new ZPlay();
-
-            this.info = new TStreamInfo();
-            this.time = new TStreamTime();
         }
 
         public bool CanOpen(string filepath)
@@ -35,14 +29,7 @@ namespace DeadDog.Audio.Playback
             return player.GetFileFormat(filepath) != TStreamFormat.sfUnknown;
         }
 
-        public bool Open(string filepath)
-        {
-            if (!player.OpenFile(filepath, TStreamFormat.sfAutodetect))
-                return false;
-
-            player.GetStreamInfo(ref info);
-            return true;
-        }
+        public bool Open(string filepath) => player.OpenFile(filepath, TStreamFormat.sfAutodetect);
         public bool Close() => player.Close();
 
         public bool StartPlayback() => player.StartPlayback();

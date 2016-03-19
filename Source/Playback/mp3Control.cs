@@ -36,16 +36,12 @@ namespace DeadDog.Audio.Playback
         }
 
         private string playerAlias;
-        private uint position;
-        private uint length;
         
         private const double MAXVOLUME = 1000;
 
         private mp3Control()
         {
             playerAlias = "MediaFile";
-            plStatus = PlayerStatus.NoFileOpen;
-            position = 0;
         }
 
         private static mp3Control instance;
