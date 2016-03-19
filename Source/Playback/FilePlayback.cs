@@ -52,6 +52,27 @@ namespace DeadDog.Audio.Playback
             return playback.CanOpen(fullpath);
         }
 
+        public bool Seek(PlayerSeekOrigin origin, uint offset)
+        {
+            switch (status)
+            {
+                case PlayerStatus.Playing:
+                case PlayerStatus.Paused:
+                    {
+                        bool r = playback.Seek(origin, offset);
+                        if (status == PlayerStatus.Paused)
+                            update();
+                        return r;
+                    }
+                case PlayerStatus.Stopped:
+                    return false;
+                case PlayerStatus.NoFileOpen:
+                    return false;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public PlayerStatus Status
         {
             get { return status; }

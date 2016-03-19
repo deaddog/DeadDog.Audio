@@ -184,7 +184,7 @@ namespace DeadDog.Audio.Playback
                     throw new Exception("Unknown PlayerStatus.");
             }
         }
-        
+
         public uint GetTrackLength()
         {
             string response = Mci.GetResponse($"status {playerAlias} length", 128);
@@ -216,29 +216,13 @@ namespace DeadDog.Audio.Playback
         /// <returns>true, if the seek operation was succesfull; otherwise, false.</returns>
         public bool Seek(PlayerSeekOrigin origin, uint offset)
         {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                    {
-                        uint seek = translateSeek(origin, offset);
-                        mciSendString("seek " + playerAlias + " to " + seek, null, 0, 0);
-                        if (plStatus == PlayerStatus.Paused)
-                            updatePosition();
-                        return true;
-                    }
-                case PlayerStatus.Stopped:
-                    return false;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    throw new Exception("Unknown PlayerStatus.");
-            }
+            uint seek = translateSeek(origin, offset);
+            return Mci.Send($"seek {playerAlias} to {seek}") == 0;
         }
         private uint translateSeek(PlayerSeekOrigin origin, uint offset)
         {
-            uint position = this.Position;
-            uint length = this.Length;
+            uint position = GetTrackPosition();
+            uint length = GetTrackLength();
             uint newPosition;
 
             switch (origin)

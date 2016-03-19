@@ -140,24 +140,10 @@ namespace DeadDog.Audio.Playback
         }
         public bool Seek(PlayerSeekOrigin origin, uint offset)
         {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                    {
-                        TStreamTime seekTime = new TStreamTime() { ms = offset };
-                        bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TranslateSeek(origin));
-                        if (plStatus == PlayerStatus.Paused)
-                            update();
-                        return r;
-                    }
-                case PlayerStatus.Stopped:
-                    return false;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    throw new NotImplementedException();
-            }
+            TStreamTime seekTime = new TStreamTime() { ms = offset };
+            bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TranslateSeek(origin));
+            return r;
+
         }
         private TSeekMethod TranslateSeek(PlayerSeekOrigin s)
         {
@@ -171,7 +157,7 @@ namespace DeadDog.Audio.Playback
                     return default(TSeekMethod);
             }
         }
-        
+
         public uint GetTrackLength()
         {
             TStreamInfo info = new TStreamInfo();
@@ -224,7 +210,7 @@ namespace DeadDog.Audio.Playback
         {
             this.player.GetPlayerVolume(ref volumeLeft, ref volumeRight);
         }
-        
+
         public void Dispose()
         {
             Stop();
