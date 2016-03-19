@@ -235,7 +235,13 @@ namespace DeadDog.Audio.Playback
 
                 return (volumeLeft + volumeRight) / 2;
             }
-            set { volumeLeft = volumeRight = value; playback.SetVolume(volumeLeft, volumeRight); }
+            set
+            {
+                if (value > 1) value = 1;
+                if (value < 0) value = 0;
+
+                volumeLeft = volumeRight = value; playback.SetVolume(volumeLeft, volumeRight);
+            }
         }
 
         private void update()
