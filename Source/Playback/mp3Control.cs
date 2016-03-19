@@ -73,17 +73,9 @@ namespace DeadDog.Audio.Playback
         public event EventHandler StatusChanged;
         public event PositionChangedEventHandler PositionChanged;
 
-        public bool CanOpen(string element)
+        public bool CanOpen(string filepath)
         {
-            if (element == null)
-                return false;
-
-            string fullpath;
-
-            try { fullpath = System.IO.Path.GetFullPath(element); }
-            catch { fullpath = null; }
-
-            return new System.IO.FileInfo(fullpath).Exists;
+            return true;
         }
 
         /// <summary>

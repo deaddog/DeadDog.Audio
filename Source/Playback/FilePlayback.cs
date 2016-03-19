@@ -24,6 +24,21 @@ namespace DeadDog.Audio.Playback
             this.trackPosition = 0;
         }
 
+        public bool CanOpen(T element)
+        {
+            if (element == null)
+                return false;
+
+            string fullpath;
+
+            try { fullpath = System.IO.Path.GetFullPath(getFilename(element)); }
+            catch { fullpath = null; }
+            if (!System.IO.File.Exists(fullpath))
+                return false;
+
+            return playback.CanOpen(fullpath);
+        }
+
         public uint Length => trackLength;
         public uint Position => trackPosition;
     }
