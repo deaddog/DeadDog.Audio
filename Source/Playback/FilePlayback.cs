@@ -56,5 +56,12 @@ namespace DeadDog.Audio.Playback
         }
         public uint Length => trackLength;
         public uint Position => trackPosition;
+
+        void IDisposable.Dispose()
+        {
+            Status = PlayerStatus.NoFileOpen;
+
+            playback.Dispose();
+        }
     }
 }
