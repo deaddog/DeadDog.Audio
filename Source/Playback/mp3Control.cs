@@ -94,13 +94,7 @@ namespace DeadDog.Audio.Playback
             string response = Mci.GetResponse($"status {playerAlias} mode", 128);
             return response.Equals("playing");
         }
-
-        /// <summary>
-        /// Sets the current position in the audiofile.
-        /// </summary>
-        /// <param name="offset">An offset, in milliseconds, relative to the origin parameter.</param>
-        /// <param name="origin">A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
-        /// <returns>true, if the seek operation was succesfull; otherwise, false.</returns>
+        
         public bool Seek(PlayerSeekOrigin origin, uint offset)
         {
             uint seek = translateSeek(origin, offset);
@@ -157,15 +151,9 @@ namespace DeadDog.Audio.Playback
         }
 
         #region IDisposable Members
-
-        /// <summary>
-        /// Stops playback and releases unmanaged resources.
-        /// </summary>
+        
         public void Dispose()
         {
-            Stop();
-            Close();
-            timer.Dispose();
         }
 
         #endregion

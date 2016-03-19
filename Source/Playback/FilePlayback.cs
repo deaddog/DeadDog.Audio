@@ -259,6 +259,7 @@ namespace DeadDog.Audio.Playback
 
         void IDisposable.Dispose()
         {
+            Close();
             Status = PlayerStatus.NoFileOpen;
 
             playback.Dispose();

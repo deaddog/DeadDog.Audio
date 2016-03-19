@@ -104,9 +104,6 @@ namespace DeadDog.Audio.Playback
 
         public void Dispose()
         {
-            Stop();
-            player.Close();
-            Status = PlayerStatus.NoFileOpen;
             this.player = null;
         }
     }
