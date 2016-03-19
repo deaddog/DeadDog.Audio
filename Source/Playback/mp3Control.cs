@@ -44,14 +44,14 @@ namespace DeadDog.Audio.Playback
             playerAlias = "MediaFile";
         }
 
-        private static mp3Control instance;
-        public static mp3Control Instance
+        private static mp3Control singleton;
+        public static mp3Control Singleton
         {
             get
             {
-                if (instance == null)
-                    instance = new mp3Control();
-                return instance;
+                if (singleton == null)
+                    singleton = new mp3Control();
+                return singleton;
             }
         }
 
