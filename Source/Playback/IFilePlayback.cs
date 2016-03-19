@@ -19,5 +19,8 @@ namespace DeadDog.Audio.Playback
         uint GetTrackLength();
         uint GetTrackPosition();
         bool GetIsPlaying();
+
+        void SetVolume(double left, double right);
+        void GetVolume(out double left, out double right);
     }
 }

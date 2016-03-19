@@ -38,17 +38,14 @@ namespace DeadDog.Audio.Playback
         private string playerAlias;
         private uint position;
         private uint length;
-
-        private bool swapped = false;
-        private int vol = 1000, right = 1000, left = 1000, bass = 1000, treble = 1000;
-        private int pubLeft = 1000, pubRight = 1000;
+        
+        private const double MAXVOLUME = 1000;
 
         private mp3Control()
         {
             playerAlias = "MediaFile";
             plStatus = PlayerStatus.NoFileOpen;
             position = 0;
-            left = 0;
         }
 
         private static mp3Control instance;
@@ -139,131 +136,24 @@ namespace DeadDog.Audio.Playback
             return newPosition;
         }
 
-        /// <summary>
-        /// Setter/Getter of the master volume in the range 0 to 1000.
-        /// </summary>
-        public int MasterVolume
+        public void SetVolume(double left, double right)
         {
-            get
-            {
-                return vol;
-            }
-            set
-            {
-                if (value <= 1000 && value >= 0)
-                {
-                    vol = value;
-                    mciSendString("setaudio " + playerAlias + " volume to " + value, null, 0, 0);
-                }
-            }
-        }
-        /// <summary>
-        /// Setter/Getter of the bass volume in the range 0 to 1000.
-        /// </summary>
-        public int Bass
-        {
-            get
-            {
-                return bass;
-            }
-            set
-            {
-                if (value <= 1000 && value >= 0)
-                {
-                    bass = value;
-                    mciSendString("setaudio " + playerAlias + " bass to " + value, null, 0, 0);
-                }
-            }
-        }
-        /// <summary>
-        /// Setter/Getter of the treble volume in the range 0 to 1000.
-        /// </summary>
-        public int Treble
-        {
-            get
-            {
-                return treble;
-            }
-            set
-            {
-                if (value <= 1000 && value >= 0)
-                {
-                    treble = value;
-                    mciSendString("setaudio " + playerAlias + " treble to " + value, null, 0, 0);
-                }
-            }
-        }
+            int l = (int)(left * MAXVOLUME);
+            int r = (int)(right * MAXVOLUME);
 
-        private void UpdateVolumes()
-        {
-            MasterVolume = MasterVolume;
-            Bass = Bass;
-            Treble = Treble;
-            RightVolume = RightVolume;
-            LeftVolume = LeftVolume;
+            Mci.Send($"setaudio {playerAlias} left volume to {l}");
+            Mci.Send($"setaudio {playerAlias} right volume to {r}");
         }
-        /// <summary>
-        /// Getter/Setter of the right channel volume in the range 0 to 1000. Setting the volume to 1000 sets it to 100% of the master volume.
-        /// </summary>
-        public int RightVolume
+        public void GetVolume(out double left, out double right)
         {
-            get
-            {
-                return getChannel(!swapped);
-            }
-            set
-            {
-                if (value <= 1000 && value >= 0)
-                    setChannel(value, !swapped);
-            }
-        }
-        /// <summary>
-        /// Getter/Setter of the left channel volume in the range 0 to 1000. Setting the volume to 1000 sets it to 100% of the master volume.
-        /// </summary>
-        public int LeftVolume
-        {
-            get
-            {
-                return getChannel(swapped);
-            }
-            set
-            {
-                if (value <= 1000 && value >= 0)
-                    setChannel(value, swapped);
-            }
-        }
-        private int getChannel(bool isRight)
-        {
-            if (isRight)
-                return pubRight;
-            else
-                return pubLeft;
-        }
-        private void setChannel(int volume, bool isRight)
-        {
-            double _volume = (double)volume;
-            _volume /= 1000;
-            _volume *= vol;
-            int volumeVal = (int)_volume;
-            if (isRight)
-            {
-                right = volumeVal;
-                pubRight = volume;
-                mciSendString("setaudio " + playerAlias + " right volume to " + volumeVal, null, 0, 0);
-            }
-            else
-            {
-                left = volumeVal;
-                pubLeft = volume;
-                mciSendString("setaudio " + playerAlias + " left volume to " + volumeVal, null, 0, 0);
-            }
-        }
-        /// <summary>
-        /// Swaps the meaning of the RightVolume and the LeftVolume (doesn't swap the actual sound).
-        /// </summary>
-        public void SwapLeftRight()
-        {
-            swapped = !swapped;
+            var lStr = Mci.GetResponse($"status {playerAlias} left volume", 128);
+            var rStr = Mci.GetResponse($"status {playerAlias} left volume", 128);
+
+            int l = 0;
+            int r = 0;
+
+            left = l / MAXVOLUME;
+            right = r / MAXVOLUME;
         }
 
         #region IDisposable Members

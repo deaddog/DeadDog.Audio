@@ -11,6 +11,7 @@ namespace DeadDog.Audio.Playback
 
         private uint trackLength;
         private uint trackPosition;
+        private double volumeLeft = -1, volumeRight = -1;
 
         private const int TIMER_INTERVAL = 100;
         private const int TIMER_INFINITE = System.Threading.Timeout.Infinite;
@@ -187,6 +188,55 @@ namespace DeadDog.Audio.Playback
         }
         public uint Length => trackLength;
         public uint Position => trackPosition;
+
+        public double LeftVolume
+        {
+            get
+            {
+                if (volumeLeft < 0)
+                    playback.GetVolume(out volumeLeft, out volumeRight);
+
+                return volumeLeft;
+            }
+            set
+            {
+                if (value < 0 || value > 1)
+                    throw new ArgumentOutOfRangeException("Volume must be in range [0-1].");
+
+                volumeLeft = value;
+                playback.SetVolume(volumeLeft, volumeRight);
+            }
+        }
+        public double RightVolume
+        {
+            get
+            {
+                if (volumeRight < 0)
+                    playback.GetVolume(out volumeLeft, out volumeRight);
+
+                return volumeRight;
+            }
+            set
+            {
+                if (value < 0 || value > 1)
+                    throw new ArgumentOutOfRangeException("Volume must be in range [0-1].");
+
+                volumeRight = value;
+                playback.SetVolume(volumeLeft, volumeRight);
+            }
+        }
+
+        public double Volume
+        {
+            get
+            {
+                if (volumeLeft < 0 || volumeRight < 0)
+                    playback.GetVolume(out volumeLeft, out volumeRight);
+
+                return (volumeLeft + volumeRight) / 2;
+            }
+            set { volumeLeft = volumeRight = value; playback.SetVolume(volumeLeft, volumeRight); }
+        }
 
         private void update()
         {

@@ -20,12 +20,11 @@ namespace DeadDog.Audio.Playback
         private TStreamInfo info;
         private TStreamTime time;
 
-        private int volumeLeft = 0, volumeRight = 0;
+        private const double MAXVOLUME = 100;
 
         public AudioControl()
         {
             this.player = new ZPlay();
-            readVolumes();
 
             this.info = new TStreamInfo();
             this.time = new TStreamTime();
@@ -90,38 +89,17 @@ namespace DeadDog.Audio.Playback
             return status.fPlay;
         }
 
-        public int LeftVolume
+        public void SetVolume(double left, double right)
         {
-            get
-            {
-                readVolumes();
-                return volumeLeft;
-            }
-            set
-            {
-                if (value < 0 || value > 100)
-                    throw new ArgumentOutOfRangeException("Volume must be in range [0-100].");
-                readVolumes(); player.SetPlayerVolume(value, volumeRight);
-            }
+            player.SetPlayerVolume((int)(left * MAXVOLUME), (int)(right * MAXVOLUME));
         }
-        public int RightVolume
+        public void GetVolume(out double left, out double right)
         {
-            get
-            {
-                readVolumes();
-                return volumeRight;
-            }
-            set
-            {
-                if (value < 0 || value > 100)
-                    throw new ArgumentOutOfRangeException("Volume must be in range [0-100].");
-                readVolumes(); player.SetPlayerVolume(volumeLeft, value);
-            }
-        }
+            int l = 0, r = 0;
+            player.GetPlayerVolume(ref l, ref r);
 
-        private void readVolumes()
-        {
-            this.player.GetPlayerVolume(ref volumeLeft, ref volumeRight);
+            left = l / MAXVOLUME;
+            right = r / MAXVOLUME;
         }
 
         public void Dispose()
