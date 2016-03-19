@@ -74,70 +74,11 @@ namespace DeadDog.Audio.Playback
             }
         }
 
-        public bool Play()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                    Seek(PlayerSeekOrigin.Begin, 0);
-                    return true;
-                case PlayerStatus.Paused:
-                    if (!player.ResumePlayback())
-                        throw new Exception("Player failed to resume playback.");
-                    Status = PlayerStatus.Playing;
-                    timer.Change(0, TIMER_INTERVAL);
-                    return true;
-                case PlayerStatus.Stopped:
-                    if (!player.StartPlayback())
-                        throw new Exception("Player failed to start playback.");
-                    Status = PlayerStatus.Playing;
-                    timer.Change(0, TIMER_INTERVAL);
-                    return true;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    return false;
-            }
-        }
-        public bool Pause()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                    if (!player.PausePlayback())
-                        throw new Exception("Player failed to pause playback.");
-                    Status = PlayerStatus.Paused;
-                    timer.Change(0, TIMER_INFINITE);
-                    return true;
-                case PlayerStatus.Paused:
-                    return true;
-                case PlayerStatus.Stopped:
-                    return false;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    return false;
-            }
-        }
-        public bool Stop()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                    if (!player.StopPlayback())
-                        throw new Exception("Player failed to stop playback.");
-                    Status = PlayerStatus.Stopped;
-                    timer.Change(0, TIMER_INFINITE);
-                    return true;
-                case PlayerStatus.Stopped:
-                    return true;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    return false;
-            }
-        }
+        public bool StartPlayback() => player.StartPlayback();
+        public bool PausePlayback() => player.PausePlayback();
+        public bool ResumePlayback() => player.ResumePlayback();
+        public bool StopPlayback() => player.StopPlayback();
+
         public bool Seek(PlayerSeekOrigin origin, uint offset)
         {
             TStreamTime seekTime = new TStreamTime() { ms = offset };

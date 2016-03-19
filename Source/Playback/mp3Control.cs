@@ -119,71 +119,10 @@ namespace DeadDog.Audio.Playback
             }
         }
 
-        /// <summary>
-        /// Starts (or resumes) playback.
-        /// </summary>
-        public bool Play()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                    return true;
-                case PlayerStatus.Paused:
-                case PlayerStatus.Stopped:
-                    mciSendString("play " + playerAlias, null, 0, 0);
-                    updateStatus();
-                    timer.Change(0, TIMER_INTERVAL);
-                    return true;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    throw new Exception("Unknown PlayerStatus.");
-            }
-        }
-        /// <summary>
-        /// Pauses playback.
-        /// </summary>
-        public bool Pause()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                    mciSendString("pause " + playerAlias, null, 0, 0);
-                    updateStatus();
-                    timer.Change(0, TIMER_INFINITE);
-                    return true;
-                case PlayerStatus.Paused:
-                    return true;
-                case PlayerStatus.Stopped:
-                    return false;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    throw new Exception("Unknown PlayerStatus.");
-            }
-        }
-        /// <summary>
-        /// Stops playback.
-        /// </summary>
-        public bool Stop()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                    mciSendString("stop " + playerAlias, null, 0, 0);
-                    Seek(PlayerSeekOrigin.Begin, 0);
-                    updateStatus();
-                    timer.Change(0, TIMER_INFINITE);
-                    return true;
-                case PlayerStatus.Stopped:
-                    return true;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    throw new Exception("Unknown PlayerStatus.");
-            }
-        }
+        public bool StartPlayback() => Mci.Send($"play {playerAlias}") == 0;
+        public bool PausePlayback() => Mci.Send($"pause {playerAlias}") == 0;
+        public bool ResumePlayback() => Mci.Send($"play {playerAlias}") == 0;
+        public bool StopPlayback() => Mci.Send($"stop {playerAlias}") == 0;
 
         public uint GetTrackLength()
         {

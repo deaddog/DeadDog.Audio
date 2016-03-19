@@ -6,6 +6,11 @@ namespace DeadDog.Audio.Playback
     {
         bool CanOpen(string filepath);
 
+        bool StartPlayback();
+        bool PausePlayback();
+        bool ResumePlayback();
+        bool StopPlayback();
+
         bool Seek(PlayerSeekOrigin origin, uint offset);
 
         uint GetTrackLength();
