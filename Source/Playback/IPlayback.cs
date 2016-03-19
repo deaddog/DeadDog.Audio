@@ -26,7 +26,13 @@ namespace DeadDog.Audio.Playback
         uint Position { get; }
         uint Length { get; }
 
-        int LeftVolume { get; set; }
-        int RightVolume { get; set; }
+        /// <summary>
+        /// Gets or sets the left volume in the range [0-1].
+        /// </summary>
+        double LeftVolume { get; set; }
+        /// <summary>
+        /// Gets or sets the right volume in the range [0-1].
+        /// </summary>
+        double RightVolume { get; set; }
     }
 }
