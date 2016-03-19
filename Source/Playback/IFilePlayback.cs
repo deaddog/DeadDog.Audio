@@ -6,6 +6,9 @@ namespace DeadDog.Audio.Playback
     {
         bool CanOpen(string filepath);
 
+        bool Open(string filepath);
+        bool Close();
+
         bool StartPlayback();
         bool PausePlayback();
         bool ResumePlayback();

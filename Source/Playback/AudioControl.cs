@@ -36,43 +36,15 @@ namespace DeadDog.Audio.Playback
             return player.GetFileFormat(filepath) != TStreamFormat.sfUnknown;
         }
 
-        public bool Open(T element)
+        public bool Open(string filepath)
         {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                case PlayerStatus.Stopped:
-                    Close();
-                    return Open(element);
+            if (!player.OpenFile(filepath, TStreamFormat.sfAutodetect))
+                return false;
 
-                case PlayerStatus.NoFileOpen:
-                    if (!CanOpen(element))
-                        return false;
-
-                    if (!player.OpenFile(System.IO.Path.GetFullPath(getFilename(element)), TStreamFormat.sfAutodetect))
-                        return false;
-
-                    player.GetStreamInfo(ref info);
-                    Status = PlayerStatus.Stopped;
-                    return true;
-                default:
-                    throw new Exception("Unknown PlayerStatus.");
-            }
+            player.GetStreamInfo(ref info);
+            return true;
         }
-        public bool Close()
-        {
-            if (plStatus == PlayerStatus.NoFileOpen)
-                return true;
-            else
-            {
-                Stop();
-                if (!player.Close())
-                    throw new Exception("AudioControl failed to close file.");
-                Status = PlayerStatus.NoFileOpen;
-                return true;
-            }
-        }
+        public bool Close() => player.Close();
 
         public bool StartPlayback() => player.StartPlayback();
         public bool PausePlayback() => player.PausePlayback();

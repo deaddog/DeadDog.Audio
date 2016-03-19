@@ -52,6 +52,44 @@ namespace DeadDog.Audio.Playback
             return playback.CanOpen(fullpath);
         }
 
+        public bool Open(T element)
+        {
+            switch (status)
+            {
+                case PlayerStatus.Playing:
+                case PlayerStatus.Paused:
+                case PlayerStatus.Stopped:
+                    Close();
+                    return Open(element);
+
+                case PlayerStatus.NoFileOpen:
+                    if (!CanOpen(element))
+                        return false;
+
+                    if (!playback.Open(System.IO.Path.GetFullPath(getFilename(element))))
+                        return false;
+
+                    trackLength = playback.GetTrackLength();
+                    Status = PlayerStatus.Stopped;
+                    return true;
+                default:
+                    throw new Exception("Unknown PlayerStatus.");
+            }
+        }
+        public bool Close()
+        {
+            if (status == PlayerStatus.NoFileOpen)
+                return true;
+            else
+            {
+                Stop();
+                if (!playback.Close())
+                    throw new Exception("AudioControl failed to close file.");
+                Status = PlayerStatus.NoFileOpen;
+                return true;
+            }
+        }
+
         public bool Play()
         {
             switch (status)

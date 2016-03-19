@@ -66,58 +66,9 @@ namespace DeadDog.Audio.Playback
         {
             return true;
         }
-
-        /// <summary>
-        /// Loads a new file into this mp3Control
-        /// </summary>
-        /// <param name="element">The path of the file to load.</param>
-        public bool Open(string element)
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                case PlayerStatus.Stopped:
-                    Close();
-                    return Open(element);
-                case PlayerStatus.NoFileOpen:
-                    if (!CanOpen(element))
-                        return false;
-
-                    string command = "open " + "\"" + System.IO.Path.GetFullPath(element) + "\"" + " type MPEGVideo alias " + playerAlias;
-                    long err = mciSendString(command, null, 0, 0);
-                    long b = 1 + err;
-
-                    StringBuilder buffer = new StringBuilder(128);
-                    mciSendString("status " + playerAlias + " length", buffer, 128, 0);
-                    if (buffer.Length == 0)
-                        length = 0;
-                    else
-                        length = uint.Parse(buffer.ToString());
-
-                    updateStatus();
-                    UpdateVolumes();
-                    timer.Change(0, TIMER_INFINITE);
-                    return plStatus != PlayerStatus.NoFileOpen;
-                default:
-                    throw new Exception("Unknown PlayerStatus.");
-            }
-        }
-        /// <summary>
-        /// Unloads the currently loaded file.
-        /// </summary>
-        public bool Close()
-        {
-            if (plStatus == PlayerStatus.NoFileOpen)
-                return true;
-            else
-            {
-                Stop();
-                mciSendString("close " + playerAlias, null, 0, 0);
-                updateStatus();
-                return plStatus == PlayerStatus.NoFileOpen;
-            }
-        }
+        
+        public bool Open(string filepath) => Mci.Send($"open \"{filepath}\" type MPEGVideo alias {playerAlias}") == 0;
+        public bool Close() => Mci.Send($"close {playerAlias}") == 0;
 
         public bool StartPlayback() => Mci.Send($"play {playerAlias}") == 0;
         public bool PausePlayback() => Mci.Send($"pause {playerAlias}") == 0;
