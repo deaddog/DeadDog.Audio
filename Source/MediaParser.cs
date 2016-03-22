@@ -7,9 +7,9 @@ using DeadDog.Audio.Parsing.ID3;
 
 namespace DeadDog.Audio
 {
-    public class MediaParser : IDataParser
+    public class MediaParser : IMediaParser
     {
-        private Dictionary<MediaTypes, IDataParser> parsers = new Dictionary<MediaTypes, IDataParser>();
+        private Dictionary<MediaTypes, IMediaParser> parsers = new Dictionary<MediaTypes, IMediaParser>();
 
         public MediaParser()
         {
@@ -23,7 +23,7 @@ namespace DeadDog.Audio
                     parsers.Add(type, GetParser(type));
         }
 
-        private static IDataParser GetParser(MediaTypes type)
+        private static IMediaParser GetParser(MediaTypes type)
         {
             switch (type)
             {
@@ -44,7 +44,7 @@ namespace DeadDog.Audio
                 throw new Exception("No file extension.");
 
             MediaTypes type = getMediaType(ext);
-            IDataParser parser = parsers[type];
+            IMediaParser parser = parsers[type];
 
             return parser.ParseTrack(filepath);
         }

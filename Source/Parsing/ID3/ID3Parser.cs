@@ -7,7 +7,7 @@ namespace DeadDog.Audio.Parsing.ID3
     /// <summary>
     /// Provides a method for reading metadata from files with an ID3 tag, using an <see cref="ID3info"/> object.
     /// </summary>
-    public class ID3Parser : IDataParser
+    public class ID3Parser : IMediaParser
     {
         /// <summary>
         /// Reads metadata from files with an ID3 tag, using an <see cref="ID3info"/> object.

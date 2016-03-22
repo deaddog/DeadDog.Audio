@@ -6,7 +6,7 @@ using Luminescence.Xiph;
 
 namespace DeadDog.Audio.Parsing
 {
-    public class FlacParser : IDataParser
+    public class FlacParser : IMediaParser
     {
         public RawTrack ParseTrack(string filepath)
         {
