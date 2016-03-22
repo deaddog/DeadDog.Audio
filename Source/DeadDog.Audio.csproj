@@ -78,6 +78,7 @@
     <Compile Include="Libraries\Library.cs" />
     <Compile Include="Libraries\Track.cs" />
     <Compile Include="Libraries\TrackCollection.cs" />
+    <Compile Include="Parsing\SequentialMediaParser.cs" />
     <Compile Include="Playback\AudioControl.cs" />
     <Compile Include="Playback\libZPlay.cs" />
     <Compile Include="Playback\mp3Control.cs" />
