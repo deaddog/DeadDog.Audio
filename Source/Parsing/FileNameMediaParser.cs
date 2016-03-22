@@ -21,6 +21,20 @@ namespace DeadDog.Audio.Parsing
         }
 
         /// <summary>
+        /// Gets a <see cref="FileNameMediaParser"/> with a set of predefined regular expressions.
+        /// </summary>
+        /// <returns>A <see cref="FileNameMediaParser"/> with a set of predefined regular expressions.</returns>
+        public static FileNameMediaParser GetDefault()
+        {
+            var parser = new FileNameMediaParser();
+
+            parser.Add("^(?<artist>[^-]+)-(?<title>[^-]+)$");
+            parser.Add("^(?<artist>[^/]+)/(?<title>.+)$");
+
+            return parser;
+        }
+
+        /// <summary>
         /// Adds a regular expression that should be checked against a file-name.
         /// See remark.
         /// </summary>
