@@ -1,66 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DeadDog.Audio.Parsing;
-using DeadDog.Audio.Parsing.ID3;
+﻿using DeadDog.Audio.Parsing.ID3;
 
 namespace DeadDog.Audio.Parsing
 {
-    public class MediaParser : IMediaParser
+    /// <summary>
+    /// Exposes a simple media parser type.
+    /// </summary>
+    public static class MediaParser
     {
-        private Dictionary<MediaTypes, IMediaParser> parsers = new Dictionary<MediaTypes, IMediaParser>();
+        /// <summary>
+        /// Gets a <see cref="IMediaParser"/> that support all audio file types that can be parsed by the library.
+        /// </summary>
+        /// <param name="parseFilenames">if set to <c>true</c> the parser will attempt to parse meta data from file names using <see cref="FileNameMediaParser.GetDefault"/>.</param>
+        /// <returns>A <see cref="IMediaParser"/> capable of handling all supported file types.</returns>
+        public static IMediaParser GetDefault(bool parseFilenames)
+        {
+            ExtensionMediaParser extParser = new ExtensionMediaParser();
 
-        public MediaParser()
-        {
-            foreach (MediaTypes type in Enum.GetValues(typeof(MediaTypes)))
-                parsers.Add(type, GetParser(type));
-        }
-        public MediaParser(MediaTypes types)
-        {
-            foreach (MediaTypes type in Enum.GetValues(typeof(MediaTypes)))
-                if (types.HasFlag(type))
-                    parsers.Add(type, GetParser(type));
-        }
+            extParser.Add("ogg", new OggParser());
+            extParser.Add("mp3", new ID3Parser());
+            extParser.Add("flac", new FlacParser());
 
-        private static IMediaParser GetParser(MediaTypes type)
-        {
-            switch (type)
+            if (parseFilenames)
             {
-                case MediaTypes.Ogg: return new OggParser();
-                case MediaTypes.Flac: return new FlacParser();
-                case MediaTypes.Wma: return null;
-                case MediaTypes.Mp3: return new ID3Parser();
-                default:
-                    throw new ArgumentException("Unknown media type.");
+                var parser = new SequentialMediaParser();
+
+                parser.AddFirst(extParser);
+                parser.AddLast(FileNameMediaParser.GetDefault());
+
+                return parser;
             }
-        }
-
-        public RawTrack ParseTrack(string filepath)
-        {
-            string ext = System.IO.Path.GetExtension(filepath).TrimStart('.');
-
-            if (ext == string.Empty)
-                throw new Exception("No file extension.");
-
-            MediaTypes type = getMediaType(ext);
-            IMediaParser parser = parsers[type];
-
-            return parser.ParseTrack(filepath);
-        }
-
-        private MediaTypes getMediaType(string extension)
-        {
-            extension = extension.ToLower();
-            switch (extension)
-            {
-                case "ogg": return MediaTypes.Ogg;
-                case "flac": return MediaTypes.Flac;
-                case "wma": return MediaTypes.Wma;
-                case "mp3": return MediaTypes.Mp3;
-                default:
-                    throw new ArgumentException("Unknown media type.");
-            }
+            else
+                return extParser;
         }
     }
 }
