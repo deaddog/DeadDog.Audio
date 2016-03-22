@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Libraries\LibraryCollectionBase.cs" />
-    <Compile Include="MediaParser.cs" />
+    <Compile Include="Parsing\MediaParser.cs" />
     <Compile Include="MediaTypes.cs" />
     <Compile Include="Parsing\ExtensionMediaParser.cs" />
     <Compile Include="Parsing\FileNameMediaParser.cs" />

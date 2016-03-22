@@ -5,7 +5,7 @@ using System.Text;
 using DeadDog.Audio.Parsing;
 using DeadDog.Audio.Parsing.ID3;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Parsing
 {
     public class MediaParser : IMediaParser
     {
