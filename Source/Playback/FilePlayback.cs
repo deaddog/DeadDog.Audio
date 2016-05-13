@@ -189,59 +189,50 @@ namespace DeadDog.Audio.Playback
         public uint Length => trackLength;
         public uint Position => trackPosition;
 
+        void IPlayback<T>.SetVolume(double left, double right)
+        {
+            if (left < 0 || left > 1)
+                throw new ArgumentOutOfRangeException(nameof(left), "Volume must be in range [0-1].");
+            if (right < 0 || right > 1)
+                throw new ArgumentOutOfRangeException(nameof(right), "Volume must be in range [0-1].");
+
+            playback.SetVolume(left, right);
+        }
+        void IPlayback<T>.GetVolume(out double left, out double right)
+        {
+            playback.GetVolume(out left, out right);
+        }
+
         public double LeftVolume
         {
             get
             {
-                if (volumeLeft < 0)
-                    playback.GetVolume(out volumeLeft, out volumeRight);
+                (this as IPlayback<T>).GetVolume(out volumeLeft, out volumeRight);
 
                 return volumeLeft;
             }
-            set
-            {
-                if (value < 0 || value > 1)
-                    throw new ArgumentOutOfRangeException("Volume must be in range [0-1].");
-
-                volumeLeft = value;
-                playback.SetVolume(volumeLeft, volumeRight);
-            }
+            set { (this as IPlayback<T>).SetVolume(value, RightVolume); }
         }
         public double RightVolume
         {
             get
             {
-                if (volumeRight < 0)
-                    playback.GetVolume(out volumeLeft, out volumeRight);
+                (this as IPlayback<T>).GetVolume(out volumeLeft, out volumeRight);
 
                 return volumeRight;
             }
-            set
-            {
-                if (value < 0 || value > 1)
-                    throw new ArgumentOutOfRangeException("Volume must be in range [0-1].");
-
-                volumeRight = value;
-                playback.SetVolume(volumeLeft, volumeRight);
-            }
+            set { (this as IPlayback<T>).SetVolume(LeftVolume, value); }
         }
 
         public double Volume
         {
             get
             {
-                if (volumeLeft < 0 || volumeRight < 0)
-                    playback.GetVolume(out volumeLeft, out volumeRight);
+                (this as IPlayback<T>).GetVolume(out volumeLeft, out volumeRight);
 
                 return (volumeLeft + volumeRight) / 2;
             }
-            set
-            {
-                if (value > 1) value = 1;
-                if (value < 0) value = 0;
-
-                volumeLeft = volumeRight = value; playback.SetVolume(volumeLeft, volumeRight);
-            }
+            set { (this as IPlayback<T>).SetVolume(value, value); }
         }
 
         private void update()
