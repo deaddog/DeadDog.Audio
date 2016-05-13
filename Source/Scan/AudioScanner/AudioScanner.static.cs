@@ -10,7 +10,7 @@ namespace DeadDog.Audio.Scan
 {
     public partial class AudioScanner
     {
-        public static AudioScanner Load(IDataParser parser, string filename)
+        public static AudioScanner Load(IMediaParser parser, string filename)
         {
             if (parser == null)
                 throw new ArgumentNullException("parser");
@@ -36,7 +36,7 @@ namespace DeadDog.Audio.Scan
             }
             return scanner;
         }
-        public static AudioScanner Load(IDataParser parser, Stream input)
+        public static AudioScanner Load(IMediaParser parser, Stream input)
         {
             if (parser == null)
                 throw new ArgumentNullException("parser");

@@ -13,7 +13,7 @@ namespace DeadDog.Audio.Scan
     {
         private AudioScan lastScan = null;
 
-        private IDataParser parser;
+        private IMediaParser parser;
 
         private DirectoryInfo directory;
         private SearchOption searchoption;
@@ -72,29 +72,29 @@ namespace DeadDog.Audio.Scan
             set { removeDeadFiles = value; }
         }
 
-        public AudioScanner(IDataParser parser, string directory)
+        public AudioScanner(IMediaParser parser, string directory)
             : this(parser, new DirectoryInfo(directory))
         {
         }
-        public AudioScanner(IDataParser parser, DirectoryInfo directory)
+        public AudioScanner(IMediaParser parser, DirectoryInfo directory)
             : this(parser, directory, SearchOption.AllDirectories)
         {
         }
 
-        public AudioScanner(IDataParser parser, string directory, SearchOption searchoption)
+        public AudioScanner(IMediaParser parser, string directory, SearchOption searchoption)
             : this(parser, new DirectoryInfo(directory), searchoption)
         {
         }
-        public AudioScanner(IDataParser parser, DirectoryInfo directory, SearchOption searchoption)
+        public AudioScanner(IMediaParser parser, DirectoryInfo directory, SearchOption searchoption)
             : this(parser, directory, searchoption, ".mp3", ".wma")
         {
         }
 
-        public AudioScanner(IDataParser parser, string directory, SearchOption searchoption, params string[] extensions)
+        public AudioScanner(IMediaParser parser, string directory, SearchOption searchoption, params string[] extensions)
             : this(parser, new DirectoryInfo(directory), searchoption, extensions)
         {
         }
-        public AudioScanner(IDataParser parser, DirectoryInfo directory, SearchOption searchoption, params string[] extensions)
+        public AudioScanner(IMediaParser parser, DirectoryInfo directory, SearchOption searchoption, params string[] extensions)
         {
             if (parser == null)
                 throw new ArgumentNullException("parser");

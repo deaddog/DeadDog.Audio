@@ -6,7 +6,7 @@ using Luminescence.Xiph;
 
 namespace DeadDog.Audio.Parsing
 {
-    public class OggParser : IDataParser
+    public class OggParser : IMediaParser
     {
         public RawTrack ParseTrack(string filepath)
         {

@@ -11,7 +11,7 @@ namespace DeadDog.Audio.Scan
 {
     public partial class AudioScan
     {
-        private IDataParser parser;
+        private IMediaParser parser;
         private Library library;
 
         private string[] extensions;
@@ -24,7 +24,7 @@ namespace DeadDog.Audio.Scan
         private event ScanCompletedEventHandler done;
 
         internal AudioScan(DirectoryInfo directory, SearchOption searchoption,
-            bool parseAdd, bool parseUpdate, bool removeDeadFiles, IDataParser parser, bool firstscan,
+            bool parseAdd, bool parseUpdate, bool removeDeadFiles, IMediaParser parser, bool firstscan,
             ScanFileEventHandler parsed, ScanCompletedEventHandler done)
         {
             this.directory = directory;
