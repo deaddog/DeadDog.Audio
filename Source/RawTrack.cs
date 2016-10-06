@@ -114,31 +114,23 @@ namespace DeadDog.Audio
         {
             if (filepath == null)
                 throw new ArgumentNullException("filepath", "filepath cannot equal null");
-            try
-            {
-                this.file = new System.IO.FileInfo(filepath);
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException("An error occured from the passed filepath", "filepath", e);
-            }
 
-            if (tracktitle == null || tracktitle == "")
-                track = null;
-            else
-                track = tracktitle.Trim();
+            try { this.file = new System.IO.FileInfo(filepath); }
+            catch (Exception e) { throw new ArgumentException("An error occured from the passed filepath", "filepath", e); }
 
-            if (albumtitle == null || albumtitle == "")
-                album = null;
-            else
-                album = albumtitle.Trim();
+            tracktitle = tracktitle == null ? null : tracktitle.Trim();
+            track = tracktitle == "" ? null : tracktitle;
+
+            albumtitle = albumtitle == null ? null : albumtitle.Trim();
+            album = albumtitle == "" ? null : albumtitle;
+
+            if (tracknumber <= 0 && tracknumber != TrackNumberIfUnknown)
+                throw new ArgumentOutOfRangeException("tracknumber", "The track number must be either a positive integer or the TrackNumberIfUnknown constant.");
 
             this.number = tracknumber;
 
-            if (artistname == null || artistname == "")
-                artist = null;
-            else
-                artist = artistname.Trim();
+            artistname = artistname == null ? null : artistname.Trim();
+            artist = artistname == "" ? null : artistname;
 
             this.year = year;
         }

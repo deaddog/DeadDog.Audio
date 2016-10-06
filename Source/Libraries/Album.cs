@@ -45,7 +45,7 @@ namespace DeadDog.Audio.Libraries
         internal Album(string album)
         {
             this.isunknown = album == null;
-            this.tracks = new Track.TrackCollection(trackAdded, trackRemoved);
+            this.tracks = new Track.TrackCollection();
 
             this.title = album ?? string.Empty;
         }
@@ -53,53 +53,6 @@ namespace DeadDog.Audio.Libraries
         public override string ToString()
         {
             return title;
-        }
-
-        private void trackAdded(Track.TrackCollection collection, TrackEventArgs e)
-        {
-            if (collection != tracks)
-                throw new InvalidOperationException("Album attempted to alter wrong trackcollection.");
-
-            if (collection.Count == 1)
-            {
-                if (!this.IsUnknown)
-                {
-                    this.artist = e.Track.Artist;
-                    this.artist.Albums.Add(this);
-                }
-            }
-            else if (e.Track.Artist != null && e.Track.Artist != this.artist)
-            {
-                if (this.artist != null)
-                    this.artist.Albums.Remove(this);
-                this.artist = null;
-            }
-        }
-        private void trackRemoved(Track.TrackCollection collection, TrackEventArgs e)
-        {
-            if (collection != tracks)
-                throw new InvalidOperationException("Album attempted to alter wrong trackcollection.");
-
-            Artist temp = null;
-            for (int i = 0; i < collection.Count; i++)
-                if (temp == null)
-                    temp = collection[i].Artist;
-                else if (collection[i].Artist != null && collection[i].Artist != temp)
-                {
-                    if (this.artist != null)
-                        this.artist.Albums.Remove(this);
-                    this.artist = null;
-                    return;
-                }
-
-            // All track artist are the same (or null)
-            if (this.artist != null)
-                this.artist.Albums.Remove(this);
-
-            this.artist = temp;
-
-            if (temp != null)
-                this.artist.Albums.Add(this);
         }
     }
 }

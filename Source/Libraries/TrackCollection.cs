@@ -9,19 +9,8 @@ namespace DeadDog.Audio.Libraries
     {
         public class TrackCollection : LibraryCollectionBase<Track>
         {
-            private TrackEventHandler addHandler, removeHandler;
-
             internal TrackCollection()
-                : this(null, null)
             {
-            }
-            internal TrackCollection(TrackEventHandler addHandler, TrackEventHandler removeHandler)
-            {
-                if ((addHandler == null || removeHandler == null) && addHandler != removeHandler)
-                    throw new ArgumentException("Both addHandler and removeHandler must be specified.");
-
-                this.addHandler = addHandler;
-                this.removeHandler = removeHandler;
             }
 
             internal override Track _unknownElement
@@ -33,16 +22,12 @@ namespace DeadDog.Audio.Libraries
             protected override void OnAdded(Track element)
             {
                 TrackEventArgs e = new TrackEventArgs(element);
-                if (addHandler != null)
-                    addHandler(this, e);
                 if (TrackAdded != null)
                     TrackAdded(this, e);
             }
             protected override void OnRemoved(Track element)
             {
                 TrackEventArgs e = new TrackEventArgs(element);
-                if (removeHandler != null)
-                    removeHandler(this, e);
                 if (TrackRemoved != null)
                     TrackRemoved(this, e);
             }
