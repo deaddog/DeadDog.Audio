@@ -49,7 +49,7 @@ namespace DeadDog.Audio.Parsing
             if (filepath == null)
                 throw new ArgumentNullException(nameof(filepath));
 
-            string ext = Path.GetExtension(filepath);
+            string ext = Path.GetExtension(filepath).TrimStart('.');
 
             if (!parsers.ContainsKey(ext))
                 return null;
