@@ -32,8 +32,7 @@ namespace DeadDog.Audio.Parsing
             if (parser == null)
                 throw new ArgumentNullException(nameof(parser));
 
-            if (!extension.StartsWith("."))
-                extension = "." + extension;
+            extension = extension.TrimStart('.');
 
             parsers.Add(extension, parser);
         }
@@ -50,7 +49,7 @@ namespace DeadDog.Audio.Parsing
             if (filepath == null)
                 throw new ArgumentNullException(nameof(filepath));
 
-            string ext = Path.GetExtension(filepath);
+            string ext = Path.GetExtension(filepath).TrimStart('.');
 
             if (!parsers.ContainsKey(ext))
                 return null;
