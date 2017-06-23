@@ -2,52 +2,33 @@
 {
     public class Album
     {
-        #region Properties
+        private Artist _artist;
 
-        private bool isunknown;
-        public bool IsUnknown
-        {
-            get { return isunknown; }
-        }
+        public bool IsUnknown { get; }
 
-        private string title;
-        public string Title
-        {
-            get { return title; }
-        }
+        public string Title { get; }
 
-        private TrackCollection tracks;
-        public TrackCollection Tracks
-        {
-            get { return tracks; }
-        }
+        public TrackCollection Tracks { get; }
 
-        // This is correct! - Artist should NOT be a constructor argument.
-        private Artist artist = null;
         public Artist Artist
         {
-            get { return artist; }
-            internal set { artist = value; }
+            get { return _artist; }
+            internal set { _artist = value; }
         }
-
-        public bool HasArtist
-        {
-            get { return artist != null; }
-        }
-
-        #endregion
+        public bool HasArtist => _artist != null;
 
         internal Album(string album)
         {
-            this.isunknown = album == null;
-            this.tracks = new TrackCollection();
+            IsUnknown = album == null;
+            Tracks = new TrackCollection();
 
-            this.title = album ?? string.Empty;
+            Title = album ?? string.Empty;
+            _artist = null;
         }
 
         public override string ToString()
         {
-            return title;
+            return Title;
         }
     }
 }

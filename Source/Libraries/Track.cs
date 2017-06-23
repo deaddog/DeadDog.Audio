@@ -1,61 +1,52 @@
-﻿namespace DeadDog.Audio.Libraries
+﻿using System.IO;
+
+namespace DeadDog.Audio.Libraries
 {
     public class Track
     {
-        #region Fields and properties
+        private string _title;
+        private int? _tracknumber;
 
-        private System.IO.FileInfo file;
-        public bool FileExist
-        {
-            get { file.Refresh(); return file.Exists; }
-        }
-        public string FilePath
-        {
-            get { return file.FullName; }
-        }
+        private Album _album;
+        private Artist _artist;
 
-        private string title;
+        public bool FileExist => File.Exists(FilePath);
+        public string FilePath { get; }
+
         public string Title
         {
-            get { return title; }
-            internal set { title = value; }
+            get { return _title; }
+            internal set { _title = value; }
         }
-
-        private int? tracknumber;
         public int? Tracknumber
         {
-            get { return tracknumber; }
-            internal set { tracknumber = value; }
+            get { return _tracknumber; }
+            internal set { _tracknumber = value; }
         }
 
-        private Album album;
         public Album Album
         {
-            get { return album; }
-            internal set { album = value; }
+            get { return _album; }
+            internal set { _album = value; }
         }
-
-        private Artist artist;
         public Artist Artist
         {
-            get { return artist; }
-            internal set { artist = value; }
+            get { return _artist; }
+            internal set { _artist = value; }
         }
-
-        #endregion
 
         internal Track(RawTrack trackinfo)
         {
-            this.file = new System.IO.FileInfo(trackinfo.Filepath);
-            this.album = null;
-            this.artist = null;
-            this.title = trackinfo.TrackTitle;
-            this.tracknumber = trackinfo.TrackNumber;
+            FilePath = trackinfo.Filepath;
+            _album = null;
+            _artist = null;
+            _title = trackinfo.TrackTitle;
+            _tracknumber = trackinfo.TrackNumber;
         }
 
         public override string ToString()
         {
-            return (tracknumber == null ? "" : "#" + tracknumber + " ") + title;
+            return Tracknumber == null ? Title : $"#{Tracknumber} {Title}";
         }
     }
 }

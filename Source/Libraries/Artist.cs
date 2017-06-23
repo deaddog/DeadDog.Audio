@@ -2,40 +2,24 @@
 {
     public class Artist
     {
-        #region Properties
-
-        private bool isunknown;
-        public bool IsUnknown
-        {
-            get { return isunknown; }
-        }
-
-        private string name;
-        public string Name
-        {
-            get { return name; }
-        }
-
-        private AlbumCollection albums;
-        public AlbumCollection Albums
-        {
-            get { return albums; }
-        }
-
-        #endregion
+        public bool IsUnknown { get; }
+        
+        public string Name { get; }
+        
+        public AlbumCollection Albums { get; }
 
         internal Artist(string name)
         {
-            this.isunknown = name == null;
-            this.albums = new AlbumCollection();
-            this.albums.UnknownAlbum.Artist = this;
+            IsUnknown = name == null;
+            Albums = new AlbumCollection();
+            Albums.UnknownAlbum.Artist = this;
 
-            this.name = name ?? string.Empty;
+            Name = name ?? string.Empty;
         }
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
     }
 }
