@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
 
 namespace DeadDog.Audio.Libraries
 {
-    public class Track
+    public class Track : INotifyPropertyChanged
     {
         private string _title;
         private int? _tracknumber;
@@ -16,23 +17,51 @@ namespace DeadDog.Audio.Libraries
         public string Title
         {
             get { return _title; }
-            internal set { _title = value; }
+            internal set
+            {
+                if (value != _title)
+                {
+                    _title = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+                }
+            }
         }
         public int? Tracknumber
         {
             get { return _tracknumber; }
-            internal set { _tracknumber = value; }
+            internal set
+            {
+                if (value != _tracknumber)
+                {
+                    _tracknumber = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tracknumber)));
+                }
+            }
         }
 
         public Album Album
         {
             get { return _album; }
-            internal set { _album = value; }
+            internal set
+            {
+                if (value != _album)
+                {
+                    _album = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Album)));
+                }
+            }
         }
         public Artist Artist
         {
             get { return _artist; }
-            internal set { _artist = value; }
+            internal set
+            {
+                if (value != _artist)
+                {
+                    _artist = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Artist)));
+                }
+            }
         }
 
         internal Track(RawTrack trackinfo)
@@ -43,6 +72,8 @@ namespace DeadDog.Audio.Libraries
             _title = trackinfo.TrackTitle;
             _tracknumber = trackinfo.TrackNumber;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {

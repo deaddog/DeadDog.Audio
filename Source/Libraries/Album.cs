@@ -1,6 +1,8 @@
-﻿namespace DeadDog.Audio.Libraries
+﻿using System.ComponentModel;
+
+namespace DeadDog.Audio.Libraries
 {
-    public class Album
+    public class Album : INotifyPropertyChanged
     {
         private Artist _artist;
 
@@ -13,7 +15,18 @@
         public Artist Artist
         {
             get { return _artist; }
-            internal set { _artist = value; }
+            internal set
+            {
+                if (_artist != value)
+                {
+                    bool hasArtistChanged = _artist == null || value == null;
+                    _artist = value;
+
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Artist)));
+                    if (hasArtistChanged)
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasArtist)));
+                }
+            }
         }
         public bool HasArtist => _artist != null;
 
@@ -25,6 +38,8 @@
             Title = album ?? string.Empty;
             _artist = null;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {

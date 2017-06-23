@@ -1,11 +1,13 @@
-﻿namespace DeadDog.Audio.Libraries
+﻿using System.ComponentModel;
+
+namespace DeadDog.Audio.Libraries
 {
-    public class Artist
+    public class Artist : INotifyPropertyChanged
     {
         public bool IsUnknown { get; }
-        
+
         public string Name { get; }
-        
+
         public AlbumCollection Albums { get; }
 
         internal Artist(string name)
@@ -16,6 +18,8 @@
 
             Name = name ?? string.Empty;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {
