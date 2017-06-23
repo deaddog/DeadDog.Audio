@@ -12,8 +12,8 @@ namespace DeadDog.Audio.Parsing.ID3
         private string album;
         private string title;
         private string trackstring;
-        private int tracknumber;
-        private int year;
+        private int? tracknumber;
+        private int? year;
 
         private string searchstring;
 
@@ -42,8 +42,8 @@ namespace DeadDog.Audio.Parsing.ID3
             this.album = null;
             this.title = null;
             this.trackstring = null;
-            this.tracknumber = -1;
-            this.year = -1;
+            this.tracknumber = null;
+            this.year = null;
             this.file = null;
             this.v1Info = null;
             this.v2Info = null;
@@ -66,8 +66,8 @@ namespace DeadDog.Audio.Parsing.ID3
                 this.album = null;
                 this.title = null;
                 this.trackstring = null;
-                this.tracknumber = -1;
-                this.year = -1;
+                this.tracknumber = null;
+                this.year = null;
                 this.v1Info = null;
                 this.v2Info = null;
 
@@ -92,10 +92,12 @@ namespace DeadDog.Audio.Parsing.ID3
             else
                 trackstring = ID3v1.TrackNumber.ToString("0");
 
-            if (ID3v2.TrackNumber >= 0)
+            if (ID3v2.TrackNumber > 0)
                 tracknumber = ID3v2.TrackNumber;
-            else
+            else if (ID3v1.TrackNumber > 0)
                 tracknumber = ID3v1.TrackNumber;
+            else
+                tracknumber = null;
 
             if (ID3v2.Year >= 0)
                 year = ID3v2.Year;
@@ -105,10 +107,10 @@ namespace DeadDog.Audio.Parsing.ID3
                 if (mYear.Success)
                     year = int.Parse(mYear.Value);
                 else
-                    year = -1;
+                    year = null;
             }
             else
-                year = -1;
+                year = null;
 
             searchstring = (artist + " " + album + " " + title).ToLower();
             while (searchstring.Contains("  "))
@@ -224,11 +226,11 @@ namespace DeadDog.Audio.Parsing.ID3
         {
             get { return trackstring; }
         }
-        public int TrackNumber
+        public int? TrackNumber
         {
             get { return tracknumber; }
         }
-        public int Year
+        public int? Year
         {
             get { return year; }
         }

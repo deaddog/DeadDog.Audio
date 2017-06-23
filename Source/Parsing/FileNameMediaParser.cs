@@ -97,13 +97,17 @@ namespace DeadDog.Audio.Parsing
                     if (title == "")
                         continue;
 
-                    int track;
-                    if (int.TryParse(trackStr, out track))
-                        track = RawTrack.TrackNumberIfUnknown;
+                    int? track;
+                    if (int.TryParse(trackStr, out int t))
+                        track = t;
+                    else
+                        track = null;
 
-                    int year;
-                    if (int.TryParse(yearStr, out year))
-                        year = RawTrack.YearIfUnknown;
+                    int? year;
+                    if (int.TryParse(yearStr, out int y))
+                        year = y;
+                    else
+                        year = null;
 
                     return new RawTrack(filepath, title, album, track, artist, year);
                 }

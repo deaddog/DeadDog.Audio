@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -34,7 +31,7 @@ namespace DeadDog.Audio.YouTube
                 title = match.Groups["track"].Value.Trim();
             }
 
-            return new RawTrack(filepath, title, album, RawTrack.TrackNumberIfUnknown, artist, RawTrack.YearIfUnknown);
+            return new RawTrack(filepath, title, album, null, artist, null);
         }
 
         public static string GetTitle(YouTubeID id)
