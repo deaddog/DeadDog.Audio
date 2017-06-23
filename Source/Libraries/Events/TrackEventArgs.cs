@@ -6,7 +6,7 @@ using System.Text;
 namespace DeadDog.Audio.Libraries
 {
     /// <summary>
-    /// Provides data for the <see cref="DeadDog.Audio.Libraries.Track.TrackCollection.TrackAdded"/> and the <see cref="DeadDog.Audio.Libraries.Track.TrackCollection.TrackRemoved"/> events.
+    /// Provides data for the <see cref="DeadDog.Audio.Libraries.TrackCollection.TrackAdded"/> and the <see cref="DeadDog.Audio.Libraries.TrackCollection.TrackRemoved"/> events.
     /// </summary>
     public class TrackEventArgs : EventArgs
     {

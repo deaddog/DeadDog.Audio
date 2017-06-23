@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DeadDog.Audio.Libraries
+﻿namespace DeadDog.Audio.Libraries
 {
-    public partial class Track
+    public class Track
     {
         #region Fields and properties
 

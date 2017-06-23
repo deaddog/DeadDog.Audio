@@ -41,7 +41,7 @@ namespace DeadDog.Audio
                 EntryChanging(this, e);
         }
 
-        void Artists_ArtistRemoved(Artist.ArtistCollection collection, ArtistEventArgs e)
+        void Artists_ArtistRemoved(ArtistCollection collection, ArtistEventArgs e)
         {
             if (lookup.ContainsKey(e.Artist))
             {
@@ -51,7 +51,7 @@ namespace DeadDog.Audio
             else
                 throw new InvalidOperationException("Playlist was not in the LibraryPlaylist and could not be removed");
         }
-        void Artists_ArtistAdded(Artist.ArtistCollection collection, ArtistEventArgs e)
+        void Artists_ArtistAdded(ArtistCollection collection, ArtistEventArgs e)
         {
             ArtistPlaylist artistplaylist = new ArtistPlaylist(e.Artist);
             lookup.Add(e.Artist, artistplaylist);

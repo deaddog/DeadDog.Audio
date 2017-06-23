@@ -43,7 +43,7 @@ namespace DeadDog.Audio
                 EntryChanging(this, e);
         }
 
-        void Albums_AlbumRemoved(Album.AlbumCollection collection, AlbumEventArgs e)
+        void Albums_AlbumRemoved(AlbumCollection collection, AlbumEventArgs e)
         {
             if (lookup.ContainsKey(e.Album))
             {
@@ -53,7 +53,7 @@ namespace DeadDog.Audio
             else
                 throw new InvalidOperationException("Playlist was not in the ArtistPlaylist and could not be removed");
         }
-        void Albums_AlbumAdded(Album.AlbumCollection collection, AlbumEventArgs e)
+        void Albums_AlbumAdded(AlbumCollection collection, AlbumEventArgs e)
         {
             AlbumPlaylist albumplaylist = new AlbumPlaylist(e.Album);
             lookup.Add(e.Album, albumplaylist);

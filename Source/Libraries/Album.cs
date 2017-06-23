@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DeadDog.Audio.Libraries
+﻿namespace DeadDog.Audio.Libraries
 {
-    public partial class Album
+    public class Album
     {
         #region Properties
 
@@ -21,8 +16,8 @@ namespace DeadDog.Audio.Libraries
             get { return title; }
         }
 
-        private Track.TrackCollection tracks;
-        public Track.TrackCollection Tracks
+        private TrackCollection tracks;
+        public TrackCollection Tracks
         {
             get { return tracks; }
         }
@@ -45,7 +40,7 @@ namespace DeadDog.Audio.Libraries
         internal Album(string album)
         {
             this.isunknown = album == null;
-            this.tracks = new Track.TrackCollection();
+            this.tracks = new TrackCollection();
 
             this.title = album ?? string.Empty;
         }

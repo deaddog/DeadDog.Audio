@@ -6,7 +6,7 @@ using System.Text;
 namespace DeadDog.Audio.Libraries
 {
     /// <summary>
-    /// Provides data for the <see cref="DeadDog.Audio.Libraries.Album.AlbumCollection.AlbumAdded"/> and the <see cref="DeadDog.Audio.Libraries.Album.AlbumCollection.AlbumRemoved"/> events.
+    /// Provides data for the <see cref="DeadDog.Audio.Libraries.AlbumCollection.AlbumAdded"/> and the <see cref="DeadDog.Audio.Libraries.AlbumCollection.AlbumRemoved"/> events.
     /// </summary>
     public class AlbumEventArgs : EventArgs
     {

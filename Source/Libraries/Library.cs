@@ -7,20 +7,20 @@ namespace DeadDog.Audio.Libraries
 {
     public class Library : IEnumerable<Track>
     {
-        private Artist.ArtistCollection artists;
-        public Artist.ArtistCollection Artists
+        private ArtistCollection artists;
+        public ArtistCollection Artists
         {
             get { return artists; }
         }
 
-        private Album.AlbumCollection albums;
-        public Album.AlbumCollection Albums
+        private AlbumCollection albums;
+        public AlbumCollection Albums
         {
             get { return albums; }
         }
 
-        private Track.TrackCollection tracks;
-        public Track.TrackCollection Tracks
+        private TrackCollection tracks;
+        public TrackCollection Tracks
         {
             get { return tracks; }
         }
@@ -30,9 +30,9 @@ namespace DeadDog.Audio.Libraries
 
         public Library()
         {
-            this.artists = new Artist.ArtistCollection();
-            this.albums = new Album.AlbumCollection();
-            this.tracks = new Track.TrackCollection();
+            this.artists = new ArtistCollection();
+            this.albums = new AlbumCollection();
+            this.tracks = new TrackCollection();
 
             this.trackDict = new Dictionary<string, Track>();
             this.artistTrackCount = new Dictionary<Artist, int>();

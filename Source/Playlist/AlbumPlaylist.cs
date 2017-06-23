@@ -37,12 +37,12 @@ namespace DeadDog.Audio
                 EntryChanging(this, e);
         }
 
-        void Tracks_TrackAdded(Track.TrackCollection collection, TrackEventArgs e)
+        void Tracks_TrackAdded(TrackCollection collection, TrackEventArgs e)
         {
             int i = collection.IndexOf(e.Track);
             playlist.Insert(i, e.Track);
         }
-        void Tracks_TrackRemoved(Track.TrackCollection collection, TrackEventArgs e)
+        void Tracks_TrackRemoved(TrackCollection collection, TrackEventArgs e)
         {
             playlist.Remove(e.Track);
         }
