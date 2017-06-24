@@ -16,8 +16,6 @@ namespace DeadDog.Audio.Libraries
             _comparer = comparer;
         }
 
-        internal abstract T _unknownElement { get; }
-
         private int FindIndexOf(T element) => _list.BinarySearch(element, _comparer);
 
         public int Count
@@ -100,8 +98,6 @@ namespace DeadDog.Audio.Libraries
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            if (_unknownElement != null)
-                yield return _unknownElement;
             T[] array = _list.ToArray();
             for (int i = 0; i < array.Length; i++)
                 yield return array[i];

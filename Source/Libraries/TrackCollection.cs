@@ -5,10 +5,5 @@
         internal TrackCollection() : base(LibraryComparisons.CompareTrackNumbers)
         {
         }
-
-        internal override Track _unknownElement
-        {
-            get { return null; }
-        }
     }
 }

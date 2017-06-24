@@ -14,7 +14,6 @@ namespace DeadDog.Audio.Libraries
         {
             IsUnknown = name == null;
             Albums = new AlbumCollection();
-            Albums.UnknownAlbum.Artist = this;
 
             Name = name ?? string.Empty;
         }
