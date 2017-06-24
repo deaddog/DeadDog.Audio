@@ -50,10 +50,10 @@ namespace DeadDog.Audio.Libraries
             Album album = GetOrCreateAlbum(artist, track.AlbumTitle);
 
             Track t = new Track(track.Filepath, track.TrackTitle, track.TrackNumber, album, artist);
-
             trackDict.Add(track.Filepath, t);
-            addTrackToArtist(t, artist);
-            addTrackToAlbum(t, album);
+
+            album.Tracks.Add(t);
+            artist.Tracks.Add(t);
             tracks.Add(t);
 
             return t;

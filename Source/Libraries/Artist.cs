@@ -9,11 +9,13 @@ namespace DeadDog.Audio.Libraries
         public string Name { get; }
 
         public AlbumCollection Albums { get; }
+        public TrackCollection Tracks { get; }
 
         internal Artist(string name)
         {
             IsUnknown = name == null;
             Albums = new AlbumCollection();
+            Tracks = new TrackCollection();
 
             Name = name ?? string.Empty;
         }
