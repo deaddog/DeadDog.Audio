@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace DeadDog.Audio.Libraries
 {
-    public abstract class LibraryCollection<T> : INotifyCollectionChanged, IEnumerable<T> where T : class, INotifyPropertyChanged
+    public class LibraryCollection<T> : INotifyCollectionChanged, IEnumerable<T> where T : class, INotifyPropertyChanged
     {
         private readonly List<T> _list;
         private readonly Comparison<T> _comparer;

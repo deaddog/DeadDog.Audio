@@ -12,7 +12,7 @@ namespace DeadDog.Audio.Libraries
 
         public string Title { get; }
 
-        public TrackCollection Tracks { get; }
+        public LibraryCollection<Track> Tracks { get; }
 
         public Artist Artist
         {
@@ -41,7 +41,7 @@ namespace DeadDog.Audio.Libraries
         internal Album(string title)
         {
             IsUnknown = title == null;
-            Tracks = new TrackCollection();
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareTrackNumbers);
             Tracks.CollectionChanged += TracksCollectionChanged;
 
             Title = title ?? string.Empty;

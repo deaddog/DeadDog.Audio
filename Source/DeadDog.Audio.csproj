@@ -67,13 +67,10 @@
     <Compile Include="Parsing\ID3\v2\TagHeader.cs" />
     <Compile Include="StreamExtension.cs" />
     <Compile Include="Libraries\Album.cs" />
-    <Compile Include="Libraries\AlbumCollection.cs" />
     <Compile Include="Libraries\Artist.cs" />
-    <Compile Include="Libraries\ArtistCollection.cs" />
     <Compile Include="BinarySearchExtension.cs" />
     <Compile Include="Libraries\Library.cs" />
     <Compile Include="Libraries\Track.cs" />
-    <Compile Include="Libraries\TrackCollection.cs" />
     <Compile Include="Parsing\SequentialMediaParser.cs" />
     <Compile Include="Playback\AudioControl.cs" />
     <Compile Include="Playback\libZPlay.cs" />

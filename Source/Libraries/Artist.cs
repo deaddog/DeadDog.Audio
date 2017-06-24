@@ -8,14 +8,15 @@ namespace DeadDog.Audio.Libraries
 
         public string Name { get; }
 
-        public AlbumCollection Albums { get; }
-        public TrackCollection Tracks { get; }
+        public LibraryCollection<Album> Albums { get; }
+        public LibraryCollection<Track> Tracks { get; }
 
         internal Artist(string name)
         {
             IsUnknown = name == null;
-            Albums = new AlbumCollection();
-            Tracks = new TrackCollection();
+
+            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareAlbumTitles);
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareTrackNumbers);
 
             Name = name ?? string.Empty;
         }
