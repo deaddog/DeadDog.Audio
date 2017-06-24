@@ -62,8 +62,10 @@ namespace DeadDog.Audio.Libraries
         {
             if (artistname == null || artistname.Length == 0)
                 return artists.UnknownArtist;
-            else if (artists.Contains(artistname))
-                return artists[artistname];
+
+            var existing = artists.FirstOrDefault(x => x.Name == artistname);
+            if (existing != null)
+                return existing;
             else
             {
                 Artist artist = new Artist(artistname);
@@ -76,8 +78,10 @@ namespace DeadDog.Audio.Libraries
         {
             if (albumname == null || albumname.Length == 0)
                 return artist.Albums.UnknownAlbum;
-            else if (albums.Contains(albumname))
-                return albums[albumname];
+
+            var existing = albums.FirstOrDefault(x => x.Title == albumname);
+            if (existing != null)
+                return existing;
             else
             {
                 Album album = new Album(albumname);
