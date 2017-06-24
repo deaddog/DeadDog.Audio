@@ -7,26 +7,26 @@ namespace DeadDog.Audio.Libraries
 {
     public abstract class LibraryCollectionBase<T> : INotifyCollectionChanged, IEnumerable<T> where T : class, INotifyPropertyChanged
     {
-        private readonly List<T> list;
+        private readonly List<T> _list;
         private readonly Comparison<T> _comparer;
 
         internal LibraryCollectionBase(Comparison<T> comparer)
         {
-            this.list = new List<T>();
+            _list = new List<T>();
             _comparer = comparer;
         }
 
         internal abstract T _unknownElement { get; }
 
-        private int FindIndexOf(T element) => list.BinarySearch(element, _comparer);
+        private int FindIndexOf(T element) => _list.BinarySearch(element, _comparer);
 
         public int Count
         {
-            get { return list.Count; }
+            get { return _list.Count; }
         }
         public T this[int index]
         {
-            get { return list[index]; }
+            get { return _list[index]; }
         }
 
         public bool Contains(T element)
@@ -38,7 +38,7 @@ namespace DeadDog.Audio.Libraries
         {
             int index = FindIndexOf(element);
             if (index < 0) index = ~index;
-            list.Insert(index, element);
+            _list.Insert(index, element);
             element.PropertyChanged += ElementPropertyChanged;
 
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, element, index));
@@ -48,7 +48,7 @@ namespace DeadDog.Audio.Libraries
             int index = FindIndexOf(element);
             if (index >= 0)
             {
-                list.RemoveAt(index);
+                _list.RemoveAt(index);
                 element.PropertyChanged -= ElementPropertyChanged;
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, element, index));
             }
@@ -60,30 +60,30 @@ namespace DeadDog.Audio.Libraries
             {
                 int oldIndex = -1;
                 int newIndex = -1;
-                for (int i = 0; i < list.Count; i++)
+                for (int i = 0; i < _list.Count; i++)
                 {
-                    if (oldIndex == -1 && list[i] == element)
+                    if (oldIndex == -1 && _list[i] == element)
                         oldIndex = i;
-                    else if (newIndex == -1 && _comparer(element, list[i]) < 0)
+                    else if (newIndex == -1 && _comparer(element, _list[i]) < 0)
                         newIndex = i;
                 }
 
                 if (oldIndex == -1)
                     throw new ArgumentOutOfRangeException("An element on which a property has changed was not part of the collection.");
                 if (newIndex == -1)
-                    newIndex = list.Count;
+                    newIndex = _list.Count;
 
                 if (newIndex < oldIndex) //Move left
                 {
-                    list.RemoveAt(oldIndex);
-                    list.Insert(newIndex, element);
+                    _list.RemoveAt(oldIndex);
+                    _list.Insert(newIndex, element);
 
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, element, newIndex - 1, oldIndex));
                 }
                 else if (newIndex > oldIndex) //Move right
                 {
-                    list.Insert(newIndex, element);
-                    list.RemoveAt(oldIndex);
+                    _list.Insert(newIndex, element);
+                    _list.RemoveAt(oldIndex);
 
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, element, newIndex, oldIndex));
                 }
@@ -102,7 +102,7 @@ namespace DeadDog.Audio.Libraries
         {
             if (_unknownElement != null)
                 yield return _unknownElement;
-            T[] array = list.ToArray();
+            T[] array = _list.ToArray();
             for (int i = 0; i < array.Length; i++)
                 yield return array[i];
         }
@@ -113,7 +113,7 @@ namespace DeadDog.Audio.Libraries
 
         public override string ToString()
         {
-            return "Count {" + list.Count + "}";
+            return "Count {" + _list.Count + "}";
         }
     }
 }
