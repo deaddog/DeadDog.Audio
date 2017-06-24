@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DeadDog.Audio.Libraries
 {
@@ -14,7 +11,6 @@ namespace DeadDog.Audio.Libraries
             this.list = new List<T>();
         }
 
-        protected abstract string GetName(T element);
         protected abstract int Compare(T element1, T element2);
 
         internal abstract T _unknownElement { get; }
@@ -27,24 +23,10 @@ namespace DeadDog.Audio.Libraries
         {
             get { return list[index]; }
         }
-        public T this[string name]
-        {
-            get
-            {
-                if (name == null || name.Length == 0)
-                    return _unknownElement;
-                else
-                    return list.FirstOrDefault(e => GetName(e) == name);
-            }
-        }
 
         public bool Contains(T element)
         {
             return list.BinarySearch(element, Compare) >= 0;
-        }
-        public bool Contains(string name)
-        {
-            return list.BinarySearch(name, string.Compare, GetName) >= 0;
         }
 
         internal void Add(T element)
@@ -74,11 +56,6 @@ namespace DeadDog.Audio.Libraries
         public int IndexOf(T element)
         {
             int index = list.BinarySearch(element, Compare);
-            return index < 0 ? -1 : index;
-        }
-        public int IndexOf(string name)
-        {
-            int index = list.BinarySearch(name, string.Compare, GetName);
             return index < 0 ? -1 : index;
         }
 

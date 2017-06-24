@@ -28,10 +28,6 @@
             AlbumRemoved?.Invoke(this, new AlbumEventArgs(element));
         }
 
-        protected override string GetName(Album element)
-        {
-            return element.Title;
-        }
         protected override int Compare(Album element1, Album element2)
         {
             return element1.Title.CompareTo(element2.Title);

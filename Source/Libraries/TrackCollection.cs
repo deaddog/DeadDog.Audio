@@ -25,10 +25,6 @@
                 TrackRemoved(this, e);
         }
 
-        protected override string GetName(Track element)
-        {
-            return element.Title;
-        }
         protected override int Compare(Track element1, Track element2)
         {
             int? v1 = element1.Tracknumber, v2 = element2.Tracknumber;

@@ -28,10 +28,6 @@
             ArtistRemoved?.Invoke(this, new ArtistEventArgs(element));
         }
 
-        protected override string GetName(Artist element)
-        {
-            return element.Name;
-        }
         protected override int Compare(Artist element1, Artist element2)
         {
             return element1.Name.CompareTo(element2.Name);
