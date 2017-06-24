@@ -92,25 +92,41 @@ namespace DeadDog.Audio.Libraries
 
         public Track UpdateTrack(RawTrack track)
         {
-            Track item;
-            if (!trackDict.TryGetValue(track.Filepath, out item))
-                throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be updated by it.");
+            if (!trackDict.TryGetValue(track.Filepath, out Track item))
+                throw new ArgumentOutOfRangeException(nameof(track), "A track must be contained by a Library to be updated by it.");
 
-            if (item.Title != track.TrackTitle)
-                item.Title = track.TrackTitle;
+            item.Title = track.TrackTitle;
+            item.Tracknumber = track.TrackNumber;
 
-            if (item.Album.Title != track.AlbumTitle)
+            var oldAlbum = item.Album;
+            var oldArtist = item.Artist;
+
+            var updateAlbum = item.Album.Title != track.AlbumTitle;
+            var updateArtist = item.Artist.Name != track.ArtistName;
+
+            if (updateAlbum)
             {
-                removeTrackFromAlbum(item);
-                var album = getAlbum(item.Artist, track.AlbumTitle);
-                addTrackToAlbum(item, album);
+                oldAlbum.Tracks.Remove(item);
+                if (oldAlbum.Tracks.Count == 0)
+                    albums.Remove(oldAlbum);
             }
 
-            if (item.Artist.Name != track.ArtistName)
+            if (updateArtist)
             {
-                removeTrackFromArtist(item);
-                var artist = getArtist(track.ArtistName);
-                addTrackToArtist(item, artist);
+                oldArtist.Tracks.Remove(item);
+                if (oldArtist.Tracks.Count == 0)
+                    artists.Remove(oldArtist);
+
+                Artist artist = GetOrCreateArtist(track.ArtistName);
+                item.Artist = artist;
+                artist.Tracks.Add(item);
+            }
+
+            if (updateAlbum)
+            {
+                Album album = GetOrCreateAlbum(item.Artist, track.AlbumTitle);
+                item.Album = album;
+                album.Tracks.Add(item);
             }
 
             return item;
