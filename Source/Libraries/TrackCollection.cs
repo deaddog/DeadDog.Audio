@@ -2,7 +2,7 @@
 {
     public class TrackCollection : LibraryCollectionBase<Track>
     {
-        internal TrackCollection()
+        internal TrackCollection() : base(CompareTracks)
         {
         }
 
@@ -25,7 +25,7 @@
                 TrackRemoved(this, e);
         }
 
-        protected override int Compare(Track element1, Track element2)
+        private static int CompareTracks(Track element1, Track element2)
         {
             int? v1 = element1.Tracknumber, v2 = element2.Tracknumber;
             if (v1.HasValue)

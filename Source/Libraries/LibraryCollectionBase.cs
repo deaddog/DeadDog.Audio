@@ -1,19 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DeadDog.Audio.Libraries
 {
     public abstract class LibraryCollectionBase<T> : IEnumerable<T> where T : class
     {
-        private List<T> list;
+        private readonly List<T> list;
+        private readonly Comparison<T> _comparer;
 
-        internal LibraryCollectionBase()
+        internal LibraryCollectionBase(Comparison<T> comparer)
         {
             this.list = new List<T>();
+            _comparer = comparer;
         }
 
-        protected abstract int Compare(T element1, T element2);
-
         internal abstract T _unknownElement { get; }
+
+        private int FindIndexOf(T element) => list.BinarySearch(element, _comparer);
 
         public int Count
         {
@@ -26,12 +29,12 @@ namespace DeadDog.Audio.Libraries
 
         public bool Contains(T element)
         {
-            return list.BinarySearch(element, Compare) >= 0;
+            return FindIndexOf(element) >= 0;
         }
 
         internal void Add(T element)
         {
-            int index = list.BinarySearch(element, Compare);
+            int index = FindIndexOf(element);
             if (index < 0) index = ~index;
             list.Insert(index, element);
 
@@ -48,14 +51,14 @@ namespace DeadDog.Audio.Libraries
         {
             list.Remove(element);
 
-            int index = list.BinarySearch(element, Compare);
+            int index = FindIndexOf(element);
             if (index < 0) index = ~index;
             list.Insert(index, element);
         }
 
         public int IndexOf(T element)
         {
-            int index = list.BinarySearch(element, Compare);
+            int index = FindIndexOf(element);
             return index < 0 ? -1 : index;
         }
 

@@ -4,7 +4,7 @@
     {
         private Artist unknownArtist;
 
-        internal ArtistCollection()
+        internal ArtistCollection() : base((a1, a2) => a1.Name.CompareTo(a2.Name))
         {
             this.unknownArtist = new Artist(null);
         }
@@ -26,11 +26,6 @@
         protected override void OnRemoved(Artist element)
         {
             ArtistRemoved?.Invoke(this, new ArtistEventArgs(element));
-        }
-
-        protected override int Compare(Artist element1, Artist element2)
-        {
-            return element1.Name.CompareTo(element2.Name);
         }
     }
 }

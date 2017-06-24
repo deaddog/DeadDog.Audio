@@ -4,7 +4,7 @@
     {
         private Album unknownAlbum;
 
-        internal AlbumCollection()
+        internal AlbumCollection() : base((a1, a2) => a1.Title.CompareTo(a2.Title))
         {
             this.unknownAlbum = new Album(null);
         }
@@ -26,11 +26,6 @@
         protected override void OnRemoved(Album element)
         {
             AlbumRemoved?.Invoke(this, new AlbumEventArgs(element));
-        }
-
-        protected override int Compare(Album element1, Album element2)
-        {
-            return element1.Title.CompareTo(element2.Title);
         }
     }
 }
