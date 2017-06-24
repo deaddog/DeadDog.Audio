@@ -1,6 +1,6 @@
 ﻿namespace DeadDog.Audio.Libraries
 {
-    public class AlbumCollection : LibraryCollectionBase<Album>
+    public class AlbumCollection : LibraryCollection<Album>
     {
         internal AlbumCollection() : base(LibraryComparisons.CompareAlbumTitles)
         {

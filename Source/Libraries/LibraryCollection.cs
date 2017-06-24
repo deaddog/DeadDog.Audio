@@ -5,12 +5,12 @@ using System.ComponentModel;
 
 namespace DeadDog.Audio.Libraries
 {
-    public abstract class LibraryCollectionBase<T> : INotifyCollectionChanged, IEnumerable<T> where T : class, INotifyPropertyChanged
+    public abstract class LibraryCollection<T> : INotifyCollectionChanged, IEnumerable<T> where T : class, INotifyPropertyChanged
     {
         private readonly List<T> _list;
         private readonly Comparison<T> _comparer;
 
-        internal LibraryCollectionBase(Comparison<T> comparer)
+        internal LibraryCollection(Comparison<T> comparer)
         {
             _list = new List<T>();
             _comparer = comparer;

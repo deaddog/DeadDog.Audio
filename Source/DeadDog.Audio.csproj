@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Libraries\LibraryCollectionBase.cs" />
+    <Compile Include="Libraries\LibraryCollection.cs" />
     <Compile Include="Libraries\LibraryComparisons.cs" />
     <Compile Include="LinqExtension.cs" />
     <Compile Include="Parsing\MediaParser.cs" />
