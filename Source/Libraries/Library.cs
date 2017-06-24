@@ -74,17 +74,17 @@ namespace DeadDog.Audio.Libraries
                 return artist;
             }
         }
-        private Album getAlbum(Artist artist, string albumname)
+        private Album getAlbum(Artist artist, string albumtitle)
         {
-            if (albumname == null || albumname.Length == 0)
+            if (albumtitle == null || albumtitle.Length == 0)
                 return artist.Albums.UnknownAlbum;
 
-            var existing = albums.FirstOrDefault(x => x.Title == albumname);
+            var existing = albums.FirstOrDefault(x => x.Title == albumtitle);
             if (existing != null)
                 return existing;
             else
             {
-                Album album = new Album(albumname);
+                Album album = new Album(albumtitle);
                 albums.Add(album);
                 return album;
             }

@@ -30,12 +30,12 @@ namespace DeadDog.Audio.Libraries
         }
         public bool HasArtist => _artist != null;
 
-        internal Album(string album)
+        internal Album(string title)
         {
-            IsUnknown = album == null;
+            IsUnknown = title == null;
             Tracks = new TrackCollection();
 
-            Title = album ?? string.Empty;
+            Title = title ?? string.Empty;
             _artist = null;
         }
 
