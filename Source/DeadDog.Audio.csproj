@@ -71,12 +71,6 @@
     <Compile Include="Libraries\Artist.cs" />
     <Compile Include="Libraries\ArtistCollection.cs" />
     <Compile Include="BinarySearchExtension.cs" />
-    <Compile Include="Libraries\Events\AlbumEventArgs.cs" />
-    <Compile Include="Libraries\Events\AlbumEventHandler.cs" />
-    <Compile Include="Libraries\Events\ArtistEventArgs.cs" />
-    <Compile Include="Libraries\Events\ArtistEventHandler.cs" />
-    <Compile Include="Libraries\Events\TrackEventArgs.cs" />
-    <Compile Include="Libraries\Events\TrackEventHandler.cs" />
     <Compile Include="Libraries\Library.cs" />
     <Compile Include="Libraries\Track.cs" />
     <Compile Include="Libraries\TrackCollection.cs" />
