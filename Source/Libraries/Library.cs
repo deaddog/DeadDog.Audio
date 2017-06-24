@@ -151,101 +151,23 @@ namespace DeadDog.Audio.Libraries
             tracks.Remove(track);
             trackDict.Remove(track.FilePath);
 
-            removeTrackFromAlbum(track);
-            removeTrackFromArtist(track);
+            album.Tracks.Remove(track);
+            if (album.Tracks.Count == 0)
+                albums.Remove(album);
+
+            artist.Tracks.Remove(track);
+            if (artist.Tracks.Count == 0)
+                artists.Remove(artist);
         }
         public void RemoveTrack(string filename)
         {
             if (filename == null)
                 throw new ArgumentNullException("track");
 
-            Track track;
-            if (!trackDict.TryGetValue(filename, out track))
+            if (!trackDict.TryGetValue(filename, out Track track))
                 throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
 
             RemoveTrack(track);
-        }
-
-        private void addTrackToAlbum(Track track, Album album)
-        {
-            var artist = track.Artist;
-
-            album.Tracks.Add(track);
-            if (!album.IsUnknown)
-            {
-                if (album.Tracks.Count == 1)
-                {
-                    artist.Albums.Add(album);
-                    album.Artist = artist;
-                }
-                else if (album.Artist != artist && album.Artist != artists.UnknownArtist)
-                {
-                    album.Artist.Albums.Remove(album);
-                    artists.UnknownArtist.Albums.Add(album);
-                    album.Artist = artists.UnknownArtist;
-                }
-            }
-
-            track.Album = album;
-        }
-        private void removeTrackFromAlbum(Track track)
-        {
-            var album = track.Album;
-
-            album.Tracks.Remove(track);
-            if (!album.IsUnknown)
-            {
-                if (album.Artist.IsUnknown)
-                {
-                    Artist a = album.Tracks[0].Artist;
-                    for (int i = 1; i < album.Tracks.Count; i++)
-                        if (a != album.Tracks[i].Artist)
-                            a = artists.UnknownArtist;
-                    if (album.Artist != a)
-                    {
-                        album.Artist.Albums.Remove(album);
-                        a.Albums.Add(album);
-                        album.Artist = a;
-                    }
-                }
-
-                if (album.Tracks.Count == 0)
-                {
-                    //Remove album
-                    albums.Remove(album);
-                    if (!album.Artist.IsUnknown)
-                    {
-                        album.Artist.Albums.Remove(album);
-                        album.Artist = null;
-                    }
-                }
-            }
-            track.Album = null;
-        }
-
-        private void addTrackToArtist(Track track, Artist artist)
-        {
-            track.Artist = artist;
-
-            if (!artist.IsUnknown)
-                artistTrackCount[artist]++;
-        }
-        private void removeTrackFromArtist(Track track)
-        {
-            var artist = track.Artist;
-
-            if (!artist.IsUnknown)
-            {
-                artistTrackCount[artist]--;
-                if (artistTrackCount[artist] == 0)
-                {
-                    //Remove artist
-                    artists.Remove(artist);
-                    artistTrackCount.Remove(artist);
-                }
-            }
-
-            track.Artist = null;
         }
 
         IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
