@@ -49,7 +49,7 @@ namespace DeadDog.Audio.Libraries
             Artist artist = GetOrCreateArtist(track.ArtistName);
             Album album = GetOrCreateAlbum(artist, track.AlbumTitle);
 
-            Track t = new Track(track);
+            Track t = new Track(track.Filepath, track.TrackTitle, track.TrackNumber, album, artist);
 
             trackDict.Add(track.Filepath, t);
             addTrackToArtist(t, artist);

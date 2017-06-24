@@ -64,13 +64,13 @@ namespace DeadDog.Audio.Libraries
             }
         }
 
-        internal Track(RawTrack trackinfo)
+        internal Track(string filepath, string title, int? tracknumber, Album album, Artist artist)
         {
-            FilePath = trackinfo.Filepath;
-            _album = null;
-            _artist = null;
-            _title = trackinfo.TrackTitle;
-            _tracknumber = trackinfo.TrackNumber;
+            FilePath = filepath;
+            _title = title;
+            _tracknumber = tracknumber;
+            _album = album;
+            _artist = artist;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
