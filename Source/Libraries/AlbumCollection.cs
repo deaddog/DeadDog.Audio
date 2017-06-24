@@ -4,7 +4,7 @@
     {
         private Album unknownAlbum;
 
-        internal AlbumCollection() : base((a1, a2) => a1.Title.CompareTo(a2.Title))
+        internal AlbumCollection() : base(LibraryComparisons.CompareAlbumTitles)
         {
             this.unknownAlbum = new Album(null);
         }

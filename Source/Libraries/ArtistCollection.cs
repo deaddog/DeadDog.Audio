@@ -4,7 +4,7 @@
     {
         private Artist unknownArtist;
 
-        internal ArtistCollection() : base((a1, a2) => a1.Name.CompareTo(a2.Name))
+        internal ArtistCollection() : base(LibraryComparisons.CompareArtistNames)
         {
             this.unknownArtist = new Artist(null);
         }
