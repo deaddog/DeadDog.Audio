@@ -46,8 +46,8 @@ namespace DeadDog.Audio.Libraries
             if (trackDict.ContainsKey(track.Filepath))
                 throw new ArgumentException(track.Filepath + " is already in library - use Update instead.", "track");
 
-            Artist artist = getArtist(track.ArtistName);
-            Album album = getAlbum(artist, track.AlbumTitle);
+            Artist artist = GetOrCreateArtist(track.ArtistName);
+            Album album = GetOrCreateAlbum(artist, track.AlbumTitle);
 
             Track t = new Track(track);
 
@@ -58,28 +58,28 @@ namespace DeadDog.Audio.Libraries
 
             return t;
         }
-        private Artist getArtist(string artistname)
-        {
-            if (artistname == null || artistname.Length == 0)
-                return artists.UnknownArtist;
 
-            var existing = artists.FirstOrDefault(x => x.Name == artistname);
+        private Artist GetOrCreateArtist(string artistname)
+        {
+            Artist existing = artistname == null ?
+                artists.FirstOrDefault(x => x.IsUnknown) :
+                artists.FirstOrDefault(x => x.Name.Equals(artistname));
+
             if (existing != null)
                 return existing;
             else
             {
                 Artist artist = new Artist(artistname);
                 artists.Add(artist);
-                artistTrackCount.Add(artist, 0);
                 return artist;
             }
         }
-        private Album getAlbum(Artist artist, string albumtitle)
+        private Album GetOrCreateAlbum(Artist artist, string albumtitle)
         {
-            if (albumtitle == null || albumtitle.Length == 0)
-                return artist.Albums.UnknownAlbum;
+            Album existing = albumtitle == null ?
+                artist.Albums.FirstOrDefault(x => x.IsUnknown) :
+                albums.FirstOrDefault(x => x.Title.Equals(albumtitle));
 
-            var existing = albums.FirstOrDefault(x => x.Title == albumtitle);
             if (existing != null)
                 return existing;
             else
