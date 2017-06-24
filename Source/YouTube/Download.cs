@@ -34,7 +34,7 @@ namespace DeadDog.Audio.YouTube
             this.downloaded = -1;
         }
         internal Download(YouTubeID id, RawTrack trackinfo, string title)
-            : this(id, trackinfo.FullFilename)
+            : this(id, trackinfo.Filepath)
         {
             if (trackinfo == null)
                 throw new ArgumentNullException("trackinfo");

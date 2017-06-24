@@ -93,7 +93,7 @@ namespace DeadDog.Audio.Scan
 
                 public int Compare(RawTrack x, RawTrack y)
                 {
-                    return x.FullFilename.CompareTo(file.FullName);
+                    return x.Filepath.CompareTo(file.FullName);
                 }
             }
 
@@ -102,7 +102,7 @@ namespace DeadDog.Audio.Scan
             {
                 public int Compare(RawTrack x, RawTrack y)
                 {
-                    return x.FullFilename.CompareTo(y.FullFilename);
+                    return x.Filepath.CompareTo(y.Filepath);
                 }
             }
 

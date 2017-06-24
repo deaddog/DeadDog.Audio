@@ -16,15 +16,15 @@ namespace DeadDog.Audio.Libraries.Tests
 
         private RawTrack getRawTrackWithTrackTitle(RawTrack origin, string title)
         {
-            return new RawTrack(origin.FullFilename, title, origin.AlbumTitle, origin.TrackNumber, origin.ArtistName, origin.Year);
+            return new RawTrack(origin.Filepath, title, origin.AlbumTitle, origin.TrackNumber, origin.ArtistName, origin.Year);
         }
         private RawTrack getRawTrackWithAlbumTitle(RawTrack origin, string title)
         {
-            return new RawTrack(origin.FullFilename, origin.TrackTitle, title, origin.TrackNumber, origin.ArtistName, origin.Year);
+            return new RawTrack(origin.Filepath, origin.TrackTitle, title, origin.TrackNumber, origin.ArtistName, origin.Year);
         }
         private RawTrack getRawTrackWithArtistName(RawTrack origin, string name)
         {
-            return new RawTrack(origin.FullFilename, origin.TrackTitle, origin.AlbumTitle, origin.TrackNumber, name, origin.Year);
+            return new RawTrack(origin.Filepath, origin.TrackTitle, origin.AlbumTitle, origin.TrackNumber, name, origin.Year);
         }
 
         private Library library;
@@ -37,10 +37,10 @@ namespace DeadDog.Audio.Libraries.Tests
 
         private void assertTrack(RawTrack expected, Track actual)
         {
-            Assert.IsTrue(library.Contains(expected), "Track path \"" + expected.FullFilename + "\" not found in library.");
+            Assert.IsTrue(library.Contains(expected), "Track path \"" + expected.Filepath + "\" not found in library.");
             Assert.IsTrue(library.Tracks.Contains(actual), "Track instance not found in library.");
 
-            Assert.AreEqual(expected.FullFilename, actual.FilePath, "Different file paths, probable error in test.");
+            Assert.AreEqual(expected.Filepath, actual.FilePath, "Different file paths, probable error in test.");
             Assert.AreEqual(expected.TrackTitle, actual.Title, "Title mismatch.");
 
             if (actual.Album == null)

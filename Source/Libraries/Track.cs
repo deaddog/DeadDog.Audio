@@ -51,7 +51,7 @@ namespace DeadDog.Audio.Libraries
 
         internal Track(RawTrack trackinfo)
         {
-            this.file = trackinfo.File;
+            this.file = new System.IO.FileInfo(trackinfo.Filepath);
             this.album = null;
             this.artist = null;
             this.title = trackinfo.TrackTitle;

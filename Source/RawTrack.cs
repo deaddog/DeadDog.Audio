@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace DeadDog.Audio
 {
@@ -25,27 +23,13 @@ namespace DeadDog.Audio
             unknown = new RawTrack();
         }
 
-        internal static void SetNewArtistName(RawTrack item, string newname)
-        {
-            if (item == unknown)
-                throw new ArgumentException("Cannot alter \"Unknown\"");
-
-            item.artist = newname;
-        }
-
         /// <summary>
         /// Creates a new instance of the <see cref="RawTrack"/> that is a copy of the current instance.
         /// </summary>
         /// <returns>A new cloned instance of the current object.</returns>
         public object Clone()
         {
-            RawTrack rt = new RawTrack();
-            rt.album = this.album;
-            rt.artist = this.artist;
-            rt.file = this.file;
-            rt.number = this.number;
-            rt.track = this.track;
-            return rt;
+            return new RawTrack(Filepath, TrackTitle, AlbumTitle, TrackNumber, ArtistName, Year);
         }
 
         /// <summary>
@@ -88,31 +72,26 @@ namespace DeadDog.Audio
                 throw new ArgumentException("Output stream must support writing", "output");
 
             IOAssistant io = new IOAssistant(output);
-            io.Write(this.file.FullName);
-            io.Write(this.track);
-            io.Write(this.album);
-            io.Write(this.number ?? -1);
-            io.Write(this.artist);
-            io.Write(this.year ?? -1);
+            io.Write(Filepath);
+            io.Write(TrackTitle);
+            io.Write(AlbumTitle);
+            io.Write(TrackNumber ?? -1);
+            io.Write(ArtistName);
+            io.Write(Year ?? -1);
         }
-
-        private System.IO.FileInfo file;
-        private string track, album, artist;
-        private int? number, year;
 
         /// <summary>
         /// Should only be used in the static type constructor.
         /// </summary>
         private RawTrack()
         {
-            this.file = null;
+            Filepath = null;
 
-            this.track = null;
-            this.album = "Unknown";
-            this.number = null;
-            this.year = null;
-
-            this.artist = "Unknown";
+            TrackTitle = null;
+            AlbumTitle = "Unknown";
+            ArtistName = "Unknown";
+            TrackNumber = null;
+            Year = null;
         }
 
         /// <summary>
@@ -129,83 +108,48 @@ namespace DeadDog.Audio
             if (filepath == null)
                 throw new ArgumentNullException("filepath", "filepath cannot equal null");
 
-            try { this.file = new System.IO.FileInfo(filepath); }
-            catch (Exception e) { throw new ArgumentException("An error occured from the passed filepath", "filepath", e); }
+            Filepath = filepath;
 
-            tracktitle = tracktitle == null ? null : tracktitle.Trim();
-            track = tracktitle == "" ? null : tracktitle;
-
-            albumtitle = albumtitle == null ? null : albumtitle.Trim();
-            album = albumtitle == "" ? null : albumtitle;
+            TrackTitle = string.IsNullOrWhiteSpace(tracktitle) ? null : tracktitle.Trim();
+            AlbumTitle = string.IsNullOrWhiteSpace(albumtitle) ? null : albumtitle.Trim();
+            ArtistName = string.IsNullOrWhiteSpace(artistname) ? null : artistname.Trim();
 
             if (tracknumber <= 0)
                 throw new ArgumentOutOfRangeException(nameof(tracknumber), "The track number cannot be negative or zero.");
             else
-                this.number = tracknumber;
-
-            artistname = artistname == null ? null : artistname.Trim();
-            artist = artistname == "" ? null : artistname;
+                TrackNumber = tracknumber;
 
             if (year <= 0)
                 throw new ArgumentOutOfRangeException(nameof(year), "The release year cannot be negative or zero.");
             else
-                this.year = year;
+                Year = year;
         }
 
         /// <summary>
         /// Gets the title of the track. If the title is unknown, null is returned.
         /// </summary>
-        public string TrackTitle
-        {
-            get { return track; }
-        }
+        public string TrackTitle { get; }
         /// <summary>
         /// Gets the album name of the track. If the title is unknown, null is returned.
         /// </summary>
-        public string AlbumTitle
-        {
-            get { return album; }
-        }
+        public string AlbumTitle { get; }
         /// <summary>
         /// Gets the tracknumber of the track on the album, or <c>null</c> if the tracknumber is unknown.
         /// </summary>
-        public int? TrackNumber
-        {
-            get { return number; }
-        }
+        public int? TrackNumber { get; }
         /// <summary>
         /// Gets the artistname for the track. If the artist is unknown, null is returned.
         /// </summary>
-        public string ArtistName
-        {
-            get { return artist; }
-        }
+        public string ArtistName { get; }
         /// <summary>
         /// Gets the year the track was releasedm, or <c>null</c> if the release year is unknown.
         /// </summary>
-        public int? Year
-        {
-            get { return year; }
-        }
+        public int? Year { get; }
 
-        internal System.IO.FileInfo File
-        {
-            get { return file; }
-        }
-        /// <summary>
-        /// Gets the filename (e.g. mysong.mp3)
-        /// </summary>
-        public string Filename
-        {
-            get { return file.Name; }
-        }
         /// <summary>
         /// Gets the full path of the file.
         /// </summary>
-        public string FullFilename
-        {
-            get { return file.FullName; }
-        }
+        public string Filepath { get; }
 
         /// <summary>
         /// Creates a human-readable string that represents this <see cref="RawTrack"/>.
@@ -213,19 +157,31 @@ namespace DeadDog.Audio
         /// <returns>A string that represents this <see cref="RawTrack"/>.</returns>
         public override string ToString()
         {
-            if (track != null)
+            if (TrackTitle != null)
             {
-                if (artist != null && album != null)
-                    return artist + " [" + album + "] - " + track;
+                if (ArtistName != null)
+                {
+                    if (AlbumTitle != null)
+                        return $"{ArtistName} [{AlbumTitle}] - {TrackTitle}";
+                    else
+                        return $"{ArtistName} - {TrackTitle}";
+                }
                 else
-                    return track;
+                    return TrackTitle;
             }
             else
-                return file.FullName;
+                return Filepath;
         }
 
-        #region IEquatable<RawTrack> Members
-
+        public override int GetHashCode()
+        {
+            return Filepath.GetHashCode() ^
+                ArtistName.GetHashCode() ^
+                AlbumTitle.GetHashCode() ^
+                TrackTitle.GetHashCode() ^
+                TrackNumber.GetHashCode() ^
+                Year.GetHashCode();
+        }
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -235,17 +191,14 @@ namespace DeadDog.Audio
             else
                 return false;
         }
-
         public bool Equals(RawTrack other)
         {
-            return this.file.FullName == other.file.FullName &&
-                this.artist == other.artist &&
-                this.album == other.album &&
-                this.track == other.track &&
-                this.number == other.number &&
-                this.year == other.year;
+            return Filepath.Equals(other.Filepath) &&
+                ArtistName.Equals(other.ArtistName) &&
+                AlbumTitle.Equals(other.AlbumTitle) &&
+                TrackTitle.Equals(other.TrackTitle) &&
+                TrackNumber.Equals(other.TrackNumber) &&
+                Year.Equals(other.Year);
         }
-
-        #endregion
     }
 }
