@@ -63,9 +63,7 @@ namespace DeadDog.Audio.Libraries.Tests
                 Assert.AreEqual(expected.ArtistName, actual.Artist.Name, "Artist name mismatch.");
             }
 
-            Assert.AreEqual(expected.TrackNumberUnknown, !actual.Tracknumber.HasValue, "Availability of track number mismatch.");
-            if (!expected.TrackNumberUnknown)
-                Assert.AreEqual(expected.TrackNumber, actual.Tracknumber.Value, "Track number mismatch.");
+            Assert.AreEqual(expected.TrackNumber, actual.Tracknumber, "Track number mismatch.");
         }
         private void assertCounts(int artistCount, int albumCount, int trackCount)
         {
