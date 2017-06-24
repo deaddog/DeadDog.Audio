@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace DeadDog.Audio.Libraries
 {
-    public abstract class LibraryCollectionBase<T> : IEnumerable<T> where T : class
+    public abstract class LibraryCollectionBase<T> : INotifyCollectionChanged, IEnumerable<T> where T : class
     {
         private readonly List<T> list;
         private readonly Comparison<T> _comparer;
@@ -38,13 +39,16 @@ namespace DeadDog.Audio.Libraries
             if (index < 0) index = ~index;
             list.Insert(index, element);
 
-            OnAdded(element);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, element, index));
         }
         internal void Remove(T element)
         {
-            list.Remove(element);
-
-            OnRemoved(element);
+            int index = FindIndexOf(element);
+            if (index >= 0)
+            {
+                list.RemoveAt(index);
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, element, index));
+            }
         }
 
         internal void Reposition(T element)
@@ -62,8 +66,7 @@ namespace DeadDog.Audio.Libraries
             return index < 0 ? -1 : index;
         }
 
-        protected abstract void OnAdded(T element);
-        protected abstract void OnRemoved(T element);
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {

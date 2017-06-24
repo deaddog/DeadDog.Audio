@@ -11,20 +11,6 @@
             get { return null; }
         }
 
-        public event TrackEventHandler TrackAdded, TrackRemoved;
-        protected override void OnAdded(Track element)
-        {
-            TrackEventArgs e = new TrackEventArgs(element);
-            if (TrackAdded != null)
-                TrackAdded(this, e);
-        }
-        protected override void OnRemoved(Track element)
-        {
-            TrackEventArgs e = new TrackEventArgs(element);
-            if (TrackRemoved != null)
-                TrackRemoved(this, e);
-        }
-
         private static int CompareTracks(Track element1, Track element2)
         {
             int? v1 = element1.Tracknumber, v2 = element2.Tracknumber;

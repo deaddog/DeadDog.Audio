@@ -17,15 +17,5 @@
         {
             get { return unknownArtist; }
         }
-
-        public event ArtistEventHandler ArtistAdded, ArtistRemoved;
-        protected override void OnAdded(Artist element)
-        {
-            ArtistAdded?.Invoke(this, new ArtistEventArgs(element));
-        }
-        protected override void OnRemoved(Artist element)
-        {
-            ArtistRemoved?.Invoke(this, new ArtistEventArgs(element));
-        }
     }
 }
