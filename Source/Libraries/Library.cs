@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DeadDog.Audio.Libraries
 {
-    public class Library : IEnumerable<Track>
+    public class Library
     {
         private LibraryCollection<Artist> artists;
         public LibraryCollection<Artist> Artists
@@ -168,18 +167,6 @@ namespace DeadDog.Audio.Libraries
                 throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be removed from it.");
 
             RemoveTrack(track);
-        }
-
-        IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
-        {
-            foreach (var artist in artists)
-                foreach (var album in artist.Albums)
-                    foreach (var track in album.Tracks)
-                        yield return track;
-        }
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return (this as IEnumerable<Track>).GetEnumerator();
         }
     }
 }
