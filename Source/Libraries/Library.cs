@@ -6,35 +6,19 @@ namespace DeadDog.Audio.Libraries
 {
     public class Library
     {
-        private LibraryCollection<Artist> artists;
-        public LibraryCollection<Artist> Artists
-        {
-            get { return artists; }
-        }
+        public LibraryCollection<Artist> Artists { get; }
+        public LibraryCollection<Album> Albums { get; }
+        public LibraryCollection<Track> Tracks { get; }
 
-        private LibraryCollection<Album> albums;
-        public LibraryCollection<Album> Albums
-        {
-            get { return albums; }
-        }
-
-        private LibraryCollection<Track> tracks;
-        public LibraryCollection<Track> Tracks
-        {
-            get { return tracks; }
-        }
-
-        private Dictionary<string, Track> trackDict;
-        private Dictionary<Artist, int> artistTrackCount;
+        private readonly Dictionary<string, Track> trackDict;
 
         public Library()
         {
-            this.artists = new LibraryCollection<Artist>(LibraryComparisons.CompareArtistNames);
-            this.albums = new LibraryCollection<Album>(LibraryComparisons.CompareArtistNamesAlbumTitles);
-            this.tracks = new LibraryCollection<Track>(LibraryComparisons.CompareArtistNameAlbumTitlesTrackNumbers);
+            Artists = new LibraryCollection<Artist>(LibraryComparisons.CompareArtistNames);
+            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareArtistNamesAlbumTitles);
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareArtistNameAlbumTitlesTrackNumbers);
 
-            this.trackDict = new Dictionary<string, Track>();
-            this.artistTrackCount = new Dictionary<Artist, int>();
+            trackDict = new Dictionary<string, Track>();
         }
 
         public Track AddTrack(RawTrack track)
@@ -53,7 +37,7 @@ namespace DeadDog.Audio.Libraries
 
             album.Tracks.Add(t);
             artist.Tracks.Add(t);
-            tracks.Add(t);
+            Tracks.Add(t);
 
             return t;
         }
@@ -61,15 +45,15 @@ namespace DeadDog.Audio.Libraries
         private Artist GetOrCreateArtist(string artistname)
         {
             Artist existing = artistname == null ?
-                artists.FirstOrDefault(x => x.IsUnknown) :
-                artists.FirstOrDefault(x => x.Name.Equals(artistname));
+                Artists.FirstOrDefault(x => x.IsUnknown) :
+                Artists.FirstOrDefault(x => x.Name.Equals(artistname));
 
             if (existing != null)
                 return existing;
             else
             {
                 Artist artist = new Artist(artistname);
-                artists.Add(artist);
+                Artists.Add(artist);
                 return artist;
             }
         }
@@ -77,14 +61,14 @@ namespace DeadDog.Audio.Libraries
         {
             Album existing = albumtitle == null ?
                 artist.Albums.FirstOrDefault(x => x.IsUnknown) :
-                albums.FirstOrDefault(x => x.Title.Equals(albumtitle));
+                Albums.FirstOrDefault(x => x.Title.Equals(albumtitle));
 
             if (existing != null)
                 return existing;
             else
             {
                 Album album = new Album(albumtitle);
-                albums.Add(album);
+                Albums.Add(album);
                 return album;
             }
         }
@@ -107,14 +91,14 @@ namespace DeadDog.Audio.Libraries
             {
                 oldAlbum.Tracks.Remove(item);
                 if (oldAlbum.Tracks.Count == 0)
-                    albums.Remove(oldAlbum);
+                    Albums.Remove(oldAlbum);
             }
 
             if (updateArtist)
             {
                 oldArtist.Tracks.Remove(item);
                 if (oldArtist.Tracks.Count == 0)
-                    artists.Remove(oldArtist);
+                    Artists.Remove(oldArtist);
 
                 Artist artist = GetOrCreateArtist(track.ArtistName);
                 item.Artist = artist;
@@ -147,16 +131,16 @@ namespace DeadDog.Audio.Libraries
             Artist artist = track.Artist;
             Album album = track.Album;
 
-            tracks.Remove(track);
+            Tracks.Remove(track);
             trackDict.Remove(track.FilePath);
 
             album.Tracks.Remove(track);
             if (album.Tracks.Count == 0)
-                albums.Remove(album);
+                Albums.Remove(album);
 
             artist.Tracks.Remove(track);
             if (artist.Tracks.Count == 0)
-                artists.Remove(artist);
+                Artists.Remove(artist);
         }
         public void RemoveTrack(string filename)
         {
