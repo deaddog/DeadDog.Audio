@@ -43,15 +43,15 @@ namespace DeadDog.Audio.Libraries
             if (track == null)
                 throw new ArgumentNullException("track");
 
-            if (trackDict.ContainsKey(track.FullFilename))
-                throw new ArgumentException(track.FullFilename + " is already in library - use Update instead.", "track");
+            if (trackDict.ContainsKey(track.Filepath))
+                throw new ArgumentException(track.Filepath + " is already in library - use Update instead.", "track");
 
             Artist artist = getArtist(track.ArtistName);
             Album album = getAlbum(artist, track.AlbumTitle);
 
             Track t = new Track(track);
 
-            trackDict.Add(track.FullFilename, t);
+            trackDict.Add(track.Filepath, t);
             addTrackToArtist(t, artist);
             addTrackToAlbum(t, album);
             tracks.Add(t);
@@ -89,7 +89,7 @@ namespace DeadDog.Audio.Libraries
         public Track UpdateTrack(RawTrack track)
         {
             Track item;
-            if (!trackDict.TryGetValue(track.FullFilename, out item))
+            if (!trackDict.TryGetValue(track.Filepath, out item))
                 throw new ArgumentOutOfRangeException("track", "A track must be contained by a Library to be updated by it.");
 
             if (item.Title != track.TrackTitle)
@@ -114,7 +114,7 @@ namespace DeadDog.Audio.Libraries
 
         public bool Contains(RawTrack track)
         {
-            return trackDict.ContainsKey(track.FullFilename);
+            return trackDict.ContainsKey(track.Filepath);
         }
 
         public void RemoveTrack(Track track)

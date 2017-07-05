@@ -51,11 +51,11 @@ namespace DeadDog.Audio.Libraries
 
         internal Track(RawTrack trackinfo)
         {
-            this.file = trackinfo.File;
+            this.file = new System.IO.FileInfo(trackinfo.Filepath);
             this.album = null;
             this.artist = null;
             this.title = trackinfo.TrackTitle;
-            this.tracknumber = trackinfo.TrackNumberUnknown ? (int?)null : trackinfo.TrackNumber;
+            this.tracknumber = trackinfo.TrackNumber;
         }
 
         public override string ToString()

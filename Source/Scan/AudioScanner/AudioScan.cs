@@ -62,7 +62,7 @@ namespace DeadDog.Audio.Scan
         }
         internal IEnumerable<RawTrack> ExistingFiles
         {
-            set { existingFiles = value.ToDictionary(rt => rt.File); }
+            set { existingFiles = value.ToDictionary(rt => new FileInfo(rt.Filepath)); }
         }
         internal IEnumerable<string> IgnoredFiles
         {
