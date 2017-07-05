@@ -45,15 +45,13 @@ namespace DeadDog.Audio.Scan
             if (!input.CanRead)
                 throw new ArgumentException("Input stream must support reading", "input");
 
-            IOAssistant io = new IOAssistant(input);
-
-            string path = io.ReadString();
+            string path = input.ReadString();
             DirectoryInfo directory = new DirectoryInfo(path);
 
-            int extCount = io.ReadInt32();
+            int extCount = input.ReadInt32();
             string[] extensions = new string[extCount];
             for (int i = 0; i < extCount; i++)
-                extensions[i] = io.ReadString();
+                extensions[i] = input.ReadString();
 
             FlagByte1 flagbyte1 = (FlagByte1)input.ReadByte();
             SearchOption searchoption = SearchOption.TopDirectoryOnly;
@@ -66,7 +64,7 @@ namespace DeadDog.Audio.Scan
             ac.ParseUpdate = (flagbyte1 & FlagByte1.ParseUpdate) == FlagByte1.ParseUpdate;
             ac.RemoveDeadFiles = (flagbyte1 & FlagByte1.RemoveDeadFiles) == FlagByte1.RemoveDeadFiles;
 
-            int existCount = io.ReadInt32();
+            int existCount = input.ReadInt32();
             for (int i = 0; i < existCount; i++)
                 ac.existingFiles.Add(RawTrack.FromStream(input));
 
@@ -82,16 +80,15 @@ namespace DeadDog.Audio.Scan
             if (!output.CanWrite)
                 throw new ArgumentException("Output stream must support writing", "output");
 
-            IOAssistant io = new IOAssistant(output);
-            io.Write(ac.directory.FullName);
-            io.Write(ac.extensionList.Count);
+            output.Write(ac.directory.FullName);
+            output.Write(ac.extensionList.Count);
             for (int i = 0; i < ac.extensionList.Count; i++)
-                io.Write(ac.extensionList[i]);
+                output.Write(ac.extensionList[i]);
 
             FlagByte1 fb1 = ConstructFlag1(ac);
             output.WriteByte((byte)fb1);
 
-            io.Write(ac.existingFiles.Count);
+            output.Write(ac.existingFiles.Count);
             foreach (RawTrack rt in ac.existingFiles)
                 rt.Save(output);
         }

@@ -40,23 +40,16 @@ namespace DeadDog.Audio
         public static RawTrack FromStream(Stream input)
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             if (!input.CanRead)
-                throw new ArgumentException("Input stream must support reading", "input");
+                throw new ArgumentException("Input stream must support reading", nameof(input));
 
-            IOAssistant io = new IOAssistant(input);
-
-            var path = io.ReadString();
-            var track = io.ReadString();
-            var album = io.ReadString();
-            int? number = io.ReadInt32();
-            var artist = io.ReadString();
-            int? year = io.ReadInt32();
-
-            if (number == -1)
-                number = null;
-            if (year == -1)
-                year = null;
+            var path = input.ReadString();
+            var track = input.ReadString();
+            var album = input.ReadString();
+            int? number = input.ReadNullableInt32();
+            var artist = input.ReadString();
+            int? year = input.ReadNullableInt32();
 
             return new RawTrack(path, track, album, number, artist, year);
         }
@@ -67,17 +60,17 @@ namespace DeadDog.Audio
         public void Save(Stream output)
         {
             if (output == null)
-                throw new ArgumentNullException("output");
+                throw new ArgumentNullException(nameof(output));
             if (!output.CanWrite)
-                throw new ArgumentException("Output stream must support writing", "output");
+                throw new ArgumentException("Output stream must support writing", nameof(output));
 
-            IOAssistant io = new IOAssistant(output);
-            io.Write(Filepath);
-            io.Write(TrackTitle);
-            io.Write(AlbumTitle);
-            io.Write(TrackNumber ?? -1);
-            io.Write(ArtistName);
-            io.Write(Year ?? -1);
+            output.Write(Filepath);
+            output.Write(Filepath);
+            output.Write(TrackTitle);
+            output.Write(AlbumTitle);
+            output.Write(TrackNumber);
+            output.Write(ArtistName);
+            output.Write(Year);
         }
 
         /// <summary>
@@ -106,7 +99,7 @@ namespace DeadDog.Audio
         public RawTrack(string filepath, string tracktitle, string albumtitle, int? tracknumber, string artistname, int? year)
         {
             if (filepath == null)
-                throw new ArgumentNullException("filepath", "filepath cannot equal null");
+                throw new ArgumentNullException(nameof(filepath), "filepath cannot equal null");
 
             Filepath = filepath;
 
@@ -142,7 +135,7 @@ namespace DeadDog.Audio
         /// </summary>
         public string ArtistName { get; }
         /// <summary>
-        /// Gets the year the track was releasedm, or <c>null</c> if the release year is unknown.
+        /// Gets the year the track was released, or <c>null</c> if the release year is unknown.
         /// </summary>
         public int? Year { get; }
 
