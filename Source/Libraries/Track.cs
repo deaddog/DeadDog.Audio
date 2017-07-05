@@ -1,66 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
+using System.IO;
 
 namespace DeadDog.Audio.Libraries
 {
-    public partial class Track
+    public class Track : INotifyPropertyChanged
     {
-        #region Fields and properties
+        private string _title;
+        private int? _tracknumber;
 
-        private System.IO.FileInfo file;
-        public bool FileExist
-        {
-            get { file.Refresh(); return file.Exists; }
-        }
-        public string FilePath
-        {
-            get { return file.FullName; }
-        }
+        private Album _album;
+        private Artist _artist;
 
-        private string title;
+        public bool FileExist => File.Exists(FilePath);
+        public string FilePath { get; }
+
         public string Title
         {
-            get { return title; }
-            internal set { title = value; }
+            get { return _title; }
+            internal set
+            {
+                if (value != _title)
+                {
+                    _title = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+                }
+            }
         }
-
-        private int? tracknumber;
         public int? Tracknumber
         {
-            get { return tracknumber; }
-            internal set { tracknumber = value; }
+            get { return _tracknumber; }
+            internal set
+            {
+                if (value != _tracknumber)
+                {
+                    _tracknumber = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tracknumber)));
+                }
+            }
         }
 
-        private Album album;
         public Album Album
         {
-            get { return album; }
-            internal set { album = value; }
+            get { return _album; }
+            internal set
+            {
+                if (value != _album)
+                {
+                    _album = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Album)));
+                }
+            }
         }
-
-        private Artist artist;
         public Artist Artist
         {
-            get { return artist; }
-            internal set { artist = value; }
+            get { return _artist; }
+            internal set
+            {
+                if (value != _artist)
+                {
+                    _artist = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Artist)));
+                }
+            }
         }
 
-        #endregion
-
-        internal Track(RawTrack trackinfo)
+        internal Track(string filepath, string title, int? tracknumber, Album album, Artist artist)
         {
-            this.file = new System.IO.FileInfo(trackinfo.Filepath);
-            this.album = null;
-            this.artist = null;
-            this.title = trackinfo.TrackTitle;
-            this.tracknumber = trackinfo.TrackNumber;
+            FilePath = filepath;
+            _title = title;
+            _tracknumber = tracknumber;
+            _album = album;
+            _artist = artist;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {
-            return (tracknumber == null ? "" : "#" + tracknumber + " ") + title;
+            return Tracknumber == null ? Title : $"#{Tracknumber} {Title}";
         }
     }
 }

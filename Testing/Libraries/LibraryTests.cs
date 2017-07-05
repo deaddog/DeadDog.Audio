@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DeadDog.Audio.Libraries;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace DeadDog.Audio.Libraries.Tests
 {
     [TestClass()]
@@ -117,7 +112,7 @@ namespace DeadDog.Audio.Libraries.Tests
             var rawTrack = getRawTrackWithAlbumTitle(rawTrack1, null);
             var track = library.AddTrack(rawTrack);
 
-            assertCounts(1, 0, 1);
+            assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
         }
 
@@ -127,7 +122,7 @@ namespace DeadDog.Audio.Libraries.Tests
             var rawTrack = getRawTrackWithArtistName(rawTrack1, null);
             var track = library.AddTrack(rawTrack);
 
-            assertCounts(0, 1, 1);
+            assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
         }
 
@@ -209,7 +204,7 @@ namespace DeadDog.Audio.Libraries.Tests
             RawTrack rawTrack = getRawTrackWithAlbumTitle(rawTrack1, null);
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
 
-            assertCounts(1, 0, 1);
+            assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
         }
 
@@ -243,7 +238,7 @@ namespace DeadDog.Audio.Libraries.Tests
             RawTrack rawTrack = getRawTrackWithArtistName(rawTrack1, null);
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
 
-            assertCounts(0, 1, 1);
+            assertCounts(1, 1, 1);
             assertTrack(rawTrack, track);
         }
 
@@ -271,7 +266,7 @@ namespace DeadDog.Audio.Libraries.Tests
             var t2 = addTrack(rawTrack2);
             var t3 = addTrack(getRawTrackWithArtistName(rawTrack3, "Different Name"));
 
-            Assert.IsTrue(t1.Album.Artist.IsUnknown, "Various artists album should have unknown artist.");
+            Assert.IsTrue(t1.Album.Artist == null, "Various artists album should not have an artist.");
 
             library.RemoveTrack(t3);
 

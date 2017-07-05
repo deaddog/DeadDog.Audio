@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Libraries\LibraryCollectionBase.cs" />
+    <Compile Include="Libraries\LibraryCollection.cs" />
+    <Compile Include="Libraries\LibraryComparisons.cs" />
+    <Compile Include="LinqExtension.cs" />
     <Compile Include="Parsing\MediaParser.cs" />
     <Compile Include="MediaTypes.cs" />
     <Compile Include="Parsing\ExtensionMediaParser.cs" />
@@ -65,19 +67,10 @@
     <Compile Include="Parsing\ID3\v2\TagHeader.cs" />
     <Compile Include="StreamExtension.cs" />
     <Compile Include="Libraries\Album.cs" />
-    <Compile Include="Libraries\AlbumCollection.cs" />
     <Compile Include="Libraries\Artist.cs" />
-    <Compile Include="Libraries\ArtistCollection.cs" />
     <Compile Include="BinarySearchExtension.cs" />
-    <Compile Include="Libraries\Events\AlbumEventArgs.cs" />
-    <Compile Include="Libraries\Events\AlbumEventHandler.cs" />
-    <Compile Include="Libraries\Events\ArtistEventArgs.cs" />
-    <Compile Include="Libraries\Events\ArtistEventHandler.cs" />
-    <Compile Include="Libraries\Events\TrackEventArgs.cs" />
-    <Compile Include="Libraries\Events\TrackEventHandler.cs" />
     <Compile Include="Libraries\Library.cs" />
     <Compile Include="Libraries\Track.cs" />
-    <Compile Include="Libraries\TrackCollection.cs" />
     <Compile Include="Parsing\SequentialMediaParser.cs" />
     <Compile Include="Playback\AudioControl.cs" />
     <Compile Include="Playback\libZPlay.cs" />
@@ -101,6 +94,7 @@
     <Compile Include="Playlist\PlaylistCollection.cs" />
     <Compile Include="Playlist\QueuePlaylist.cs" />
     <Compile Include="Playlist\RepeatPlaylist.cs" />
+    <Compile Include="Playlist\TrackCollectionPlaylist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawTrack.cs" />
     <Compile Include="Scan\AudioScanner\AudioScan.cs" />

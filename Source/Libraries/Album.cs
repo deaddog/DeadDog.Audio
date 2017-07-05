@@ -1,58 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace DeadDog.Audio.Libraries
 {
-    public partial class Album
+    public class Album : INotifyPropertyChanged
     {
-        #region Properties
+        private Artist _artist;
 
-        private bool isunknown;
-        public bool IsUnknown
-        {
-            get { return isunknown; }
-        }
+        public bool IsUnknown { get; }
 
-        private string title;
-        public string Title
-        {
-            get { return title; }
-        }
+        public string Title { get; }
 
-        private Track.TrackCollection tracks;
-        public Track.TrackCollection Tracks
-        {
-            get { return tracks; }
-        }
+        public LibraryCollection<Track> Tracks { get; }
 
-        // This is correct! - Artist should NOT be a constructor argument.
-        private Artist artist = null;
         public Artist Artist
         {
-            get { return artist; }
-            internal set { artist = value; }
-        }
+            get { return _artist; }
+            private set
+            {
+                if (_artist != value)
+                {
+                    if (_artist != null)
+                        _artist.Albums.Remove(this);
 
-        public bool HasArtist
+                    bool hasArtistChanged = _artist == null || value == null;
+                    _artist = value;
+
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Artist)));
+                    if (hasArtistChanged)
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasArtist)));
+
+                    if (value != null)
+                        value.Albums.Add(this);
+                }
+            }
+        }
+        public bool HasArtist => _artist != null;
+
+        internal Album(string title)
         {
-            get { return artist != null; }
+            IsUnknown = title == null;
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareTrackNumbers);
+            Tracks.CollectionChanged += TracksCollectionChanged;
+
+            Title = title ?? string.Empty;
+            _artist = null;
         }
 
-        #endregion
-
-        internal Album(string album)
+        private void TracksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.isunknown = album == null;
-            this.tracks = new Track.TrackCollection();
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Track t in e.NewItems)
+                    t.PropertyChanged += TrackPropertyChanged;
+                Artist = Tracks.AllSameOrDefault(x => x.Artist)?.Artist;
+            }
 
-            this.title = album ?? string.Empty;
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Track t in e.OldItems)
+                    t.PropertyChanged -= TrackPropertyChanged;
+                Artist = Tracks.AllSameOrDefault(x => x.Artist)?.Artist;
+            }
         }
+        private void TrackPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Track.Artist))
+                Artist = Tracks.AllSameOrDefault(x => x.Artist)?.Artist;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {
-            return title;
+            return Title;
         }
     }
 }

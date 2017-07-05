@@ -1,46 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace DeadDog.Audio.Libraries
 {
-    public partial class Artist
+    public class Artist : INotifyPropertyChanged
     {
-        #region Properties
+        public bool IsUnknown { get; }
 
-        private bool isunknown;
-        public bool IsUnknown
-        {
-            get { return isunknown; }
-        }
+        public string Name { get; }
 
-        private string name;
-        public string Name
-        {
-            get { return name; }
-        }
-
-        private Album.AlbumCollection albums;
-        public Album.AlbumCollection Albums
-        {
-            get { return albums; }
-        }
-
-        #endregion
+        public LibraryCollection<Album> Albums { get; }
+        public LibraryCollection<Track> Tracks { get; }
 
         internal Artist(string name)
         {
-            this.isunknown = name == null;
-            this.albums = new Album.AlbumCollection();
-            this.albums.UnknownAlbum.Artist = this;
+            IsUnknown = name == null;
 
-            this.name = name ?? string.Empty;
+            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareAlbumTitles);
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareTrackNumbers);
+
+            Name = name ?? string.Empty;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
     }
 }
