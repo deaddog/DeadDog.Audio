@@ -1,22 +1,21 @@
 ﻿using DeadDog.Audio.Libraries;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace DeadDog.Audio.Playlist
 {
-    public class TrackCollectionPlaylist : IPlaylist<Track>
+    public class TrackCollectionPlaylist : DecoratorPlaylist<Track>
     {
-        private readonly LibraryCollection<Track> _collection;
         private readonly Playlist<Track> _playlist;
+        private readonly LibraryCollection<Track> _collection;
 
-        public TrackCollectionPlaylist(LibraryCollection<Track> collection)
+        public TrackCollectionPlaylist(LibraryCollection<Track> collection) : this(collection, new Playlist<Track>())
         {
+        }
+        private TrackCollectionPlaylist(LibraryCollection<Track> collection, Playlist<Track> playlist) : base(playlist)
+        {
+            _playlist = playlist;
             _collection = collection;
-            _playlist = new Playlist<Track>();
-
-            _playlist.EntryChanged += (s, e) => EntryChanged?.Invoke(this, e);
-            _playlist.EntryChanging += (s, e) => EntryChanging?.Invoke(this, e);
 
             foreach (var track in collection)
                 _playlist.Add(track);
@@ -49,55 +48,6 @@ namespace DeadDog.Audio.Playlist
                 default:
                     throw new NotSupportedException($"The collection change action {e.Action} is not supported by the playlist.");
             }
-        }
-
-        public Track Entry
-        {
-            get { return _playlist.Entry; }
-        }
-
-        public event EventHandler EntryChanged;
-        public event EntryChangingEventHandler<Track> EntryChanging;
-
-        public void Reset()
-        {
-            _playlist.Reset();
-        }
-
-        public bool MoveNext()
-        {
-            return _playlist.MoveNext();
-        }
-        public bool MovePrevious()
-        {
-            return _playlist.MovePrevious();
-        }
-
-        public bool MoveToFirst()
-        {
-            return _playlist.MoveToFirst();
-        }
-        public bool MoveToLast()
-        {
-            return _playlist.MoveToLast();
-        }
-
-        public bool MoveToEntry(Track entry)
-        {
-            return _playlist.MoveToEntry(entry);
-        }
-        public bool Contains(Track entry)
-        {
-            return _playlist.Contains(entry);
-        }
-
-        IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
-        {
-            return (_playlist as IEnumerable<Track>).GetEnumerator();
-        }
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return (_playlist as System.Collections.IEnumerable).GetEnumerator();
         }
     }
 }
