@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     /// <summary>
     /// Represents an iteration on a collection of objects.

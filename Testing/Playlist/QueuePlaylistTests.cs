@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DeadDog.Audio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DeadDog.Audio.Playlist;
+
 namespace DeadDog.Audio.Tests
 {
     [TestClass()]

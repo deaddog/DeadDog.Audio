@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     public interface IQueue<T> : IEnumerable<T>
     {

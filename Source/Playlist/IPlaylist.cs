@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     /// <summary>
     /// Represents a collection of objects that can be traversed in multiple ways.

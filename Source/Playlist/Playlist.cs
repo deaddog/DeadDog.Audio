@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     public class Playlist<T> : IPlaylist<T>, IList<T>
         where T : class

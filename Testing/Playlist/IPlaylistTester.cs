@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DeadDog.Audio.Playlist;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DeadDog.Audio.Tests

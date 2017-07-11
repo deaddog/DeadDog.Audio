@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     /// <summary>
     /// Provides data for the <see cref="IPlaylist{T}.EntryChanging"/> event.

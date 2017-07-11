@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     public class QueuePlaylist<T> : IPlayable<T>
         where T : class

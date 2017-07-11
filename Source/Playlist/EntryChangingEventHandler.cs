@@ -1,4 +1,4 @@
-﻿namespace DeadDog.Audio
+﻿namespace DeadDog.Audio.Playlist
 {
     /// <summary>
     /// Represents the method that will handle the <see cref="IPlaylist{T}.EntryChanging"/> event.

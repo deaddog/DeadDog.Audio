@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeadDog.Audio.Playlist;
+using System;
 
 namespace DeadDog.Audio.Playback
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DeadDog.Audio.Playlist
+﻿namespace DeadDog.Audio.Playlist
 {
     public class RepeatPlaylist<T> : IPlayable<T>
     {

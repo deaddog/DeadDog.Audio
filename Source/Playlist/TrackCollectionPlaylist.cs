@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     public class TrackCollectionPlaylist : IPlaylist<Track>
     {
