@@ -17,8 +17,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloWorldPlaylist();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -34,10 +33,9 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloWorldPlaylist();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
-            queue.Enqueue("world");
+            queuePlaylist.Enqueue("world");
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -51,13 +49,12 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloWorldPlaylist();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
-            queue.Enqueue("world");
-            queue.Enqueue("world");
-            queue.Enqueue("hello");
-            queue.Enqueue("world");
+            queuePlaylist.Enqueue("world");
+            queuePlaylist.Enqueue("world");
+            queuePlaylist.Enqueue("hello");
+            queuePlaylist.Enqueue("world");
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -77,8 +74,7 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -98,10 +94,9 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
-            queue.Enqueue("hello");
+            queuePlaylist.Enqueue("hello");
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -120,10 +115,9 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
-            queue.Enqueue("crazy");
+            queuePlaylist.Enqueue("crazy");
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -140,10 +134,9 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
-            queue.Enqueue("wild");
+            queuePlaylist.Enqueue("wild");
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -158,10 +151,9 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
-            queue.Enqueue("world");
+            queuePlaylist.Enqueue("world");
 
             AssertState(null, PreListIndex);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -175,11 +167,10 @@ namespace DeadDog.Audio.Tests
         {
             LoadHelloCrazyWildWorldPlaylistCollection();
 
-            Queue<string> queue = new Queue<string>();
-            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(queue, playlist);
+            QueuePlaylist<string> queuePlaylist = new QueuePlaylist<string>(playlist);
 
             AssertState(null, PreListIndex);
-            
+
             AssertMove(queuePlaylist.MoveNext, true, true);
             AssertState("hello", 0);
             AssertMove(queuePlaylist.MoveNext, true, true);
@@ -187,7 +178,7 @@ namespace DeadDog.Audio.Tests
             AssertMove(queuePlaylist.MoveNext, true, true);
             AssertState("wild", 1);
 
-            queue.Enqueue("hello");
+            queuePlaylist.Enqueue("hello");
 
             AssertMove(queuePlaylist.MoveNext, true, true);
             AssertState("hello", 0);

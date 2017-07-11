@@ -67,6 +67,7 @@
     <Compile Include="Parsing\ID3\v2\TagHeader.cs" />
     <Compile Include="Playlist\DecoratorPlayable.cs" />
     <Compile Include="Playlist\DecoratorPlaylist.cs" />
+    <Compile Include="Playlist\RepeatPlaylist.cs" />
     <Compile Include="StreamExtension.cs" />
     <Compile Include="Libraries\Album.cs" />
     <Compile Include="Libraries\Artist.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Playlist\Playlist.cs" />
     <Compile Include="Playlist\PlaylistCollection.cs" />
     <Compile Include="Playlist\QueuePlaylist.cs" />
-    <Compile Include="Playlist\RepeatPlaylist.cs" />
     <Compile Include="Playlist\TrackCollectionPlaylist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawTrack.cs" />

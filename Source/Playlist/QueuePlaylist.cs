@@ -3,80 +3,38 @@ using System.Collections.Generic;
 
 namespace DeadDog.Audio.Playlist
 {
-    public class QueuePlaylist<T> : IPlayable<T>
-        where T : class
+    public class QueuePlaylist<T> : DecoratorPlaylist<T>
     {
-        private IPlaylist<T> playlist;
-        private Queue<T> queue;
+        private Queue<T> _queue;
 
-        public QueuePlaylist(Queue<T> queue, IPlaylist<T> fallbackPlaylist)
+        public QueuePlaylist(IPlaylist<T> playlist) : base(playlist)
         {
-            if (queue == null)
-                throw new ArgumentNullException("queue");
-
-            if (fallbackPlaylist == null)
-                throw new ArgumentNullException("fallbackPlaylist");
-
-            this.queue = queue;
-            this.playlist = fallbackPlaylist;
-
-            this.playlist.EntryChanged += playlist_EntryChanged;
-            this.playlist.EntryChanging += playlist_EntryChanging;
+            _queue = new Queue<T>();
         }
 
-        public T Entry
+        public void Enqueue(T entry)
         {
-            get { return playlist.Entry; }
+            if (entry == null)
+                throw new ArgumentNullException(nameof(entry), "A null value cannot be queued.");
+
+            _queue.Enqueue(entry);
         }
 
-        public event EventHandler EntryChanged;
-        public event EntryChangingEventHandler<T> EntryChanging;
-
-        private void playlist_EntryChanged(object sender, EventArgs e)
+        public override bool MoveNext()
         {
-            if (EntryChanged != null)
-                EntryChanged(this, e);
-        }
-        private void playlist_EntryChanging(IPlayable<T> sender, EntryChangingEventArgs<T> e)
-        {
-            if (EntryChanging != null)
-                EntryChanging(this, e);
-        }
-
-        public bool MoveNext()
-        {
-            while (queue.Count > 0)
+            while (_queue.Count > 0)
             {
-                T item = queue.Dequeue();
-                if (item == null)
-                    throw new NullReferenceException("The queded element cannot be null.");
-
-                if (!playlist.Contains(item))
-                    throw new KeyNotFoundException("The queued element was not found in the playlist.");
-
-                if (TryChangingEntry(item))
-                    return playlist.MoveToEntry(item);
+                var item = _queue.Dequeue();
+                if (base.MoveToEntry(item))
+                    return true;
             }
 
-            return playlist.MoveNext();
+            return base.MoveNext();
         }
-        public bool TryChangingEntry(T entry)
+        public override void Reset()
         {
-            if (EntryChanging != null)
-            {
-                EntryChangingEventArgs<T> e = new EntryChangingEventArgs<T>(entry);
-                EntryChanging(this, e);
-                if (e.Rejected)
-                    return false;
-            }
-
-            return true;
-        }
-
-        public void Reset()
-        {
-            queue.Clear();
-            playlist.Reset();
+            _queue.Clear();
+            base.Reset();
         }
     }
 }
