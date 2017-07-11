@@ -7,9 +7,9 @@ namespace DeadDog.Audio.Playlist
         where T : class
     {
         private IPlaylist<T> playlist;
-        private IQueue<T> queue;
+        private Queue<T> queue;
 
-        public QueuePlaylist(IQueue<T> queue, IPlaylist<T> fallbackPlaylist)
+        public QueuePlaylist(Queue<T> queue, IPlaylist<T> fallbackPlaylist)
         {
             if (queue == null)
                 throw new ArgumentNullException("queue");
@@ -22,10 +22,6 @@ namespace DeadDog.Audio.Playlist
 
             this.playlist.EntryChanged += playlist_EntryChanged;
             this.playlist.EntryChanging += playlist_EntryChanging;
-        }
-        public QueuePlaylist(Queue<T> queue, IPlaylist<T> fallbackPlaylist)
-            : this(new QueueInterfaceWrapper<T>(queue), fallbackPlaylist)
-        {
         }
 
         public T Entry
@@ -81,64 +77,6 @@ namespace DeadDog.Audio.Playlist
         {
             queue.Clear();
             playlist.Reset();
-        }
-
-        private class QueueInterfaceWrapper<T> : IQueue<T>
-        {
-            private Queue<T> queue;
-
-            public QueueInterfaceWrapper(Queue<T> queue)
-            {
-                if (queue == null)
-                    throw new ArgumentNullException("queue");
-
-                this.queue = queue;
-            }
-
-            public static implicit operator QueueInterfaceWrapper<T>(Queue<T> q)
-            {
-                return new QueueInterfaceWrapper<T>(q);
-            }
-
-            public int Count
-            {
-                get { return queue.Count; }
-            }
-            public bool IsReadOnly
-            {
-                get { return false; }
-            }
-
-            public void Enqueue(T entry)
-            {
-                queue.Enqueue(entry);
-            }
-            public T Dequeue()
-            {
-                return queue.Dequeue();
-            }
-
-            public void Clear()
-            {
-                queue.Clear();
-            }
-            public bool Contains(T item)
-            {
-                return queue.Contains(item);
-            }
-            public void CopyTo(T[] array, int arrayIndex)
-            {
-                queue.CopyTo(array, arrayIndex);
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                return queue.GetEnumerator();
-            }
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return queue.GetEnumerator();
-            }
         }
     }
 }
