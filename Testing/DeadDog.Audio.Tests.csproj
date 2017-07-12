@@ -51,7 +51,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Libraries\LibraryTests.cs" />
-    <Compile Include="Playlist\IPlaylistTester.cs" />
+    <Compile Include="Playlist\AssertionExtension.cs" />
     <Compile Include="Playlist\PlaylistCollectionTests.cs" />
     <Compile Include="Playlist\PlaylistTests.cs" />
     <Compile Include="Playlist\QueuePlaylistTests.cs" />
