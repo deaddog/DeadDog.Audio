@@ -1,224 +1,401 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DeadDog.Audio.Playlist;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DeadDog.Audio.Tests.Playlist
 {
-    [TestClass()]
-    public class PlaylistCollectionTests : IPlaylistTester
+    [TestClass]
+    public class PlaylistCollectionTests
     {
         #region Constructor
 
-        [TestMethod()]
+        [TestMethod]
         public void PlaylistCollectionTest()
         {
-            LoadEmptyPlaylistCollection();
-            AssertState(null, EmptyListIndex);
+            var playlist = new PlaylistCollection<string>();
+
+            playlist.AssertEmpty();
         }
 
         #endregion
 
         #region MoveNext
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveNextEmptyTest()
         {
-            LoadEmptyPlaylistCollection();
+            var playlist = new PlaylistCollection<string>();
 
-            AssertMove(playlist.MoveNext, false, false);
-            AssertState(null, EmptyListIndex);
+            playlist.AssertMove(playlist.MoveNext, false, false);
+            playlist.AssertEmpty();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveNextTwoEntriesTest()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove(playlist.MoveNext, true, true);
-            AssertState("hello", 0);
+            playlist.AssertMove(playlist.MoveNext, true, true);
+            playlist.AssertState("hello", 0);
 
-            AssertMove(playlist.MoveNext, true, true);
-            AssertState("crazy", 0);
+            playlist.AssertMove(playlist.MoveNext, true, true);
+            playlist.AssertState("crazy", 0);
 
-            AssertMove(playlist.MoveNext, true, true);
-            AssertState("wild", 1);
+            playlist.AssertMove(playlist.MoveNext, true, true);
+            playlist.AssertState("wild", 1);
 
-            AssertMove(playlist.MoveNext, true, true);
-            AssertState("world", 1);
+            playlist.AssertMove(playlist.MoveNext, true, true);
+            playlist.AssertState("world", 1);
 
-            AssertMove(playlist.MoveNext, false, true);
-            AssertState(null, PostListIndex);
+            playlist.AssertMove(playlist.MoveNext, false, true);
+            playlist.AssertStatePost();
         }
 
         #endregion
         #region MovePrevious
 
-        [TestMethod()]
+        [TestMethod]
         public void MovePreviousEmptyTest()
         {
-            LoadEmptyPlaylistCollection();
+            var playlist = new PlaylistCollection<string>();
 
-            AssertMove(playlist.MovePrevious, false, false);
-            AssertState(null, EmptyListIndex);
+            playlist.AssertMove(playlist.MovePrevious, false, false);
+            playlist.AssertEmpty();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MovePreviousTwoEntriesDirectTest()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove(playlist.MovePrevious, false, false);
-            AssertState(null, PreListIndex);
+            playlist.AssertMove(playlist.MovePrevious, false, false);
+            playlist.AssertStatePre();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MovePreviousTwoEntriesTest()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection(~0);
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove(playlist.MovePrevious, true, true);
-            AssertState("world", 1);
+            playlist.MoveToLast();
+            playlist.MoveNext();
+            playlist.AssertStatePost();
 
-            AssertMove(playlist.MovePrevious, true, true);
-            AssertState("wild", 1);
+            playlist.AssertMove(playlist.MovePrevious, true, true);
+            playlist.AssertState("world", 1);
 
-            AssertMove(playlist.MovePrevious, true, true);
-            AssertState("crazy", 0);
+            playlist.AssertMove(playlist.MovePrevious, true, true);
+            playlist.AssertState("wild", 1);
 
-            AssertMove(playlist.MovePrevious, true, true);
-            AssertState("hello", 0);
+            playlist.AssertMove(playlist.MovePrevious, true, true);
+            playlist.AssertState("crazy", 0);
 
-            AssertMove(playlist.MovePrevious, false, true);
-            AssertState(null, PreListIndex);
+            playlist.AssertMove(playlist.MovePrevious, true, true);
+            playlist.AssertState("hello", 0);
+
+            playlist.AssertMove(playlist.MovePrevious, false, true);
+            playlist.AssertStatePre();
         }
 
         #endregion
         #region MoveToLast
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToLastEmptyTest()
         {
-            LoadEmptyPlaylistCollection();
+            var playlist = new PlaylistCollection<string>();
 
-            AssertMove(playlist.MoveToLast, false, false);
-            AssertState(null, EmptyListIndex);
+            playlist.AssertMove(playlist.MoveToLast, false, false);
+            playlist.AssertEmpty();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToLastTwoEntriesTest()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove(playlist.MoveToLast, true, true);
-            AssertState("world", 1);
+            playlist.AssertMove(playlist.MoveToLast, true, true);
+            playlist.AssertState("world", 1);
         }
 
         #endregion
         #region MoveToFirst
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToFirstEmptyTest()
         {
-            LoadEmptyPlaylistCollection();
+            var playlist = new PlaylistCollection<string>();
 
-            AssertMove(playlist.MoveToFirst, false, false);
-            AssertState(null, EmptyListIndex);
+            playlist.AssertMove(playlist.MoveToFirst, false, false);
+            playlist.AssertEmpty();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToFirstTwoEntriesDirectTest()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove(playlist.MoveToFirst, true, true);
-            AssertState("hello", 0);
+            playlist.AssertMove(playlist.MoveToFirst, true, true);
+            playlist.AssertState("hello", 0);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToFirstTwoEntriesTest()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection(~0);
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove(playlist.MoveToFirst, true, true);
-            AssertState("hello", 0);
+            playlist.MoveToLast();
+            playlist.MoveNext();
+            playlist.AssertStatePost();
+
+            playlist.AssertMove(playlist.MoveToFirst, true, true);
+            playlist.AssertState("hello", 0);
         }
 
         #endregion
         #region MoveToEntry
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToEntryEmptyTest()
         {
-            LoadEmptyPlaylistCollection();
+            var playlist = new PlaylistCollection<string>();
 
-            AssertMove("hello", false, false);
+            playlist.AssertMove("hello", false, false);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToEntryTwoEntriesUnknownKeyTest1()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove("unknown", false, false);
+            playlist.AssertMove("unknown", false, false);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToEntryTwoEntriesUnknownKeyTest2()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection(1);
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove("unknown", false, false);
+            playlist.MoveNext();
+            playlist.AssertState("hello", 0);
+
+            playlist.AssertMove("unknown", false, false);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToEntryTwoEntriesUnknownKeyTest3()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection(~0);
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove("unknown", false, false);
+            playlist.MoveToLast();
+            playlist.MoveNext();
+            playlist.AssertStatePost();
+
+            playlist.AssertMove("unknown", false, false);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void MoveToEntryTwoEntriesWithKeyTest1()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove("hello", true, true);
-            AssertState("hello", 0);
+            playlist.AssertMove("hello", true, true);
+            playlist.AssertState("hello", 0);
         }
-        [TestMethod()]
+        [TestMethod]
         public void MoveToEntryTwoEntriesWithKeyTest2()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
-            AssertMove("wild", true, true);
-            AssertState("wild", 1);
+            playlist.AssertMove("wild", true, true);
+            playlist.AssertState("wild", 1);
         }
 
         #endregion
 
         #region Reset
 
-        [TestMethod()]
+        [TestMethod]
         public void ResetEmptyTest()
         {
-            LoadEmptyPlaylistCollection();
+            var playlist = new PlaylistCollection<string>();
 
             playlist.Reset();
-            AssertState(null, EmptyListIndex);
+            playlist.AssertEmpty();
         }
-        [TestMethod()]
+        [TestMethod]
         public void ResetTwoEntriesTest1()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection();
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
 
             playlist.Reset();
-            AssertState(null, PreListIndex);
+            playlist.AssertStatePre();
         }
-        [TestMethod()]
+        [TestMethod]
         public void ResetTwoEntriesTest2()
         {
-            LoadHelloCrazyWildWorldPlaylistCollection(~0);
+            var playlist = new PlaylistCollection<string>()
+            {
+                new Playlist<string>
+                {
+                    "hello",
+                    "crazy"
+                },
+                new Playlist<string>
+                {
+                    "wild",
+                    "world"
+                }
+            };
+
+            playlist.MoveToLast();
+            playlist.MoveNext();
+            playlist.AssertStatePost();
 
             playlist.Reset();
-            AssertState(null, PreListIndex);
+            playlist.AssertStatePre();
         }
 
         #endregion

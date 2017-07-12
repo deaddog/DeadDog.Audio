@@ -2,7 +2,7 @@
 
 namespace DeadDog.Audio.Libraries.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class LibraryTests
     {
         private readonly RawTrack rawTrack1 = new RawTrack("C:\\1.mp3", "Ain't My Bitch", "Load", 1, "Metallica", 1991);
@@ -77,7 +77,7 @@ namespace DeadDog.Audio.Libraries.Tests
             return library.AddTrack(rawTrack);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void LibraryTest()
         {
             Library library = new Library();
@@ -87,7 +87,7 @@ namespace DeadDog.Audio.Libraries.Tests
 
         #region Adding
 
-        [TestMethod()]
+        [TestMethod]
         public void AddTrackTest()
         {
             var track = library.AddTrack(rawTrack1);
@@ -96,7 +96,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack1, track);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AddTrackNoTitleTest()
         {
             var rawTrack = getRawTrackWithTrackTitle(rawTrack1, null);
@@ -106,7 +106,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack, track);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AddTrackNoAlbumTest()
         {
             var rawTrack = getRawTrackWithAlbumTitle(rawTrack1, null);
@@ -116,7 +116,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack, track);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AddTrackNoArtistTest()
         {
             var rawTrack = getRawTrackWithArtistName(rawTrack1, null);
@@ -130,7 +130,7 @@ namespace DeadDog.Audio.Libraries.Tests
 
         #region Updating
 
-        [TestMethod()]
+        [TestMethod]
         public void UpdateNothingTest()
         {
             var track = addTrack(rawTrack1);
@@ -140,7 +140,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack1, track);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void UpdateTitleTest()
         {
             RawTrack rawTrack = getRawTrackWithTrackTitle(rawTrack1, "Wrong Title");
@@ -151,7 +151,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-        [TestMethod()]
+        [TestMethod]
         public void UpdateTitleAddTest()
         {
             RawTrack rawTrack = getRawTrackWithTrackTitle(rawTrack1, null);
@@ -162,7 +162,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-        [TestMethod()]
+        [TestMethod]
         public void UpdateTitleRemoveTest()
         {
             var track = addTrack(rawTrack1);
@@ -174,7 +174,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack, track);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void UpdateAlbumTest()
         {
             RawTrack rawTrack = getRawTrackWithAlbumTitle(rawTrack1, "Wrong Title");
@@ -185,7 +185,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-        [TestMethod()]
+        [TestMethod]
         public void UpdateAlbumAddTest()
         {
             RawTrack rawTrack = getRawTrackWithAlbumTitle(rawTrack1, null);
@@ -196,7 +196,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-        [TestMethod()]
+        [TestMethod]
         public void UpdateAlbumRemoveTest()
         {
             var track = addTrack(rawTrack1);
@@ -208,7 +208,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertTrack(rawTrack, track);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void UpdateArtistTest()
         {
             RawTrack rawTrack = getRawTrackWithArtistName(rawTrack1, "Wrong Name");
@@ -219,7 +219,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-        [TestMethod()]
+        [TestMethod]
         public void UpdateArtistAddTest()
         {
             RawTrack rawTrack = getRawTrackWithArtistName(rawTrack1, null);
@@ -230,7 +230,7 @@ namespace DeadDog.Audio.Libraries.Tests
             assertCounts(1, 1, 1);
             assertTrack(rawTrack1, track);
         }
-        [TestMethod()]
+        [TestMethod]
         public void UpdateArtistRemoveTest()
         {
             var track = addTrack(rawTrack1);
