@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DeadDog.Audio;
+﻿using DeadDog.Audio.Playlist;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DeadDog.Audio.Playlist;
 
-namespace DeadDog.Audio.Tests
+namespace DeadDog.Audio.Tests.Playlist
 {
     [TestClass()]
     public class QueuePlaylistTests : IPlaylistTester

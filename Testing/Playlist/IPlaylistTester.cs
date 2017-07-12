@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace DeadDog.Audio.Tests
+namespace DeadDog.Audio.Tests.Playlist
 {
     public abstract class IPlaylistTester
     {

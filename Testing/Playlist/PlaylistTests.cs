@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DeadDog.Audio.Playlist;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DeadDog.Audio.Tests
+namespace DeadDog.Audio.Tests.Playlist
 {
     [TestClass()]
     public class PlaylistTests : IPlaylistTester
