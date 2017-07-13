@@ -15,7 +15,6 @@ namespace DeadDog.Audio.Playlist
         public int Index
         {
             get { return playlists.Index; }
-            set { throw new NotImplementedException(); }
         }
 
         public PlaylistCollection()
