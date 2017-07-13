@@ -105,6 +105,32 @@ namespace DeadDog.Audio.Playlist
         public event System.EventHandler EntryChanged;
         public event EntryChangingEventHandler<T> EntryChanging;
 
+        public void MoveEntry(T entry, int newIndex)
+        {
+            int oldIndex = IndexOf(entry);
+            if (oldIndex == -1)
+                throw new ArgumentOutOfRangeException(nameof(entry), "Move entry can only be executed when the entry is part of the playlist.");
+
+            if (newIndex < 0 || newIndex >= entries.Count)
+                throw new ArgumentOutOfRangeException(nameof(newIndex));
+
+            if (newIndex == oldIndex)
+                return;
+
+            var temp = entries[oldIndex];
+            entries.RemoveAt(oldIndex);
+            entries.Insert(newIndex, entry);
+
+            if (index == oldIndex)
+                index = newIndex;
+            else if (oldIndex < index && newIndex >= index)
+                index--;
+            else if (oldIndex > index && newIndex <= index)
+                index++;
+
+            tempIndex = index;
+        }
+
         public bool MoveNext()
         {
             if (index == EmptyListIndex)

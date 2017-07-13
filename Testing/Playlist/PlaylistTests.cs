@@ -17,6 +17,403 @@ namespace DeadDog.Audio.Tests.Playlist
 
         #endregion
 
+        #region MoveEntry
+
+        [TestMethod]
+        public void MoveEntryMoveActiveForwardTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("are", 5);
+            playlist.AssertState("are", 5);
+
+            playlist.AssertAllForwards("today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveActiveBackwardTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("are", 1);
+            playlist.AssertState("are", 1);
+
+            playlist.AssertAllBackwards("hello");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveActiveNowhereTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("are", 3);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("you", "doing", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveActiveLastTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("are", 6);
+            playlist.AssertState("are", 6);
+
+            playlist.AssertAllForwards();
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveActiveFirstTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("are", 0);
+            playlist.AssertState("are", 0);
+
+            playlist.AssertAllBackwards();
+        }
+
+
+        [TestMethod]
+        public void MoveEntryMovePreviousForwardTest1()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("world", 2);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("you", "doing", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMovePreviousForwardTest2()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("world", 5);
+            playlist.AssertState("are", 2);
+
+            playlist.AssertAllForwards("you", "doing", "world", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMovePreviousBackwardTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("how", 1);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("you", "doing", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMovePreviousNowhereTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("how", 1);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("you", "doing", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMovePreviousLastTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("how", 6);
+            playlist.AssertState("are", 2);
+
+            playlist.AssertAllForwards("you", "doing", "today", "how");
+        }
+
+        [TestMethod]
+        public void MoveEntryMovePreviousFirstTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("how", 0);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllBackwards("world", "hello", "how");
+        }
+
+
+        [TestMethod]
+        public void MoveEntryMoveNextForwardTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("you", 5);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("doing", "you", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveNextBackwardTest1()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("doing", 4);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("doing", "you", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveNextBackwardTest2()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("doing", 1);
+            playlist.AssertState("are", 4);
+
+            playlist.AssertAllForwards("you", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveNextNowhereTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("doing", 5);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("you", "doing", "today");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveNextLastTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("doing", 6);
+            playlist.AssertState("are", 3);
+
+            playlist.AssertAllForwards("you", "today", "doing");
+        }
+
+        [TestMethod]
+        public void MoveEntryMoveNextFirstTest()
+        {
+            var playlist = new Playlist<string>
+            {
+                "hello",
+                "world",
+                "how",
+                "are",
+                "you",
+                "doing",
+                "today"
+            };
+
+            playlist.Index = 3;
+            playlist.AssertState("are", 3);
+
+            playlist.AssertMoveEntry("doing", 0);
+            playlist.AssertState("are", 4);
+
+            playlist.AssertAllBackwards("how", "world", "hello", "doing");
+        }
+
+        #endregion
+
         #region MoveNext
 
         [TestMethod]

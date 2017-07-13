@@ -95,5 +95,45 @@ namespace DeadDog.Audio.Tests.Playlist
         {
             AssertMove(playlist, () => playlist.MoveToEntry(target), expectedMove, expectsEvent);
         }
+
+        public static void AssertAllForwards(this Playlist<string> playlist, params string[] entries)
+        {
+            var index = playlist.Index;
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                AssertMove(playlist, playlist.MoveNext, true, true);
+                AssertState(playlist, entries[i], index + i + 1);
+            }
+
+            AssertMove(playlist, playlist.MoveNext, false, true);
+            AssertStatePost(playlist);
+        }
+        public static void AssertAllBackwards(this Playlist<string> playlist, params string[] entries)
+        {
+            var index = playlist.Index;
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                AssertMove(playlist, playlist.MovePrevious, true, true);
+                AssertState(playlist, entries[i], index - i - 1);
+            }
+
+            AssertMove(playlist, playlist.MovePrevious, false, true);
+            AssertStatePre(playlist);
+        }
+
+        public static void AssertMoveEntry(this Playlist<string> playlist, string entry, int newIndex)
+        {
+            int entryChangeCount = 0;
+            void EntryCounter(object sender, EventArgs e) => entryChangeCount++;
+
+            playlist.EntryChanged += EntryCounter;
+            
+            playlist.MoveEntry(entry, newIndex);
+            Assert.AreEqual(0, entryChangeCount, "The EntryChanged event was raised.");
+
+            playlist.EntryChanged -= EntryCounter;
+        }
     }
 }
