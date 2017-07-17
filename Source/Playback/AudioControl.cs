@@ -13,183 +13,36 @@ namespace DeadDog.Audio.Playback
     /// <remarks>
     /// libzplay is developed by Zoran Cindori, see http://libzplay.sourceforge.net/ for more.
     /// </remarks>
-    public class AudioControl<T> : IPlayback<T>
-        where T : class
+    public class AudioControl : IFilePlayback
     {
         private ZPlay player;
 
-        private PlayerStatus plStatus = PlayerStatus.NoFileOpen;
+        private const double MAXVOLUME = 100;
 
-        private TStreamInfo info;
-        private TStreamStatus status;
-        private TStreamTime time;
-
-        private int TIMER_INTERVAL = 100;
-        private int TIMER_INFINITE = System.Threading.Timeout.Infinite;
-        private System.Threading.Timer timer;
-
-        private int volumeLeft = 0, volumeRight = 0;
-
-        private Func<T, string> getFilename;
-
-        public AudioControl(Func<T, string> getFilename)
+        public AudioControl()
         {
-            if (getFilename == null)
-                throw new ArgumentNullException("getFilename");
-            this.getFilename = getFilename;
-
             this.player = new ZPlay();
-            readVolumes();
-
-            this.info = new TStreamInfo();
-            this.status = new TStreamStatus();
-            this.time = new TStreamTime();
-
-            this.timer = new System.Threading.Timer(obj => update(), null, 0, 0);
         }
 
-        public event EventHandler StatusChanged;
-        public event PositionChangedEventHandler PositionChanged;
-
-        public bool CanOpen(T element)
+        public bool CanOpen(string filepath)
         {
-            if (element == null)
-                return false;
-
-            string fullpath;
-
-            try { fullpath = System.IO.Path.GetFullPath(getFilename(element)); }
-            catch { fullpath = null; }
-
-            if (!new System.IO.FileInfo(fullpath).Exists)
-                return false;
-
-            TStreamFormat format = player.GetFileFormat(fullpath);
-            return format != TStreamFormat.sfUnknown;
+            return player.GetFileFormat(filepath) != TStreamFormat.sfUnknown;
         }
 
-        public bool Open(T element)
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                case PlayerStatus.Stopped:
-                    Close();
-                    return Open(element);
+        public bool Open(string filepath) => player.OpenFile(filepath, TStreamFormat.sfAutodetect);
+        public bool Close() => player.Close();
 
-                case PlayerStatus.NoFileOpen:
-                    if (!CanOpen(element))
-                        return false;
+        public bool StartPlayback() => player.StartPlayback();
+        public bool PausePlayback() => player.PausePlayback();
+        public bool ResumePlayback() => player.ResumePlayback();
+        public bool StopPlayback() => player.StopPlayback();
 
-                    if (!player.OpenFile(System.IO.Path.GetFullPath(getFilename(element)), TStreamFormat.sfAutodetect))
-                        return false;
-
-                    player.GetStreamInfo(ref info);
-                    Status = PlayerStatus.Stopped;
-                    return true;
-                default:
-                    throw new Exception("Unknown PlayerStatus.");
-            }
-        }
-        public bool Close()
-        {
-            if (plStatus == PlayerStatus.NoFileOpen)
-                return true;
-            else
-            {
-                Stop();
-                if (!player.Close())
-                    throw new Exception("AudioControl failed to close file.");
-                Status = PlayerStatus.NoFileOpen;
-                return true;
-            }
-        }
-
-        public bool Play()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                    Seek(PlayerSeekOrigin.Begin, 0);
-                    return true;
-                case PlayerStatus.Paused:
-                    if (!player.ResumePlayback())
-                        throw new Exception("Player failed to resume playback.");
-                    Status = PlayerStatus.Playing;
-                    timer.Change(0, TIMER_INTERVAL);
-                    return true;
-                case PlayerStatus.Stopped:
-                    if (!player.StartPlayback())
-                        throw new Exception("Player failed to start playback.");
-                    Status = PlayerStatus.Playing;
-                    timer.Change(0, TIMER_INTERVAL);
-                    return true;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    return false;
-            }
-        }
-        public bool Pause()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                    if (!player.PausePlayback())
-                        throw new Exception("Player failed to pause playback.");
-                    Status = PlayerStatus.Paused;
-                    timer.Change(0, TIMER_INFINITE);
-                    return true;
-                case PlayerStatus.Paused:
-                    return true;
-                case PlayerStatus.Stopped:
-                    return false;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    return false;
-            }
-        }
-        public bool Stop()
-        {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                    if (!player.StopPlayback())
-                        throw new Exception("Player failed to stop playback.");
-                    Status = PlayerStatus.Stopped;
-                    timer.Change(0, TIMER_INFINITE);
-                    return true;
-                case PlayerStatus.Stopped:
-                    return true;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    return false;
-            }
-        }
         public bool Seek(PlayerSeekOrigin origin, uint offset)
         {
-            switch (plStatus)
-            {
-                case PlayerStatus.Playing:
-                case PlayerStatus.Paused:
-                    {
-                        TStreamTime seekTime = new TStreamTime() { ms = offset };
-                        bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TranslateSeek(origin));
-                        if (plStatus == PlayerStatus.Paused)
-                            update();
-                        return r;
-                    }
-                case PlayerStatus.Stopped:
-                    return false;
-                case PlayerStatus.NoFileOpen:
-                    return false;
-                default:
-                    throw new NotImplementedException();
-            }
+            TStreamTime seekTime = new TStreamTime() { ms = offset };
+            bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TranslateSeek(origin));
+            return r;
+
         }
         private TSeekMethod TranslateSeek(PlayerSeekOrigin s)
         {
@@ -204,84 +57,40 @@ namespace DeadDog.Audio.Playback
             }
         }
 
-        public PlayerStatus Status
+        public uint GetTrackLength()
         {
-            get { return plStatus; }
-            private set
-            {
-                plStatus = value;
-                if (StatusChanged != null)
-                    StatusChanged(this, EventArgs.Empty);
-            }
+            TStreamInfo info = new TStreamInfo();
+            player.GetStreamInfo(ref info);
+            return info.Length.ms;
         }
-        public uint Position
+        public uint GetTrackPosition()
         {
-            get { return time.ms; }
-        }
-        public uint Length
-        {
-            get { return info.Length.ms; }
-        }
-
-        public int LeftVolume
-        {
-            get
-            {
-                readVolumes();
-                return volumeLeft;
-            }
-            set
-            {
-                if (value < 0 || value > 100)
-                    throw new ArgumentOutOfRangeException("Volume must be in range [0-100].");
-                readVolumes(); player.SetPlayerVolume(value, volumeRight);
-            }
-        }
-        public int RightVolume
-        {
-            get
-            {
-                readVolumes();
-                return volumeRight;
-            }
-            set
-            {
-                if (value < 0 || value > 100)
-                    throw new ArgumentOutOfRangeException("Volume must be in range [0-100].");
-                readVolumes(); player.SetPlayerVolume(volumeLeft, value);
-            }
-        }
-
-        private void readVolumes()
-        {
-            this.player.GetPlayerVolume(ref volumeLeft, ref volumeRight);
-        }
-
-        private void update()
-        {
-            player.GetStatus(ref status);
+            TStreamTime time = new TStreamTime();
             player.GetPosition(ref time);
+            return time.ms;
+        }
+        public bool GetIsPlaying()
+        {
+            TStreamStatus status = new TStreamStatus();
+            player.GetStatus(ref status);
+            return status.fPlay;
+        }
 
-            bool endreached = false;
+        public void SetVolume(double left, double right)
+        {
+            player.SetPlayerVolume((int)(left * MAXVOLUME), (int)(right * MAXVOLUME));
+        }
+        public void GetVolume(out double left, out double right)
+        {
+            int l = 0, r = 0;
+            player.GetPlayerVolume(ref l, ref r);
 
-            if (plStatus == PlayerStatus.Playing && !status.fPlay
-                && Position == 0 && Length > 0)
-            {
-                Status = PlayerStatus.Stopped;
-                timer.Change(TIMER_INFINITE, TIMER_INFINITE);
-
-                endreached = true;
-            }
-
-            if (PositionChanged != null)
-                PositionChanged(this, new PositionChangedEventArgs(endreached));
+            left = l / MAXVOLUME;
+            right = r / MAXVOLUME;
         }
 
         public void Dispose()
         {
-            Stop();
-            player.Close();
-            Status = PlayerStatus.NoFileOpen;
             this.player = null;
         }
     }
