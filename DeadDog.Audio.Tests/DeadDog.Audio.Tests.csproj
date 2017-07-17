@@ -58,7 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Source\DeadDog.Audio.csproj">
+    <ProjectReference Include="..\DeadDog.Audio\DeadDog.Audio.csproj">
       <Project>{A393FD81-A89C-4761-AF87-2E5DE2B95B61}</Project>
       <Name>DeadDog.Audio</Name>
     </ProjectReference>
