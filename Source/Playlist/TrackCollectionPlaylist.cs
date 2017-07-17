@@ -38,11 +38,10 @@ namespace DeadDog.Audio.Playlist
                     break;
 
                 case NotifyCollectionChangedAction.Move:
-                    var temp = _playlist[e.OldStartingIndex];
                     if (e.OldItems.Count != 1)
                         throw new NotSupportedException("The playlist does not support more than one track moving at a time.");
-                    _playlist.RemoveAt(e.OldStartingIndex);
-                    _playlist.Insert(e.NewStartingIndex, (Track)e.OldItems[0]);
+                    else
+                        _playlist.MoveEntry((Track)e.OldItems[0], e.NewStartingIndex);
                     break;
 
                 default:
