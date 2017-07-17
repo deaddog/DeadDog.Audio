@@ -20,6 +20,17 @@ namespace DeadDog.Audio.Playlist
             _queue.Enqueue(entry);
         }
 
+        public override bool TryPeekNext(out T entry)
+        {
+            if (_queue.Count > 0)
+            {
+                entry = _queue.Peek();
+                return true;
+            }
+            else
+                return base.TryPeekNext(out entry);
+        }
+
         public override bool MoveNext()
         {
             while (_queue.Count > 0)

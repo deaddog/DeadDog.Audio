@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeadDog.Audio.Playlist
 {
-    public class Playlist<T> : IPlaylist<T>, IList<T>
+    public class Playlist<T> : IPeekablePlaylist<T>, IPlaylist<T>, IList<T>
         where T : class
     {
         private T entry;
@@ -129,6 +129,20 @@ namespace DeadDog.Audio.Playlist
                 index++;
 
             tempIndex = index;
+        }
+
+        public bool TryPeekNext(out T entry)
+        {
+            if (index == EmptyListIndex || index == PostListIndex || index == entries.Count - 1)
+            {
+                entry = default(T);
+                return false;
+            }
+            else
+            {
+                entry = entries[index + 1];
+                return true;
+            }
         }
 
         public bool MoveNext()

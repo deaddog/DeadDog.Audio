@@ -1,4 +1,7 @@
-﻿namespace DeadDog.Audio.Playlist
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace DeadDog.Audio.Playlist
 {
     public class RepeatPlaylist<T> : DecoratorPlaylist<T>
     {
@@ -8,6 +11,18 @@
         }
 
         public bool Repeat { get; set; }
+
+        public override bool TryPeekNext(out T entry)
+        {
+            if (base.TryPeekNext(out entry))
+                return true;
+            else
+            {
+                var e = this as IEnumerable<T>;
+                entry = e.FirstOrDefault();
+                return e.Any();
+            }
+        }
 
         public override bool MoveNext()
         {

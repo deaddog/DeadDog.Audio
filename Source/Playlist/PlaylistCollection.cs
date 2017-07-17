@@ -7,7 +7,7 @@ namespace DeadDog.Audio.Playlist
     /// Provides a collection of playlists, joining them into one.
     /// </summary>
     /// <typeparam name="T">The type of elements in the playlists.</typeparam>
-    public class PlaylistCollection<T> : IPlaylist<T>
+    public class PlaylistCollection<T> : IPeekablePlaylist<T>, IPlaylist<T>
         where T : class
     {
         private Playlist<IPlaylist<T>> playlists;
@@ -46,6 +46,29 @@ namespace DeadDog.Audio.Playlist
         public void Reset()
         {
             playlists.Reset();
+        }
+
+        public bool TryPeekNext(out T entry)
+        {
+            var current = playlists.Entry;
+            var hasNext = playlists.TryPeekNext(out var next);
+
+            if (current == null)
+            {
+                if (hasNext && next is IPeekablePlaylist<T> peek && peek.TryPeekNext(out entry))
+                    return true;
+
+                entry = default(T);
+                return false;
+            }
+            else
+            {
+                if (current is IPeekablePlaylist<T> peek && peek.TryPeekNext(out entry))
+                    return true;
+
+                entry = default(T);
+                return false;
+            }
         }
 
         public bool MoveNext()
