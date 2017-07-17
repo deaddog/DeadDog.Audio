@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeadDog.Audio.Playlist
 {
-    public abstract class DecoratorPlaylist<T> : IPlaylist<T>
+    public abstract class DecoratorPlaylist<T> : IPeekablePlaylist<T>, IPlaylist<T>
     {
         private readonly IPlaylist<T> _playlist;
 
@@ -21,6 +21,17 @@ namespace DeadDog.Audio.Playlist
         public event EntryChangingEventHandler<T> EntryChanging;
 
         public virtual void Reset() => _playlist.Reset();
+
+        public virtual bool TryPeekNext(out T entry)
+        {
+            if (_playlist is IPeekablePlaylist<T> peek && peek.TryPeekNext(out entry))
+                return true;
+            else
+            {
+                entry = default(T);
+                return false;
+            }
+        }
 
         public virtual bool MoveNext() => _playlist.MoveNext();
         public virtual bool MovePrevious() => _playlist.MovePrevious();
