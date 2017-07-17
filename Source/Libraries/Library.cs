@@ -32,7 +32,7 @@ namespace DeadDog.Audio.Libraries
             Artist artist = GetOrCreateArtist(track.ArtistName);
             Album album = GetOrCreateAlbum(artist, track.AlbumTitle);
             
-            Track t = new Track(track.Filepath, track.TrackTitle, track.TrackNumber, album, artist);
+            Track t = new Track(track.Filepath, track.TrackTitle, track.TrackNumber, track.Year, album, artist);
             _trackDict.Add(track.Filepath, t);
 
             album.Tracks.Add(t);
@@ -80,6 +80,7 @@ namespace DeadDog.Audio.Libraries
 
             item.Title = track.TrackTitle;
             item.Tracknumber = track.TrackNumber;
+            item.Year = track.Year;
 
             var oldAlbum = item.Album;
             var oldArtist = item.Artist;

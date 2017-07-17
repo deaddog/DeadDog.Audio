@@ -1,52 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DeadDog.Audio.Playlist
+﻿namespace DeadDog.Audio.Playlist
 {
-    public class RepeatPlaylist<T> : IPlayable<T>
+    public class RepeatPlaylist<T> : DecoratorPlaylist<T>
     {
-        private IPlaylist<T> playlist;
-        private bool repeat;
-
-        public RepeatPlaylist(IPlaylist<T> playlist, bool repeat)
+        public RepeatPlaylist(IPlaylist<T> playlist, bool repeat) : base(playlist)
         {
-            this.playlist = playlist;
-            this.Repeat = repeat;
+            Repeat = repeat;
         }
 
-        public T Entry
-        {
-            get { return playlist.Entry; }
-        }
-        public bool Repeat
-        {
-            get { return repeat; }
-            set { repeat = value; }
-        }
+        public bool Repeat { get; set; }
 
-        public event EventHandler EntryChanged
+        public override bool MoveNext()
         {
-            add { playlist.EntryChanged += value; }
-            remove { playlist.EntryChanged -= value; }
-        }
-
-        public event EntryChangingEventHandler<T> EntryChanging
-        {
-            add { playlist.EntryChanging += value; }
-            remove { playlist.EntryChanging -= value; }
-        }
-
-        public bool MoveNext()
-        {
-            if (playlist.MoveNext())
+            if (base.MoveNext())
                 return true;
-            else if (repeat)
-            {
-                playlist.Reset();
-                return playlist.MoveNext();
-            }
+            else if (Repeat)
+                return base.MoveToFirst();
+            else
+                return false;
+        }
+        public override bool MovePrevious()
+        {
+            if (base.MovePrevious())
+                return true;
+            else if (Repeat)
+                return base.MoveToLast();
             else
                 return false;
         }

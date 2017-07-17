@@ -1,27 +1,39 @@
 ﻿using DeadDog.Audio.Libraries;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
-    public class TrackCollectionPlaylist : IPlaylist<Track>
+    public class TrackCollectionPlaylist : DecoratorPlaylist<Track>
     {
-        private readonly LibraryCollection<Track> _collection;
+        private readonly SortedPlaylist<Track> _sortedPlaylist;
         private readonly Playlist<Track> _playlist;
+        private readonly LibraryCollection<Track> _collection;
 
-        public TrackCollectionPlaylist(LibraryCollection<Track> collection)
+        public TrackCollectionPlaylist(LibraryCollection<Track> collection, Comparison<Track> comparison = null)
+            : this(collection, comparison, comparison == null ? null : new SortedPlaylist<Track>(comparison), comparison == null ? new Playlist<Track>() : null)
         {
+        }
+        private TrackCollectionPlaylist(LibraryCollection<Track> collection, Comparison<Track> comparison, SortedPlaylist<Track> sortedPlaylist, Playlist<Track> playlist) : base((IPlaylist<Track>)sortedPlaylist ?? playlist)
+        {
+            _sortedPlaylist = sortedPlaylist;
+            _playlist = playlist;
             _collection = collection;
-            _playlist = new Playlist<Track>();
 
-            _playlist.EntryChanged += (s, e) => EntryChanged?.Invoke(this, e);
-            _playlist.EntryChanging += (s, e) => EntryChanging?.Invoke(this, e);
+            if (_playlist != null)
+            {
+                foreach (var track in collection)
+                    _playlist.Add(track);
 
-            foreach (var track in collection)
-                _playlist.Add(track);
+                _collection.CollectionChanged += TracksCollectionChanged;
+            }
+            else if (_sortedPlaylist != null)
+            {
+                foreach (var track in collection)
+                    _sortedPlaylist.Add(track);
 
-            _collection.CollectionChanged += TracksCollectionChanged;
+                _collection.CollectionChanged += SortedTracksCollectionChanged;
+            }
         }
 
         private void TracksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -39,11 +51,10 @@ namespace DeadDog.Audio
                     break;
 
                 case NotifyCollectionChangedAction.Move:
-                    var temp = _playlist[e.OldStartingIndex];
                     if (e.OldItems.Count != 1)
                         throw new NotSupportedException("The playlist does not support more than one track moving at a time.");
-                    _playlist.RemoveAt(e.OldStartingIndex);
-                    _playlist.Insert(e.NewStartingIndex, (Track)e.OldItems[0]);
+                    else
+                        _playlist.MoveEntry((Track)e.OldItems[0], e.NewStartingIndex);
                     break;
 
                 default:
@@ -51,53 +62,27 @@ namespace DeadDog.Audio
             }
         }
 
-        public Track Entry
+        private void SortedTracksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            get { return _playlist.Entry; }
-        }
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    for (int i = 0; i < e.NewItems.Count; i++)
+                        _sortedPlaylist.Add((Track)e.NewItems[i]);
+                    break;
 
-        public event EventHandler EntryChanged;
-        public event EntryChangingEventHandler<Track> EntryChanging;
+                case NotifyCollectionChangedAction.Remove:
+                    for (int i = 0; i < e.OldItems.Count; i++)
+                        _playlist.Remove((Track)e.OldItems[i]);
+                    break;
 
-        public void Reset()
-        {
-            _playlist.Reset();
-        }
+                case NotifyCollectionChangedAction.Move:
+                    // Move events are ignored for the sorted playlist
+                    break;
 
-        public bool MoveNext()
-        {
-            return _playlist.MoveNext();
-        }
-        public bool MovePrevious()
-        {
-            return _playlist.MovePrevious();
-        }
-
-        public bool MoveToFirst()
-        {
-            return _playlist.MoveToFirst();
-        }
-        public bool MoveToLast()
-        {
-            return _playlist.MoveToLast();
-        }
-
-        public bool MoveToEntry(Track entry)
-        {
-            return _playlist.MoveToEntry(entry);
-        }
-        public bool Contains(Track entry)
-        {
-            return _playlist.Contains(entry);
-        }
-
-        IEnumerator<Track> IEnumerable<Track>.GetEnumerator()
-        {
-            return (_playlist as IEnumerable<Track>).GetEnumerator();
-        }
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return (_playlist as System.Collections.IEnumerable).GetEnumerator();
+                default:
+                    throw new NotSupportedException($"The collection change action {e.Action} is not supported by the playlist.");
+            }
         }
     }
 }

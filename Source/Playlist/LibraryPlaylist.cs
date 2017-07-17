@@ -1,6 +1,6 @@
 ﻿using DeadDog.Audio.Libraries;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     public class LibraryPlaylist : TrackCollectionPlaylist
     {

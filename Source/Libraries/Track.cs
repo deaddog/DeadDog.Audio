@@ -7,6 +7,7 @@ namespace DeadDog.Audio.Libraries
     {
         private string _title;
         private int? _tracknumber;
+        private int? _year;
 
         private Album _album;
         private Artist _artist;
@@ -38,6 +39,18 @@ namespace DeadDog.Audio.Libraries
                 }
             }
         }
+        public int? Year
+        {
+            get { return _year; }
+            internal set
+            {
+                if (value != _year)
+                {
+                    _year = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Year)));
+                }
+            }
+        }
 
         public Album Album
         {
@@ -64,11 +77,12 @@ namespace DeadDog.Audio.Libraries
             }
         }
 
-        internal Track(string filepath, string title, int? tracknumber, Album album, Artist artist)
+        internal Track(string filepath, string title, int? tracknumber, int? year, Album album, Artist artist)
         {
             FilePath = filepath;
             _title = title;
             _tracknumber = tracknumber;
+            _year = year;
             _album = album;
             _artist = artist;
         }

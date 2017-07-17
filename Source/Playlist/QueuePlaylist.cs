@@ -1,144 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
-    public class QueuePlaylist<T> : IPlayable<T>
-        where T : class
+    public class QueuePlaylist<T> : DecoratorPlaylist<T>
     {
-        private IPlaylist<T> playlist;
-        private IQueue<T> queue;
+        private Queue<T> _queue;
 
-        public QueuePlaylist(IQueue<T> queue, IPlaylist<T> fallbackPlaylist)
+        public QueuePlaylist(IPlaylist<T> playlist) : base(playlist)
         {
-            if (queue == null)
-                throw new ArgumentNullException("queue");
-
-            if (fallbackPlaylist == null)
-                throw new ArgumentNullException("fallbackPlaylist");
-
-            this.queue = queue;
-            this.playlist = fallbackPlaylist;
-
-            this.playlist.EntryChanged += playlist_EntryChanged;
-            this.playlist.EntryChanging += playlist_EntryChanging;
-        }
-        public QueuePlaylist(Queue<T> queue, IPlaylist<T> fallbackPlaylist)
-            : this(new QueueInterfaceWrapper<T>(queue), fallbackPlaylist)
-        {
+            _queue = new Queue<T>();
         }
 
-        public T Entry
+        public void Enqueue(T entry)
         {
-            get { return playlist.Entry; }
+            if (entry == null)
+                throw new ArgumentNullException(nameof(entry), "A null value cannot be queued.");
+
+            _queue.Enqueue(entry);
         }
 
-        public event EventHandler EntryChanged;
-        public event EntryChangingEventHandler<T> EntryChanging;
-
-        private void playlist_EntryChanged(object sender, EventArgs e)
+        public override bool MoveNext()
         {
-            if (EntryChanged != null)
-                EntryChanged(this, e);
+            while (_queue.Count > 0)
+            {
+                var item = _queue.Dequeue();
+                if (base.MoveToEntry(item))
+                    return true;
+            }
+
+            return base.MoveNext();
         }
-        private void playlist_EntryChanging(IPlayable<T> sender, EntryChangingEventArgs<T> e)
+        public override void Reset()
         {
-            if (EntryChanging != null)
-                EntryChanging(this, e);
-        }
-
-        public bool MoveNext()
-        {
-            while (queue.Count > 0)
-            {
-                T item = queue.Dequeue();
-                if (item == null)
-                    throw new NullReferenceException("The queded element cannot be null.");
-
-                if (!playlist.Contains(item))
-                    throw new KeyNotFoundException("The queued element was not found in the playlist.");
-
-                if (TryChangingEntry(item))
-                    return playlist.MoveToEntry(item);
-            }
-
-            return playlist.MoveNext();
-        }
-        public bool TryChangingEntry(T entry)
-        {
-            if (EntryChanging != null)
-            {
-                EntryChangingEventArgs<T> e = new EntryChangingEventArgs<T>(entry);
-                EntryChanging(this, e);
-                if (e.Rejected)
-                    return false;
-            }
-
-            return true;
-        }
-
-        public void Reset()
-        {
-            queue.Clear();
-            playlist.Reset();
-        }
-
-        private class QueueInterfaceWrapper<T> : IQueue<T>
-        {
-            private Queue<T> queue;
-
-            public QueueInterfaceWrapper(Queue<T> queue)
-            {
-                if (queue == null)
-                    throw new ArgumentNullException("queue");
-
-                this.queue = queue;
-            }
-
-            public static implicit operator QueueInterfaceWrapper<T>(Queue<T> q)
-            {
-                return new QueueInterfaceWrapper<T>(q);
-            }
-
-            public int Count
-            {
-                get { return queue.Count; }
-            }
-            public bool IsReadOnly
-            {
-                get { return false; }
-            }
-
-            public void Enqueue(T entry)
-            {
-                queue.Enqueue(entry);
-            }
-            public T Dequeue()
-            {
-                return queue.Dequeue();
-            }
-
-            public void Clear()
-            {
-                queue.Clear();
-            }
-            public bool Contains(T item)
-            {
-                return queue.Contains(item);
-            }
-            public void CopyTo(T[] array, int arrayIndex)
-            {
-                queue.CopyTo(array, arrayIndex);
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                return queue.GetEnumerator();
-            }
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return queue.GetEnumerator();
-            }
+            _queue.Clear();
+            base.Reset();
         }
     }
 }

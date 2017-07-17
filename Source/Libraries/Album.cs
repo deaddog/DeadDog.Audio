@@ -11,6 +11,7 @@ namespace DeadDog.Audio.Libraries
         public bool IsUnknown { get; }
 
         public string Title { get; }
+        public int? Year => Tracks.Select(x => x.Year).Where(x => x != null).Distinct().SingleOrDefault();
 
         public LibraryCollection<Track> Tracks { get; }
 
@@ -63,11 +64,15 @@ namespace DeadDog.Audio.Libraries
                     t.PropertyChanged -= TrackPropertyChanged;
                 Artist = Tracks.AllSameOrDefault(x => x.Artist)?.Artist;
             }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Year)));
         }
         private void TrackPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Track.Artist))
                 Artist = Tracks.AllSameOrDefault(x => x.Artist)?.Artist;
+            if (e.PropertyName == nameof(Track.Year))
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Year)));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

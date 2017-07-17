@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DeadDog.Audio.Libraries;
 
-namespace DeadDog.Audio
+namespace DeadDog.Audio.Playlist
 {
     /// <summary>
     /// Provides a collection of playlists, joining them into one.
@@ -18,7 +15,6 @@ namespace DeadDog.Audio
         public int Index
         {
             get { return playlists.Index; }
-            set { throw new NotImplementedException(); }
         }
 
         public PlaylistCollection()
