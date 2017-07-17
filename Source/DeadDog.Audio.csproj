@@ -68,6 +68,7 @@
     <Compile Include="Playlist\DecoratorPlayable.cs" />
     <Compile Include="Playlist\DecoratorPlaylist.cs" />
     <Compile Include="Playlist\RepeatPlaylist.cs" />
+    <Compile Include="Playlist\SortedPlaylist.cs" />
     <Compile Include="StreamExtension.cs" />
     <Compile Include="Libraries\Album.cs" />
     <Compile Include="Libraries\Artist.cs" />
