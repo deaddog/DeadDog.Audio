@@ -5,7 +5,7 @@ namespace DeadDog.Audio.Playlist
     /// <summary>
     /// Represents an iteration on a collection of objects.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of elements handled by the playable.</typeparam>
     public interface IPlayable<T>
     {
         /// <summary>

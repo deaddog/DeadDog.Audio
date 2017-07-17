@@ -67,6 +67,7 @@
     <Compile Include="Parsing\ID3\v2\TagHeader.cs" />
     <Compile Include="Playlist\DecoratorPlayable.cs" />
     <Compile Include="Playlist\DecoratorPlaylist.cs" />
+    <Compile Include="Playlist\IPeekable.cs" />
     <Compile Include="Playlist\RepeatPlaylist.cs" />
     <Compile Include="Playlist\SortedPlaylist.cs" />
     <Compile Include="StreamExtension.cs" />
