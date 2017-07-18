@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Downloader.cs" />
     <Compile Include="Executables\AsyncProcess.cs" />
     <Compile Include="Executables\FFmpeg.cs" />
     <Compile Include="Paths.cs" />
