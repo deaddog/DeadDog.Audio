@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YouTubeID.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeadDog.Audio\DeadDog.Audio.csproj">
