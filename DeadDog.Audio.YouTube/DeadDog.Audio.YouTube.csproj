@@ -40,8 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Executables\AsyncProcess.cs" />
+    <Compile Include="Executables\FFmpeg.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Executables\YoutubeDL.cs" />
     <Compile Include="YouTubeID.cs" />
   </ItemGroup>
   <ItemGroup>
