@@ -55,6 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Executables\YoutubeDL.cs" />
     <Compile Include="YouTubeID.cs" />
+    <Compile Include="YouTubeMediaParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeadDog.Audio\DeadDog.Audio.csproj">
