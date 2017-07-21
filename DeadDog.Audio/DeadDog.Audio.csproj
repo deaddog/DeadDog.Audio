@@ -109,7 +109,6 @@
     <Compile Include="RawTrack.cs" />
     <Compile Include="Scan\AudioScan.cs" />
     <Compile Include="Scan\AudioScanner.cs" />
-    <Compile Include="Scan\AudioScanner.static.cs" />
     <Compile Include="Scan\ExistingFilesCollection.cs" />
     <Compile Include="Scan\ExtensionList.cs" />
     <Compile Include="Scan\FileActions.cs" />
