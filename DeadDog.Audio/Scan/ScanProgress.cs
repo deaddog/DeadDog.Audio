@@ -11,7 +11,9 @@
         public int Removed { get; }
         public int Total { get; }
 
-        public ScanProgress(ScannerStates state, int added, int updated, int skipped, int errors, int removed, int total)
+        public ScannedFile? ScannedFile { get; }
+
+        public ScanProgress(ScannerStates state, int added, int updated, int skipped, int errors, int removed, int total, ScannedFile? scannedFile = null)
         {
             State = state;
             Added = added;
@@ -20,6 +22,8 @@
             Errors = errors;
             Removed = removed;
             Total = total;
+
+            ScannedFile = scannedFile;
         }
 
         public double Progress => (Added + Updated + Skipped + Errors + Removed) / (double)Total;
