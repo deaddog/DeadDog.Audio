@@ -9,7 +9,7 @@ namespace DeadDog.Audio.Scan
     {
         private RawTrack track;
         private string filepath;
-        private FileState filestate;
+        private FileActions filestate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScanFileEventArgs"/> class.
@@ -17,7 +17,7 @@ namespace DeadDog.Audio.Scan
         /// <param name="filepath">The file path affected by the event.</param>
         /// <param name="track">The track (if one exists) parsed from the file affected by the event.</param>
         /// <param name="filestate">The file state affected by the event.</param>
-        public ScanFileEventArgs(string filepath, RawTrack track, FileState filestate)
+        public ScanFileEventArgs(string filepath, RawTrack track, FileActions filestate)
         {
             this.filepath = filepath;
             this.track = track;
@@ -41,7 +41,7 @@ namespace DeadDog.Audio.Scan
         /// <summary>
         /// Gets the state of the file affected by the event.
         /// </summary>
-        public FileState State
+        public FileActions State
         {
             get { return filestate; }
         }

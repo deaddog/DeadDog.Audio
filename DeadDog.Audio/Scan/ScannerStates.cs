@@ -7,7 +7,7 @@ namespace DeadDog.Audio.Scan
     /// <summary>
     /// Describes the current state of an <see cref="AudioScanner"/>.
     /// </summary>
-    public enum ScannerState
+    public enum ScannerStates
     {
         /// <summary>
         /// The scanner is not running and has not been started.

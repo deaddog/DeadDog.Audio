@@ -32,8 +32,8 @@ namespace DeadDog.Audio.Scan
             get { return removeDeadFiles; }
         }
 
-        private ScannerState state;
-        public ScannerState State
+        private ScannerStates state;
+        public ScannerStates State
         {
             get { return state; }
         }
@@ -71,7 +71,7 @@ namespace DeadDog.Audio.Scan
 
         public bool IsRunning
         {
-            get { return state != ScannerState.Completed; }
+            get { return state != ScannerStates.Completed; }
         }
     }
 }

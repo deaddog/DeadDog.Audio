@@ -46,7 +46,7 @@ namespace DeadDog.Audio.Scan
             this.parsed = parsed;
             this.done = done;
 
-            this.state = ScannerState.NotStarted;
+            this.state = ScannerStates.NotStarted;
 
             this.added = updated = skipped = error = removed = total = 0;
         }
@@ -75,7 +75,7 @@ namespace DeadDog.Audio.Scan
         }
         internal void Start()
         {
-            state = ScannerState.Scanning;
+            state = ScannerStates.Scanning;
 
             var actions = BuildActionDictionary(ScanForFiles(), existingFiles.Keys);
             foreach (FileInfo file in ignoredFiles)
@@ -83,12 +83,12 @@ namespace DeadDog.Audio.Scan
 
             total = actions.Count;
 
-            state = ScannerState.Parsing;
+            state = ScannerStates.Parsing;
 
             foreach (var file in actions)
                 ParseFile(file.Key, file.Value);
 
-            state = ScannerState.Completed;
+            state = ScannerStates.Completed;
             if (done != null)
                 done(this, new ScanCompletedEventArgs());
         }
@@ -174,58 +174,58 @@ namespace DeadDog.Audio.Scan
                 case Action.Update:
                     RawTrack rt;
                     if (firstscan)
-                        FileParsed(file, existingFiles[file], FileState.Added);
+                        FileParsed(file, existingFiles[file], FileActions.Added);
                     else if (parser.TryParseTrack(file.FullName, out rt))
                     {
                         if (action == Action.Add)
-                            FileParsed(file, rt, FileState.Added);
+                            FileParsed(file, rt, FileActions.Added);
                         else if (existingFiles[file].Equals(rt))
-                            FileParsed(file, FileState.Skipped);
+                            FileParsed(file, FileActions.Skipped);
                         else
-                            FileParsed(file, rt, FileState.Updated);
+                            FileParsed(file, rt, FileActions.Updated);
                     }
                     else if (action == Action.Update && IsFileLocked(file))
-                        FileParsed(file, FileState.Skipped);
+                        FileParsed(file, FileActions.Skipped);
                     else
-                        FileParsed(file, action == Action.Add ? FileState.AddError : FileState.UpdateError);
+                        FileParsed(file, action == Action.Add ? FileActions.AddError : FileActions.UpdateError);
                     break;
                 case Action.Skip:
-                    FileParsed(file, FileState.Skipped);
+                    FileParsed(file, FileActions.Skipped);
                     break;
                 case Action.Remove:
-                    FileParsed(file, FileState.Removed);
+                    FileParsed(file, FileActions.Removed);
                     break;
                 default:
                     throw new InvalidOperationException("Unknown file action.");
             }
         }
 
-        private void FileParsed(FileInfo filepath, FileState state)
+        private void FileParsed(FileInfo filepath, FileActions state)
         {
             RawTrack track = null;
             existingFiles.TryGetValue(filepath, out track);
             FileParsed(filepath, track, state);
         }
-        private void FileParsed(FileInfo filepath, RawTrack track, FileState state)
+        private void FileParsed(FileInfo filepath, RawTrack track, FileActions state)
         {
             switch (state)
             {
-                case FileState.Added: added++; break;
-                case FileState.Updated: updated++; break;
-                case FileState.AddError:
-                case FileState.UpdateError:
-                case FileState.Error: error++; break;
-                case FileState.Removed: removed++; break;
-                case FileState.Skipped: skipped++; break;
+                case FileActions.Added: added++; break;
+                case FileActions.Updated: updated++; break;
+                case FileActions.AddError:
+                case FileActions.UpdateError:
+                case FileActions.Error: error++; break;
+                case FileActions.Removed: removed++; break;
+                case FileActions.Skipped: skipped++; break;
                 default: throw new InvalidOperationException("Unknown filestate.");
             }
 
             if (library != null)
                 switch (state)
                 {
-                    case FileState.Added: library.AddTrack(track); break;
-                    case FileState.Updated: library.UpdateTrack(track); break;
-                    case FileState.Removed: library.RemoveTrack(filepath.FullName); break;
+                    case FileActions.Added: library.AddTrack(track); break;
+                    case FileActions.Updated: library.UpdateTrack(track); break;
+                    case FileActions.Removed: library.RemoveTrack(filepath.FullName); break;
                 }
 
             if (parsed != null)

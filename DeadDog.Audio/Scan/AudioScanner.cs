@@ -169,17 +169,17 @@ namespace DeadDog.Audio.Scan
         {
             switch (e.State)
             {
-                case FileState.Added:
+                case FileActions.Added:
                     existingFiles.Add(e.Track);
                     break;
-                case FileState.Updated:
+                case FileActions.Updated:
                     existingFiles.Remove(e.Path);
                     existingFiles.Add(e.Track);
                     break;
-                case FileState.UpdateError:
+                case FileActions.UpdateError:
                     existingFiles.Remove(e.Path);
                     break;
-                case FileState.Removed:
+                case FileActions.Removed:
                     existingFiles.Remove(e.Path);
                     break;
             }

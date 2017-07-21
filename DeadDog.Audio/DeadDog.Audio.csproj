@@ -111,12 +111,12 @@
     <Compile Include="Scan\AudioScanner.static.cs" />
     <Compile Include="Scan\ExistingFilesCollection.cs" />
     <Compile Include="Scan\ExtensionList.cs" />
-    <Compile Include="Scan\FileState.cs" />
+    <Compile Include="Scan\FileActions.cs" />
     <Compile Include="Scan\ScanCompletedEventArgs.cs" />
     <Compile Include="Scan\ScanCompletedEventHandler.cs" />
     <Compile Include="Scan\ScanFileEventArgs.cs" />
     <Compile Include="Scan\ScanFileEventHandler.cs" />
-    <Compile Include="Scan\ScannerState.cs" />
+    <Compile Include="Scan\ScannerStates.cs" />
     <Compile Include="Searching.cs" />
     <Compile Include="PredicateString.cs" />
     <Compile Include="SearchMethods.cs" />
