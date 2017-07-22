@@ -40,6 +40,16 @@ namespace DeadDog.Audio.Scan
                 }
             });
 
+            if (settings.UseCache)
+            {
+                var newCache = resultFiles
+                    .Where(x => x.Action == FileActions.Added || x.Action == FileActions.Skipped || x.Action == FileActions.Updated)
+                    .Select(x => x.MediaInfo)
+                    .Where(x => x != null);
+
+                SaveExistingTracks(settings.CachePath, newCache);
+            }
+
             progress?.Report(new ScanProgress(ScannerStates.Completed, state.Added, state.Updated, state.Skipped, state.Errors, state.Removed, state.Total));
             return resultFiles.ToArray();
         }
@@ -86,6 +96,18 @@ namespace DeadDog.Audio.Scan
             }
 
             return tracks;
+        }
+        private static void SaveExistingTracks(string filepath, IEnumerable<RawTrack> tracks)
+        {
+            var list = tracks.ToList();
+
+            using (var fs = new FileStream(filepath, FileMode.Create))
+            {
+                fs.Write(list.Count);
+
+                for (int i = 0; i < list.Count; i++)
+                    list[i].Save(fs);
+            }
         }
         private static IEnumerable<ScannedFile> GetFileActions(IEnumerable<string> scanFiles, IEnumerable<RawTrack> existingTracks)
         {
