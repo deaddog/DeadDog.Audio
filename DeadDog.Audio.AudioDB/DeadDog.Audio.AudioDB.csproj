@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioDbRepository.cs" />
+    <Compile Include="AudioDbRepositoryExtension.cs" />
     <Compile Include="IAudioDbRepository.cs" />
     <Compile Include="Model\AudioDbAlbum.cs" />
     <Compile Include="Model\AudioDbAlbumSearchResult.cs" />
