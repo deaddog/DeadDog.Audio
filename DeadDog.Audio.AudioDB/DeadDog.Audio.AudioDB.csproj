@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioDbRepository.cs" />
+    <Compile Include="IAudioDbRepository.cs" />
     <Compile Include="Model\AudioDbAlbum.cs" />
     <Compile Include="Model\AudioDbAlbumSearchResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
