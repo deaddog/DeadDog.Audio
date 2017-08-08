@@ -73,6 +73,7 @@
     <Compile Include="Playlist\IPeekable.cs" />
     <Compile Include="Playlist\RepeatPlaylist.cs" />
     <Compile Include="Playlist\SortedPlaylist.cs" />
+    <Compile Include="Scan\LibraryUpdateProgress.cs" />
     <Compile Include="Scan\ScannedFile.cs" />
     <Compile Include="Scan\ScannerSettings.cs" />
     <Compile Include="Scan\ScanProgress.cs" />
