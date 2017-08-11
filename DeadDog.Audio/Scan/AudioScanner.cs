@@ -73,7 +73,7 @@ namespace DeadDog.Audio.Scan
 
         private static IEnumerable<string> GetMediaFiles(string directory, SearchOption searchOption, IEnumerable<string> extensions)
         {
-            foreach (var ext in extensions)
+            foreach (var ext in extensions.Select(x => "." + x.TrimStart('.')))
                 foreach (var file in Directory.GetFiles(directory, "*" + ext, searchOption))
                 {
                     if (Path.GetExtension(file).Equals(ext, StringComparison.OrdinalIgnoreCase))
