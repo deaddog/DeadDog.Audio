@@ -38,7 +38,7 @@ namespace DeadDog.Audio.Scan
                     progress?.Report(state = GetNewProgress(state, file));
                     resultFiles.Add(file);
                 }
-            });
+            }).ConfigureAwait(false);
 
             if (settings.UseCache)
             {
