@@ -63,8 +63,7 @@ namespace DeadDog.Audio
                 throw new ArgumentNullException(nameof(output));
             if (!output.CanWrite)
                 throw new ArgumentException("Output stream must support writing", nameof(output));
-
-            output.Write(Filepath);
+            
             output.Write(Filepath);
             output.Write(TrackTitle);
             output.Write(AlbumTitle);
