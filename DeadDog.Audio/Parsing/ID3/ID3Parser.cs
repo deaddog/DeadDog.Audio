@@ -15,7 +15,7 @@ namespace DeadDog.Audio.Parsing.ID3
         /// <returns>A <see cref="RawTrack"/> containing the parsed metadata, if parsing succeeded. If parsing fails an exception is thrown.</returns>
         public RawTrack ParseTrack(string filepath)
         {
-            var v1Info = new ID3v1(filepath);
+            var v1Info = ID3v1.FromFile(filepath);
             var v2Info = new ID3v2(filepath);
 
             if (!v1Info.TagFound && !v2Info.TagFound)
@@ -56,16 +56,8 @@ namespace DeadDog.Audio.Parsing.ID3
         {
             if (v2.Year > 0)
                 return v2.Year;
-            else if (v1.Year != null)
-            {
-                Match mYear = Regex.Match(v1.Year, "[0-9]{4,4}");
-                if (mYear.Success && int.Parse(mYear.Value) > 0)
-                    return int.Parse(mYear.Value);
-                else
-                    return null;
-            }
             else
-                return null;
+                return v1.Year;
         }
     }
 }

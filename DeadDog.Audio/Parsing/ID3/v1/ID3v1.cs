@@ -5,63 +5,34 @@ namespace DeadDog.Audio.Parsing.ID3
 {
     internal class ID3v1
     {
-        private static Encoding iso = Encoding.GetEncoding("ISO-8859-1");
+        private static Encoding _encoding = Encoding.GetEncoding("ISO-8859-1");
 
-        private bool tagfound;
-        private string title = null;
-        private string artist = null;
-        private string album = null;
-        private string year = null;
-        private string comment = null;
-        private int tracknumber = -1;
+        public bool TagFound { get; }
+        public string Artist { get; }
+        public string Album { get; }
+        public string Title { get; }
+        public int? TrackNumber { get; }
+        public int? Year { get; }
 
-        private ID3v1()
+        private ID3v1(bool tagFound, string artist, string album, string title, int? trackNumber, int? year)
         {
-        }
-        public ID3v1(Stream stream)
-            : this(read128(stream))
-        {
-        }
-        public ID3v1(string filename)
-            : this(read128(filename))
-        {
-        }
-        private ID3v1(byte[] buffer)
-        {
-            if (buffer.Length < 128)
-            {
-                this.tagfound = false;
-                return;
-            }
-            else if (iso.GetString(buffer, 0, 3) != "TAG")
-            {
-                this.tagfound = false;
-                return;
-            }
-            else
-                this.tagfound = true;
-
-            this.title = iso.GetString(buffer, 3, 30).Trim('\0', ' ');
-            this.artist = iso.GetString(buffer, 33, 30).Trim('\0', ' ');
-            this.album = iso.GetString(buffer, 63, 30).Trim('\0', ' ');
-            this.year = iso.GetString(buffer, 93, 4).Trim('\0', ' ');
-
-            bool hasTrack = (buffer[125] == 0);
-            if (hasTrack)
-            {
-                comment = iso.GetString(buffer, 97, 28).Trim('\0', ' ');
-                tracknumber = (int)buffer[126];
-            }
-            else
-            {
-                comment = iso.GetString(buffer, 97, 30).Trim('\0', ' ');
-            }
+            TagFound = tagFound;
+            Artist = artist;
+            Album = album;
+            Title = title;
+            TrackNumber = trackNumber;
+            Year = year;
         }
 
-        private static byte[] read128(Stream stream)
+        public static ID3v1 FromFile(string filepath)
+        {
+            using (Stream stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
+                return FromStream(stream);
+        }
+        public static ID3v1 FromStream(Stream stream)
         {
             if (stream.Length < 128)
-                return new byte[0];
+                return FromTagBytes(new byte[0]);
 
             long position = stream.Position;
 
@@ -71,40 +42,42 @@ namespace DeadDog.Audio.Parsing.ID3
 
             stream.Seek(position, SeekOrigin.Begin);
 
-            return buffer;
-        }
-        private static byte[] read128(string filename)
-        {
-            byte[] buffer;
-            using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.Read))
-                buffer = read128(stream);
-
-            return buffer;
+            return FromTagBytes(buffer);
         }
 
-        public bool TagFound
+        private static ID3v1 FromTagBytes(byte[] tag)
         {
-            get { return tagfound; }
+            if (tag.Length < 128)
+                return new ID3v1(false, null, null, null, null, null);
+
+            if (_encoding.GetString(tag, 0, 3) != "TAG")
+                return new ID3v1(false, null, null, null, null, null);
+
+            var title = _encoding.GetString(tag, 3, 30).Trim('\0', ' ');
+            var artist = _encoding.GetString(tag, 33, 30).Trim('\0', ' ');
+            var album = _encoding.GetString(tag, 63, 30).Trim('\0', ' ');
+            var year = GetYear(tag);
+            var tracknumber = GetTracknumber(tag);
+
+            return new ID3v1(true, artist, album, title, tracknumber, year);
         }
-        public string Artist
+
+        private static int? GetYear(byte[] tag)
         {
-            get { return artist; }
+            var yearStr = _encoding.GetString(tag, 93, 4).Trim('\0', ' ');
+
+            if (int.TryParse(yearStr, out int year))
+                return year;
+            else
+                return null;
         }
-        public string Album
+        private static int? GetTracknumber(byte[] tag)
         {
-            get { return album; }
-        }
-        public string Title
-        {
-            get { return title; }
-        }
-        public int TrackNumber
-        {
-            get { return tracknumber; }
-        }
-        public string Year
-        {
-            get { return year; }
+            bool hasTrack = (tag[125] == 0);
+            if (hasTrack)
+                return tag[126];
+            else
+                return null;
         }
     }
 }
