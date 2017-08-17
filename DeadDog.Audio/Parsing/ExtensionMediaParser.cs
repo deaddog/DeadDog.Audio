@@ -9,14 +9,14 @@ namespace DeadDog.Audio.Parsing
     /// </summary>
     public class ExtensionMediaParser : IMediaParser
     {
-        private Dictionary<string, IMediaParser> parsers;
+        private Dictionary<string, IMediaParser> _parsers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtensionMediaParser"/> class.
         /// </summary>
         public ExtensionMediaParser()
         {
-            this.parsers = new Dictionary<string, IMediaParser>();
+            _parsers = new Dictionary<string, IMediaParser>();
         }
 
         /// <summary>
@@ -34,27 +34,31 @@ namespace DeadDog.Audio.Parsing
 
             extension = extension.TrimStart('.');
 
-            parsers.Add(extension, parser);
+            _parsers.Add(extension, parser);
         }
 
         /// <summary>
         /// Reads metadata from an audio-file using the <see cref="IMediaParser"/> associated with the files extension.
         /// </summary>
-        /// <param name="filepath">The path of the file from which to read.</param>
-        /// <returns>
-        /// A <see cref="RawTrack"/> containing the parsed metadata, if parsing succeeded, or null if parsing failed.
-        /// </returns>
-        public RawTrack ParseTrack(string filepath)
+        /// <param name="filepath">The full path of the file from which to read.</param>
+        /// <param name="track">
+        /// When the method returns, contains the read metadata, if parsing succeeded, or null if parsing failed.
+        /// </param>
+        /// <returns><c>true</c> if the file was parsed successfully; otherwise, <c>false</c>.</returns>
+        public bool TryParseTrack(string filepath, out RawTrack track)
         {
             if (filepath == null)
                 throw new ArgumentNullException(nameof(filepath));
 
             string ext = Path.GetExtension(filepath).TrimStart('.');
 
-            if (!parsers.ContainsKey(ext))
-                return null;
+            if (!_parsers.ContainsKey(ext))
+            {
+                track = null;
+                return false;
+            }
             else
-                return parsers[ext].ParseTrack(filepath);
+                return _parsers[ext].TryParseTrack(filepath, out track);
         }
     }
 }

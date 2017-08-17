@@ -4,9 +4,9 @@ namespace DeadDog.Audio.Parsing
 {
     public class FlacParser : IMediaParser
     {
-        public RawTrack ParseTrack(string filepath)
+        public bool TryParseTrack(string filepath, out RawTrack track)
         {
-            FlacTagger flac = new FlacTagger(filepath);
+            var flac = new FlacTagger(filepath);
 
             int? trackNumber;
             if (int.TryParse(flac.TrackNumber, out int t))
@@ -20,7 +20,8 @@ namespace DeadDog.Audio.Parsing
             else
                 year = null;
 
-            return new RawTrack(filepath, flac.Title, flac.Album, trackNumber, flac.Artist, year);
+            track = new RawTrack(filepath, flac.Title, flac.Album, trackNumber, flac.Artist, year);
+            return true;
         }
     }
 }

@@ -63,7 +63,7 @@ namespace DeadDog.Audio
                 throw new ArgumentNullException(nameof(output));
             if (!output.CanWrite)
                 throw new ArgumentException("Output stream must support writing", nameof(output));
-            
+
             output.Write(Filepath);
             output.Write(TrackTitle);
             output.Write(AlbumTitle);
@@ -186,11 +186,11 @@ namespace DeadDog.Audio
         public bool Equals(RawTrack other)
         {
             return Filepath.Equals(other.Filepath) &&
-                ArtistName.Equals(other.ArtistName) &&
-                AlbumTitle.Equals(other.AlbumTitle) &&
-                TrackTitle.Equals(other.TrackTitle) &&
-                TrackNumber.Equals(other.TrackNumber) &&
-                Year.Equals(other.Year);
+                ArtistName == other.ArtistName &&
+                AlbumTitle == other.AlbumTitle &&
+                TrackTitle == other.TrackTitle &&
+                TrackNumber == other.TrackNumber &&
+                Year == other.Year;
         }
     }
 }

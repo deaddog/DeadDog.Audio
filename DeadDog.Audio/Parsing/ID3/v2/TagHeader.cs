@@ -35,12 +35,12 @@ namespace DeadDog.Audio.Parsing.ID3
             bool found = false;
             int offset = 0;
             this.version = new Version(0, 0);
-            while (reader.stream.Position < reader.stream.Length && !found && reader.stream.Position < 200)
+            while (reader._stream.Position < reader._stream.Length && !found && reader._stream.Position < 200)
             {
-                int b = reader.stream.ReadByte();
+                int b = reader._stream.ReadByte();
                 if (b == 0x49)
                 {
-                    reader.stream.Read(buffer, offset, 9);
+                    reader._stream.Read(buffer, offset, 9);
                     string text = Encoding.ASCII.GetString(buffer);
                     if (buffer[0] == 0x44 &&
                         buffer[1] == 0x33 &&
@@ -56,7 +56,7 @@ namespace DeadDog.Audio.Parsing.ID3
                         this.flags = (TagFlags)buffer[4];
                         this.size = BinaryConverter.ToInt32(buffer, 5, true);
 
-                        if (this.size + reader.stream.Position > reader.stream.Length)
+                        if (this.size + reader._stream.Position > reader._stream.Length)
                         {
                             this.version = new Version(0, 0);
                             break;
@@ -64,16 +64,16 @@ namespace DeadDog.Audio.Parsing.ID3
 
                         if ((flags & TagFlags.ExtendedHeader) == TagFlags.ExtendedHeader)
                         {
-                            reader.stream.Read(buffer, 0, 4);
+                            reader._stream.Read(buffer, 0, 4);
                             int extendedsize = BinaryConverter.ToInt32(buffer, 0, true);
-                            reader.stream.Seek(extendedsize - 4, SeekOrigin.Current);
+                            reader._stream.Seek(extendedsize - 4, SeekOrigin.Current);
                         }
 
-                        this.firstframe = reader.stream.Position;
+                        this.firstframe = reader._stream.Position;
                         break;
                     }
                     else
-                        reader.stream.Seek(-9, SeekOrigin.Current);
+                        reader._stream.Seek(-9, SeekOrigin.Current);
                 }
             }
             if (version == new Version(0, 0))
