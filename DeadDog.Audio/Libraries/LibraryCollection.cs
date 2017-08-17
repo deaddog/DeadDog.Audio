@@ -76,14 +76,14 @@ namespace DeadDog.Audio.Libraries
                     _list.RemoveAt(oldIndex);
                     _list.Insert(newIndex, element);
 
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, element, newIndex - 1, oldIndex));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, element, newIndex, oldIndex));
                 }
-                else if (newIndex > oldIndex) //Move right
+                else if (newIndex - 1 > oldIndex) //Move right
                 {
                     _list.Insert(newIndex, element);
                     _list.RemoveAt(oldIndex);
 
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, element, newIndex, oldIndex));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, element, newIndex - 1, oldIndex));
                 }
             }
         }
