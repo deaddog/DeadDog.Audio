@@ -27,7 +27,7 @@ namespace DeadDog.Audio.Parsing.ID3
 
             var tracknumber = GetTrackNumber(v1Info, v2Info);
             var year = GetYear(v1Info, v2Info);
-;
+
             return new RawTrack(filepath, title, album, tracknumber, artist, year);
         }
 
