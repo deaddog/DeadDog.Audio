@@ -1,21 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace DeadDog.Audio.Parsing.ID3
 {
-    /// <summary>
-    /// Provides methods for parsing ID3v1 metadata from audio files.
-    /// </summary>
-    public class ID3v1
+    internal class ID3v1
     {
         private static Encoding iso = Encoding.GetEncoding("ISO-8859-1");
 
         private static ID3v1 empty;
-        /// <summary>
-        /// Gets a <see cref="ID3v1"/> where all values have been set do their default.
-        /// </summary>
         public static ID3v1 Empty
         {
             get { return empty; }
@@ -43,18 +35,10 @@ namespace DeadDog.Audio.Parsing.ID3
         private ID3v1()
         {
         }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ID3v1"/> class from a <see cref="Stream"/>.
-        /// </summary>
-        /// <param name="stream">A <see cref="Stream"/> from which the metadata is read. The position within the stream is reset after reading.</param>
-        public ID3v1(System.IO.Stream stream)
+        public ID3v1(Stream stream)
             : this(read128(stream))
         {
         }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ID3v1"/> class.
-        /// </summary>
-        /// <param name="filename">The path of the file to read metadata from.</param>
         public ID3v1(string filename)
             : this(read128(filename))
         {
@@ -91,7 +75,7 @@ namespace DeadDog.Audio.Parsing.ID3
             }
         }
 
-        private static byte[] read128(System.IO.Stream stream)
+        private static byte[] read128(Stream stream)
         {
             if (stream.Length < 128)
                 return new byte[0];
@@ -115,44 +99,26 @@ namespace DeadDog.Audio.Parsing.ID3
             return buffer;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether an ID3v1 tag could be found.
-        /// </summary>
         public bool TagFound
         {
             get { return tagfound; }
         }
-        /// <summary>
-        /// Gets the name of the artist, if it could be loaded, null if not.
-        /// </summary>
         public string Artist
         {
             get { return artist; }
         }
-        /// <summary>
-        /// Gets the title of the album, if it could be loaded, null if not.
-        /// </summary>
         public string Album
         {
             get { return album; }
         }
-        /// <summary>
-        /// Gets the title of the track, if it could be loaded, null if not.
-        /// </summary>
         public string Title
         {
             get { return title; }
         }
-        /// <summary>
-        /// Gets the tracknumber (on album) for this file, if it could be loaded, -1 if not.
-        /// </summary>
         public int TrackNumber
         {
             get { return tracknumber; }
         }
-        /// <summary>
-        /// Gets the release-year of the track, if it could be loaded, null if not.
-        /// </summary>
         public string Year
         {
             get { return year; }

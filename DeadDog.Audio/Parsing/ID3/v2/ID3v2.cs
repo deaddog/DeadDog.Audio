@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DeadDog.Audio.Parsing.ID3
 {
-    public class ID3v2
+    internal class ID3v2
     {
         private TagHeader header;
         private string title = null;
@@ -19,7 +18,7 @@ namespace DeadDog.Audio.Parsing.ID3
 
         private int frameCount;
 
-        public ID3v2(System.IO.Stream stream)
+        public ID3v2(Stream stream)
         {
             using (FrameReader reader = new FrameReader(stream))
             {
@@ -28,7 +27,7 @@ namespace DeadDog.Audio.Parsing.ID3
         }
         public ID3v2(string filename)
         {
-            using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
             using (FrameReader reader = new FrameReader(fs))
             {
                 setvalues(reader);
@@ -46,7 +45,7 @@ namespace DeadDog.Audio.Parsing.ID3
                 this.year = -1;
             else
             {
-                Match regex = Regex.Match(yearstring,"[0-9]{4,4}");
+                Match regex = Regex.Match(yearstring, "[0-9]{4,4}");
                 if (regex.Success)
                     year = int.Parse(regex.Value);
                 else
@@ -111,7 +110,7 @@ namespace DeadDog.Audio.Parsing.ID3
             get { return year; }
         }
 
-        public static string ReadString(System.IO.BinaryReader reader)
+        public static string ReadString(BinaryReader reader)
         {
             Encoding iso = Encoding.GetEncoding("ISO-8859-1");
             Encoding enc = null;
