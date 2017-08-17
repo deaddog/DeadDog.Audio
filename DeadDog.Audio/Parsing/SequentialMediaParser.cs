@@ -8,14 +8,14 @@ namespace DeadDog.Audio.Parsing
     /// </summary>
     public class SequentialMediaParser : IMediaParser
     {
-        private List<IMediaParser> parsers;
+        private List<IMediaParser> _parsers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SequentialMediaParser"/> class.
         /// </summary>
         public SequentialMediaParser()
         {
-            this.parsers = new List<IMediaParser>();
+            _parsers = new List<IMediaParser>();
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace DeadDog.Audio.Parsing
             if (parser == null)
                 throw new ArgumentNullException(nameof(parser));
 
-            parsers.Insert(0, parser);
+            _parsers.Insert(0, parser);
         }
         /// <summary>
         /// Adds a new parser to the <see cref="SequentialMediaParser"/>.
@@ -40,26 +40,26 @@ namespace DeadDog.Audio.Parsing
             if (parser == null)
                 throw new ArgumentNullException(nameof(parser));
 
-            parsers.Add(parser);
+            _parsers.Add(parser);
         }
 
         /// <summary>
-        /// Reads metadata from an audio-file by testing each contained <see cref="IMediaParser"/>.
+        /// Reads metadata from an audio-file by testing each contained <see cref="IMediaParser"/> in sequence.
         /// </summary>
         /// <param name="filepath">The full path of the file from which to read.</param>
-        /// <returns>
-        /// A <see cref="RawTrack"/> containing the parsed metadata, if parsing succeeded, or null if parsing failed.
+        /// <param name="track">
+        /// When the method returns, contains the read metadata, if parsing succeeded, or null if parsing failed.
         /// The metadata will be returned from the first parser that succeeds, if any.
-        /// </returns>
-        public RawTrack ParseTrack(string filepath)
+        /// </param>
+        /// <returns><c>true</c> if the file was parsed successfully; otherwise, <c>false</c>.</returns>
+        public bool TryParseTrack(string filepath, out RawTrack track)
         {
-            RawTrack track;
+            for (int i = 0; i < _parsers.Count; i++)
+                if (_parsers[i].TryParseTrack(filepath, out track))
+                    return true;
 
-            for (int i = 0; i < parsers.Count; i++)
-                if (parsers[i].TryParseTrack(filepath, out track))
-                    return track;
-
-            return null;
+            track = null;
+            return false;
         }
     }
 }

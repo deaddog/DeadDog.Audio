@@ -4,7 +4,7 @@ namespace DeadDog.Audio.Parsing
 {
     public class OggParser : IMediaParser
     {
-        public RawTrack ParseTrack(string filepath)
+        public bool TryParseTrack(string filepath, out RawTrack track)
         {
             OggTagger ogg = new OggTagger(filepath);
 
@@ -20,7 +20,8 @@ namespace DeadDog.Audio.Parsing
             else
                 year = null;
 
-            return new RawTrack(filepath, ogg.Title, ogg.Album, trackNumber, ogg.Artist, year);
+            track = new RawTrack(filepath, ogg.Title, ogg.Album, trackNumber, ogg.Artist, year);
+            return true;
         }
     }
 }

@@ -1,25 +1,17 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace DeadDog.Audio.Parsing.ID3
+﻿namespace DeadDog.Audio.Parsing.ID3
 {
-    /// <summary>
-    /// Provides a method for reading metadata from files with an ID3 tag, using an <see cref="ID3info"/> object.
-    /// </summary>
     public class ID3Parser : IMediaParser
     {
-        /// <summary>
-        /// Reads metadata from files with an ID3 tag, using an <see cref="ID3info"/> object.
-        /// </summary>
-        /// <param name="filepath">The full path of the file from which to read.</param>
-        /// <returns>A <see cref="RawTrack"/> containing the parsed metadata, if parsing succeeded. If parsing fails an exception is thrown.</returns>
-        public RawTrack ParseTrack(string filepath)
+        public bool TryParseTrack(string filepath, out RawTrack track)
         {
             var v1Info = ID3v1.FromFile(filepath);
             var v2Info = new ID3v2(filepath);
 
             if (!v1Info.TagFound && !v2Info.TagFound)
-                throw new Exception("No tags found.");
+            {
+                track = null;
+                return false;
+            }
 
             var artist = Longest(v2Info.Artist, v1Info.Artist);
             var album = Longest(v2Info.Album, v1Info.Album);
@@ -28,7 +20,8 @@ namespace DeadDog.Audio.Parsing.ID3
             var tracknumber = GetTrackNumber(v1Info, v2Info);
             var year = GetYear(v1Info, v2Info);
 
-            return new RawTrack(filepath, title, album, tracknumber, artist, year);
+            track = new RawTrack(filepath, title, album, tracknumber, artist, year);
+            return true;
         }
 
         private string Longest(string a, string b)

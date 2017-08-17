@@ -10,14 +10,14 @@ namespace DeadDog.Audio.Parsing
     /// </summary>
     public class FileNameMediaParser : IMediaParser
     {
-        private List<Regex> regexes;
+        private List<Regex> _regexes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileNameMediaParser"/> class.
         /// </summary>
         public FileNameMediaParser()
         {
-            this.regexes = new List<Regex>();
+            _regexes = new List<Regex>();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace DeadDog.Audio.Parsing
             if (regex == null)
                 throw new ArgumentNullException(nameof(regex));
 
-            this.regexes.Add(regex);
+            _regexes.Add(regex);
         }
         /// <summary>
         /// Adds a regular expression that should be checked against a file-name.
@@ -73,10 +73,12 @@ namespace DeadDog.Audio.Parsing
         /// Attempts to extract metadata from an audio-files filename.
         /// </summary>
         /// <param name="filepath">The full path of the file from which to read.</param>
-        /// <returns>
-        /// A <see cref="RawTrack"/> containing the parsed metadata, if parsing succeeded, or null if parsing failed.
-        /// </returns>
-        public RawTrack ParseTrack(string filepath)
+        /// <param name="track">
+        /// When the method returns, contains the read metadata, if parsing succeeded, or null if parsing failed.
+        /// The metadata will be returned from the first parser that succeeds, if any.
+        /// </param>
+        /// <returns><c>true</c> if the file was parsed successfully; otherwise, <c>false</c>.</returns>
+        public bool TryParseTrack(string filepath, out RawTrack track)
         {
             if (filepath == null)
                 throw new ArgumentNullException(nameof(filepath));
@@ -85,8 +87,8 @@ namespace DeadDog.Audio.Parsing
 
             Match match;
 
-            for (int i = 0; i < regexes.Count; i++)
-                if ((match = regexes[i].Match(filename)).Success)
+            for (int i = 0; i < _regexes.Count; i++)
+                if ((match = _regexes[i].Match(filename)).Success)
                 {
                     string artist = match.Groups["artist"].Value.Trim();
                     string album = match.Groups["album"].Value.Trim();
@@ -97,11 +99,11 @@ namespace DeadDog.Audio.Parsing
                     if (title == "")
                         continue;
 
-                    int? track;
+                    int? tracknumber;
                     if (int.TryParse(trackStr, out int t))
-                        track = t;
+                        tracknumber = t;
                     else
-                        track = null;
+                        tracknumber = null;
 
                     int? year;
                     if (int.TryParse(yearStr, out int y))
@@ -109,10 +111,12 @@ namespace DeadDog.Audio.Parsing
                     else
                         year = null;
 
-                    return new RawTrack(filepath, title, album, track, artist, year);
+                    track = new RawTrack(filepath, title, album, tracknumber, artist, year);
+                    return true;
                 }
 
-            return null;
+            track = null;
+            return false;
         }
     }
 }

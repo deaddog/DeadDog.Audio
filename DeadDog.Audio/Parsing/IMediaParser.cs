@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeadDog.Audio.Parsing
+﻿namespace DeadDog.Audio.Parsing
 {
     /// <summary>
     /// Provides generic methods for parsing metadata from files to <see cref="RawTrack"/> items.
@@ -10,32 +6,35 @@ namespace DeadDog.Audio.Parsing
     public interface IMediaParser
     {
         /// <summary>
-        /// When overridden in a derived class, reads metadata from an audio-file.
+        /// Reads metadata from an audio-file.
         /// </summary>
         /// <param name="filepath">The full path of the file from which to read.</param>
-        /// <returns>When overridden in a derived class, returns a <see cref="RawTrack"/> containing the parsed metadata, if parsing succeeded, or null if parsing failed..</returns>
-        RawTrack ParseTrack(string filepath);
+        /// <param name="track">When the method returns, contains the read metadata, if parsing succeeded, or null if parsing failed. This parameter is passed uninitialized.</param>
+        /// <returns><c>true</c> if the file was parsed successfully; otherwise, <c>false</c>.</returns>
+        bool TryParseTrack(string filepath, out RawTrack track);
     }
 
     public static class DataParserExtension
     {
         /// <summary>
-        /// Reads metadata from a file to a <see cref="RawTrack"/> item. A return value indicates whether parsing succeeded. The actual parsing is done using <see cref="ParseTrack(string)"/>.
+        /// Reads metadata from an audio-file.
         /// </summary>
         /// <param name="parser">The <see cref="IMediaParser"/> used for parsing metadata.</param>
         /// <param name="filepath">The full path of the file from which to read.</param>
-        /// <param name="item">When the method returns, contains the read metadata, if parsing succeeded, or null if parsing failed. Parsing fails if any exception is thrown from the <see cref="ParseTrack(string)"/> method. This parameter is passed uninitialized.</param>
-        /// <returns>true if the file was parsed successfully; otherwise, false.</returns>
-        public static bool TryParseTrack(this IMediaParser parser, string filepath, out RawTrack item)
+        /// <param name="track">
+        /// When the method returns, contains the read metadata, if parsing succeeded, or null if parsing failed.
+        /// Parsing fails if any exception is thrown from the <see cref="IMediaParser.TryParseTrack(string, out RawTrack)"/> method.
+        /// This parameter is passed uninitialized.</param>
+        /// <returns><c>true</c> if the file was parsed successfully; otherwise, <c>false</c>.</returns>
+        public static bool SafeTryParseTrack(this IMediaParser parser, string filepath, out RawTrack track)
         {
             try
             {
-                item = parser.ParseTrack(filepath);
-                return item != null;
+                return parser.TryParseTrack(filepath, out track);
             }
             catch
             {
-                item = null;
+                track = null;
                 return false;
             }
         }

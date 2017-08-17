@@ -139,7 +139,7 @@ namespace DeadDog.Audio.Scan
                     {
                         if (!settings.IncludeNewFiles)
                             return new ScannedFile(file.Filepath, file.MediaInfo, FileActions.Skipped);
-                        else if (settings.Parser.TryParseTrack(file.Filepath, out var track))
+                        else if (settings.Parser.SafeTryParseTrack(file.Filepath, out var track))
                             return new ScannedFile(file.Filepath, track, FileActions.Added);
                         else
                             return new ScannedFile(file.Filepath, file.MediaInfo, FileActions.AddError);
@@ -149,7 +149,7 @@ namespace DeadDog.Audio.Scan
                     {
                         if (!settings.IncludeFileUpdates)
                             return new ScannedFile(file.Filepath, file.MediaInfo, FileActions.Skipped);
-                        else if (settings.Parser.TryParseTrack(file.Filepath, out var track))
+                        else if (settings.Parser.SafeTryParseTrack(file.Filepath, out var track))
                         {
                             if (file.MediaInfo.Equals(track))
                                 return new ScannedFile(file.Filepath, track, FileActions.Skipped);
