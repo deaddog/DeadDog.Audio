@@ -109,7 +109,7 @@ namespace DeadDog.Audio.Parsing.ID3
         private static byte[] read128(string filename)
         {
             byte[] buffer;
-            using (Stream stream = File.Open(filename, FileMode.Open))
+            using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.Read))
                 buffer = read128(stream);
 
             return buffer;

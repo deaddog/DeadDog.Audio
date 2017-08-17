@@ -28,7 +28,7 @@ namespace DeadDog.Audio.Parsing.ID3
         }
         public ID3v2(string filename)
         {
-            using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Open))
+            using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Open, FileAccess.Read))
             using (FrameReader reader = new FrameReader(fs))
             {
                 setvalues(reader);
