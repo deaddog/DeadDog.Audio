@@ -7,23 +7,6 @@ namespace DeadDog.Audio.Parsing.ID3
     {
         private static Encoding iso = Encoding.GetEncoding("ISO-8859-1");
 
-        private static ID3v1 empty;
-        public static ID3v1 Empty
-        {
-            get { return empty; }
-        }
-        static ID3v1()
-        {
-            empty = new ID3v1();
-            empty.tagfound = false;
-            empty.title = null;
-            empty.artist = null;
-            empty.album = null;
-            empty.year = null;
-            empty.comment = null;
-            empty.tracknumber = -1;
-        }
-
         private bool tagfound;
         private string title = null;
         private string artist = null;
