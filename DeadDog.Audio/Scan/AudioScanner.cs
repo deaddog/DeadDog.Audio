@@ -43,7 +43,10 @@ namespace DeadDog.Audio.Scan
             if (settings.UseCache)
             {
                 var newCache = resultFiles
-                    .Where(x => x.Action == FileActions.Added || x.Action == FileActions.Skipped || x.Action == FileActions.Updated)
+                    .Where(x => x.Action == FileActions.Added ||
+                                x.Action == FileActions.Skipped ||
+                                x.Action == FileActions.Updated ||
+                                x.Action == FileActions.UpdateError)
                     .Select(x => x.MediaInfo)
                     .Where(x => x != null);
 
