@@ -21,15 +21,15 @@ namespace DeadDog.Audio.Scan
             switch (scannedFile.Action)
             {
                 case FileActions.Added:
-                    library.AddTrack(scannedFile.MediaInfo);
+                    library.Add(scannedFile.MediaInfo);
                     break;
 
                 case FileActions.Updated:
-                    library.UpdateTrack(scannedFile.MediaInfo);
+                    library.Update(scannedFile.MediaInfo);
                     break;
 
                 case FileActions.Removed:
-                    library.RemoveTrack(scannedFile.Filepath);
+                    library.Remove(scannedFile.Filepath);
                     break;
             }
         }
