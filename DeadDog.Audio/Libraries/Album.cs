@@ -42,7 +42,7 @@ namespace DeadDog.Audio.Libraries
         internal Album(string title)
         {
             IsUnknown = title == null;
-            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareTrackNumbers);
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.Number);
             Tracks.CollectionChanged += TracksCollectionChanged;
 
             Title = title ?? string.Empty;

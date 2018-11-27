@@ -50,6 +50,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Libraries\AssertionExtensions.cs" />
+    <Compile Include="Libraries\LibraryComparisonsTests.cs" />
     <Compile Include="Libraries\LibraryTests.cs" />
     <Compile Include="Playlist\AssertionExtension.cs" />
     <Compile Include="Playlist\PlaylistCollectionTests.cs" />

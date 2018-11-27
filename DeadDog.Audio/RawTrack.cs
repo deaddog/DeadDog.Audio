@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DeadDog.Audio
@@ -6,7 +7,7 @@ namespace DeadDog.Audio
     /// <summary>
     /// Stores title, album, tracknumber and artist info for a track
     /// </summary>
-    public class RawTrack : ICloneable, IEquatable<RawTrack>
+    public class RawTrack : IEquatable<RawTrack>
     {
         private static RawTrack unknown;
         internal static RawTrack Unknown
@@ -21,15 +22,6 @@ namespace DeadDog.Audio
         static RawTrack()
         {
             unknown = new RawTrack();
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="RawTrack"/> that is a copy of the current instance.
-        /// </summary>
-        /// <returns>A new cloned instance of the current object.</returns>
-        public object Clone()
-        {
-            return new RawTrack(Filepath, TrackTitle, AlbumTitle, TrackNumber, ArtistName, Year);
         }
 
         /// <summary>
@@ -97,10 +89,7 @@ namespace DeadDog.Audio
         /// <param name="year">The year the track was released. Should be set to <c>null</c> if unknown.</param>
         public RawTrack(string filepath, string tracktitle, string albumtitle, int? tracknumber, string artistname, int? year)
         {
-            if (filepath == null)
-                throw new ArgumentNullException(nameof(filepath), "filepath cannot equal null");
-
-            Filepath = filepath;
+            Filepath = filepath ?? throw new ArgumentNullException(nameof(filepath), "filepath cannot equal null");
 
             TrackTitle = string.IsNullOrWhiteSpace(tracktitle) ? null : tracktitle.Trim();
             AlbumTitle = string.IsNullOrWhiteSpace(albumtitle) ? null : albumtitle.Trim();
@@ -115,6 +104,71 @@ namespace DeadDog.Audio
                 throw new ArgumentOutOfRangeException(nameof(year), "The release year cannot be negative or zero.");
             else
                 Year = year;
+        }
+
+        public RawTrack WithTrackTitle(string trackTitle)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: trackTitle,
+                albumtitle: AlbumTitle,
+                tracknumber: TrackNumber,
+                artistname: ArtistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutTrackTitle()
+        {
+            return WithTrackTitle(null);
+        }
+        public RawTrack WithTrackNumber(int? trackNumber)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: TrackTitle,
+                albumtitle: AlbumTitle,
+                tracknumber: trackNumber,
+                artistname: ArtistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutTrackNumber()
+        {
+            return WithTrackNumber(null);
+        }
+        public RawTrack WithAlbumTitle(string albumTitle)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: TrackTitle,
+                albumtitle: albumTitle,
+                tracknumber: TrackNumber,
+                artistname: ArtistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutAlbumTitle()
+        {
+            return WithAlbumTitle(null);
+        }
+        public RawTrack WithArtistName(string artistName)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: TrackTitle,
+                albumtitle: AlbumTitle,
+                tracknumber: TrackNumber,
+                artistname: artistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutArtistName()
+        {
+            return WithArtistName(null);
         }
 
         /// <summary>
@@ -176,21 +230,20 @@ namespace DeadDog.Audio
         }
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            else if (obj is RawTrack)
-                return this.Equals(obj as RawTrack);
-            else
-                return false;
+            return Equals(obj as RawTrack);
         }
         public bool Equals(RawTrack other)
         {
-            return Filepath.Equals(other.Filepath) &&
-                ArtistName == other.ArtistName &&
-                AlbumTitle == other.AlbumTitle &&
-                TrackTitle == other.TrackTitle &&
-                TrackNumber == other.TrackNumber &&
-                Year == other.Year;
+            return other != null &&
+                   Filepath == other.Filepath &&
+                   ArtistName == other.ArtistName &&
+                   AlbumTitle == other.AlbumTitle &&
+                   TrackTitle == other.TrackTitle &&
+                   TrackNumber == other.TrackNumber &&
+                   Year == other.Year;
         }
+
+        public static bool operator ==(RawTrack track1, RawTrack track2) => EqualityComparer<RawTrack>.Default.Equals(track1, track2);
+        public static bool operator !=(RawTrack track1, RawTrack track2) => !(track1 == track2);
     }
 }

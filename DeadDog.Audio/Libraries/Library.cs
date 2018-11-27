@@ -16,35 +16,11 @@ namespace DeadDog.Audio.Libraries
 
         public Library()
         {
-            Artists = new LibraryCollection<Artist>(LibraryComparisons.CompareArtistNames);
-            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareArtistNamesAlbumTitles);
-            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareArtistNameAlbumTitlesTrackNumbers);
+            Artists = new LibraryCollection<Artist>(LibraryComparisons.CompareBy(LibraryComparisons.Name));
+            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareBy(LibraryComparisons.ArtistName).ThenBy(LibraryComparisons.Title));
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareBy(LibraryComparisons.ArtistOrAlbum).ThenBy(LibraryComparisons.Number).ThenBy(LibraryComparisons.Title));
 
             _trackDict = new Dictionary<string, Track>();
-        }
-
-        public Track AddTrack(RawTrack track)
-        {
-            lock (_lockObj)
-            {
-                if (track == null)
-                    throw new ArgumentNullException(nameof(track));
-
-                if (_trackDict.ContainsKey(track.Filepath))
-                    throw new ArgumentException(track.Filepath + " is already in library - use Update instead.", "track");
-
-                Artist artist = GetOrCreateArtist(track.ArtistName);
-                Album album = GetOrCreateAlbum(artist, track.AlbumTitle);
-
-                Track t = new Track(track.Filepath, track.TrackTitle, track.TrackNumber, track.Year, album, artist);
-                _trackDict.Add(track.Filepath, t);
-
-                album.Tracks.Add(t);
-                artist.Tracks.Add(t);
-                Tracks.Add(t);
-
-                return t;
-            }
         }
 
         private Artist GetOrCreateArtist(string artistname)
@@ -78,7 +54,30 @@ namespace DeadDog.Audio.Libraries
             }
         }
 
-        public Track UpdateTrack(RawTrack track)
+        public Track Add(RawTrack track)
+        {
+            lock (_lockObj)
+            {
+                if (track == null)
+                    throw new ArgumentNullException(nameof(track));
+
+                if (_trackDict.ContainsKey(track.Filepath))
+                    throw new ArgumentException(track.Filepath + " is already in library - use Update instead.", "track");
+
+                Artist artist = GetOrCreateArtist(track.ArtistName);
+                Album album = GetOrCreateAlbum(artist, track.AlbumTitle);
+
+                Track t = new Track(track.Filepath, track.TrackTitle, track.TrackNumber, track.Year, album, artist);
+                _trackDict.Add(track.Filepath, t);
+
+                album.Tracks.Add(t);
+                artist.Tracks.Add(t);
+                Tracks.Add(t);
+
+                return t;
+            }
+        }
+        public Track Update(RawTrack track)
         {
             lock (_lockObj)
             {
@@ -124,13 +123,7 @@ namespace DeadDog.Audio.Libraries
             }
         }
 
-        public bool Contains(RawTrack track)
-        {
-            lock (_lockObj)
-                return _trackDict.ContainsKey(track.Filepath);
-        }
-
-        public void RemoveTrack(Track track)
+        public void Remove(Track track)
         {
             lock (_lockObj)
             {
@@ -155,7 +148,7 @@ namespace DeadDog.Audio.Libraries
                     Artists.Remove(artist);
             }
         }
-        public void RemoveTrack(string filename)
+        public void Remove(string filename)
         {
             lock (_lockObj)
             {
@@ -165,8 +158,18 @@ namespace DeadDog.Audio.Libraries
                 if (!_trackDict.TryGetValue(filename, out Track track))
                     throw new ArgumentOutOfRangeException(nameof(filename), "A track must be contained by a Library to be removed from it.");
 
-                RemoveTrack(track);
+                Remove(track);
             }
+        }
+
+        public bool Contains(RawTrack track)
+        {
+            lock (_lockObj)
+                return _trackDict.ContainsKey(track.Filepath);
+        }
+        public bool TryGet(RawTrack rawTrack, out Track track)
+        {
+            return _trackDict.TryGetValue(rawTrack.Filepath, out track);
         }
     }
 }
