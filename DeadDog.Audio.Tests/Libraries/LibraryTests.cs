@@ -54,16 +54,6 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.AreEqual(trackCount, library.Tracks.Count, "Track count mismatch.");
         }
 
-        /// <summary>
-        /// Adds a track to the library.
-        /// This method should be used by all methods for setting up the testing library.
-        /// This method should never be used for testing the Add method.
-        /// </summary>
-        private Track addTrack(RawTrack rawTrack)
-        {
-            return library.AddTrack(rawTrack);
-        }
-
         [TestMethod]
         public void LibraryTest()
         {
@@ -120,7 +110,7 @@ namespace DeadDog.Audio.Libraries.Tests
         [TestMethod]
         public void UpdateNothingTest()
         {
-            var track = addTrack(rawTrack1);
+            var track = library.AddTrack(rawTrack1);
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
             assertCounts(1, 1, 1);
@@ -131,7 +121,7 @@ namespace DeadDog.Audio.Libraries.Tests
         public void UpdateTitleTest()
         {
             RawTrack rawTrack = rawTrack1.WithTrackTitle("Wrong Title");
-            var track = addTrack(rawTrack);
+            var track = library.AddTrack(rawTrack);
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
@@ -142,7 +132,7 @@ namespace DeadDog.Audio.Libraries.Tests
         public void UpdateTitleAddTest()
         {
             RawTrack rawTrack = rawTrack1.WithoutTrackTitle();
-            var track = addTrack(rawTrack);
+            var track = library.AddTrack(rawTrack);
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
@@ -152,7 +142,7 @@ namespace DeadDog.Audio.Libraries.Tests
         [TestMethod]
         public void UpdateTitleRemoveTest()
         {
-            var track = addTrack(rawTrack1);
+            var track = library.AddTrack(rawTrack1);
 
             RawTrack rawTrack = rawTrack1.WithoutTrackTitle();
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
@@ -165,7 +155,7 @@ namespace DeadDog.Audio.Libraries.Tests
         public void UpdateAlbumTest()
         {
             RawTrack rawTrack = rawTrack1.WithAlbumTitle("Wrong Title");
-            var track = addTrack(rawTrack);
+            var track = library.AddTrack(rawTrack);
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
@@ -176,7 +166,7 @@ namespace DeadDog.Audio.Libraries.Tests
         public void UpdateAlbumAddTest()
         {
             RawTrack rawTrack = rawTrack1.WithoutAlbumTitle();
-            var track = addTrack(rawTrack);
+            var track = library.AddTrack(rawTrack);
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
@@ -186,7 +176,7 @@ namespace DeadDog.Audio.Libraries.Tests
         [TestMethod]
         public void UpdateAlbumRemoveTest()
         {
-            var track = addTrack(rawTrack1);
+            var track = library.AddTrack(rawTrack1);
 
             RawTrack rawTrack = rawTrack1.WithoutAlbumTitle();
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
@@ -199,7 +189,7 @@ namespace DeadDog.Audio.Libraries.Tests
         public void UpdateArtistTest()
         {
             RawTrack rawTrack = rawTrack1.WithArtistName("Wrong Name");
-            var track = addTrack(rawTrack);
+            var track = library.AddTrack(rawTrack);
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
@@ -210,7 +200,7 @@ namespace DeadDog.Audio.Libraries.Tests
         public void UpdateArtistAddTest()
         {
             RawTrack rawTrack = rawTrack1.WithoutArtistName();
-            var track = addTrack(rawTrack);
+            var track = library.AddTrack(rawTrack);
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
@@ -220,7 +210,7 @@ namespace DeadDog.Audio.Libraries.Tests
         [TestMethod]
         public void UpdateArtistRemoveTest()
         {
-            var track = addTrack(rawTrack1);
+            var track = library.AddTrack(rawTrack1);
 
             RawTrack rawTrack = rawTrack1.WithoutArtistName();
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
@@ -235,8 +225,8 @@ namespace DeadDog.Audio.Libraries.Tests
         [Description("Tests that removing a track does not double-add an album to an artist.")]
         public void DoubleAlbumErrorTest()
         {
-            var t1 = addTrack(rawTrack1);
-            var t2 = addTrack(rawTrack2);
+            var t1 = library.AddTrack(rawTrack1);
+            var t2 = library.AddTrack(rawTrack2);
 
             library.RemoveTrack(t2);
 
@@ -249,9 +239,9 @@ namespace DeadDog.Audio.Libraries.Tests
         [Description("Tests that removing a track from an album such that all tracks have same artist will set the artist of the album.")]
         public void ResetAlbumArtistErrorTest()
         {
-            var t1 = addTrack(rawTrack1);
-            var t2 = addTrack(rawTrack2);
-            var t3 = addTrack(rawTrack3.WithArtistName("Different Name"));
+            var t1 = library.AddTrack(rawTrack1);
+            var t2 = library.AddTrack(rawTrack2);
+            var t3 = library.AddTrack(rawTrack3.WithArtistName("Different Name"));
 
             Assert.IsTrue(t1.Album.Artist == null, "Various artists album should not have an artist.");
 
@@ -266,8 +256,8 @@ namespace DeadDog.Audio.Libraries.Tests
         [Description("Tests that changing a track-number will not affect sorting (1,2) -> (1,3).")]
         public void NoMoveTest()
         {
-            var t1 = addTrack(rawTrack1);
-            var t2 = addTrack(rawTrack2);
+            var t1 = library.AddTrack(rawTrack1);
+            var t2 = library.AddTrack(rawTrack2);
 
             library.UpdateTrack(rawTrack2.WithTrackNumber(3));
 
@@ -287,8 +277,8 @@ namespace DeadDog.Audio.Libraries.Tests
         [Description("Tests that lowering a track-number will affect sorting.")]
         public void MoveLeftTest()
         {
-            var t2 = addTrack(rawTrack2);
-            var t3 = addTrack(rawTrack3);
+            var t2 = library.AddTrack(rawTrack2);
+            var t3 = library.AddTrack(rawTrack3);
 
             library.UpdateTrack(rawTrack3.WithTrackNumber(1));
 
@@ -308,8 +298,8 @@ namespace DeadDog.Audio.Libraries.Tests
         [Description("Tests that raising a track-number will affect sorting.")]
         public void MoveRightTest()
         {
-            var t1 = addTrack(rawTrack1);
-            var t2 = addTrack(rawTrack2);
+            var t1 = library.AddTrack(rawTrack1);
+            var t2 = library.AddTrack(rawTrack2);
 
             library.UpdateTrack(rawTrack1.WithTrackNumber(3));
 
