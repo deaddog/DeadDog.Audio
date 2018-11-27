@@ -106,6 +106,71 @@ namespace DeadDog.Audio
                 Year = year;
         }
 
+        public RawTrack WithTrackTitle(string trackTitle)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: trackTitle,
+                albumtitle: AlbumTitle,
+                tracknumber: TrackNumber,
+                artistname: ArtistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutTrackTitle()
+        {
+            return WithTrackTitle(null);
+        }
+        public RawTrack WithTrackNumber(int? trackNumber)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: TrackTitle,
+                albumtitle: AlbumTitle,
+                tracknumber: trackNumber,
+                artistname: ArtistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutTrackNumber()
+        {
+            return WithTrackNumber(null);
+        }
+        public RawTrack WithAlbumTitle(string albumTitle)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: TrackTitle,
+                albumtitle: albumTitle,
+                tracknumber: TrackNumber,
+                artistname: ArtistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutAlbumTitle()
+        {
+            return WithAlbumTitle(null);
+        }
+        public RawTrack WithArtistName(string artistName)
+        {
+            return new RawTrack
+            (
+                filepath: Filepath,
+                tracktitle: TrackTitle,
+                albumtitle: AlbumTitle,
+                tracknumber: TrackNumber,
+                artistname: artistName,
+                year: Year
+            );
+        }
+        public RawTrack WithoutArtistName()
+        {
+            return WithArtistName(null);
+        }
+
         /// <summary>
         /// Gets the title of the track. If the title is unknown, null is returned.
         /// </summary>
