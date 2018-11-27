@@ -33,6 +33,20 @@ namespace DeadDog.Audio.Libraries
 
         public static int Artist(Track track1, Track track2) => CompareNullableStrings(track1.Artist.Name, track2.Artist.Name);
         public static int Album(Track track1, Track track2) => CompareNullableStrings(track1.Album.Title, track2.Album.Title);
+        public static int ArtistOrAlbum(Track track1, Track track2)
+        {
+            if (track1.Album.HasArtist)
+            {
+                if (track2.Album.HasArtist)
+                    return CompareBy(Artist).ThenBy(Album)(track1, track2);
+                else
+                    return CompareNullableStrings(track1.Album.Artist.Name, track2.Album.Title);
+            }
+            else if (track2.Album.HasArtist)
+                return -ArtistOrAlbum(track2, track1);
+            else
+                return Album(track1, track2);
+        }
 
         public static int Title(Album album1, Album album2) => CompareNullableStrings(album1?.Title, album2?.Title);
         public static int Name(Artist artist1, Artist artist2) => CompareNullableStrings(artist1?.Name, artist2?.Name);
