@@ -6,7 +6,7 @@ namespace DeadDog.Audio
     /// <summary>
     /// Stores title, album, tracknumber and artist info for a track
     /// </summary>
-    public class RawTrack : ICloneable, IEquatable<RawTrack>
+    public class RawTrack : IEquatable<RawTrack>
     {
         private static RawTrack unknown;
         internal static RawTrack Unknown
@@ -21,15 +21,6 @@ namespace DeadDog.Audio
         static RawTrack()
         {
             unknown = new RawTrack();
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="RawTrack"/> that is a copy of the current instance.
-        /// </summary>
-        /// <returns>A new cloned instance of the current object.</returns>
-        public object Clone()
-        {
-            return new RawTrack(Filepath, TrackTitle, AlbumTitle, TrackNumber, ArtistName, Year);
         }
 
         /// <summary>
