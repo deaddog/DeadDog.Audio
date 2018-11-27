@@ -68,7 +68,7 @@ namespace DeadDog.Audio.Libraries.Tests
         }
 
         /// <summary>
-        /// Adds a track to the library. 
+        /// Adds a track to the library.
         /// This method should be used by all methods for setting up the testing library.
         /// This method should never be used for testing the Add method.
         /// </summary>
@@ -273,6 +273,50 @@ namespace DeadDog.Audio.Libraries.Tests
             Assert.IsFalse(t1.Album.Artist.IsUnknown, "Album should no longer have various artists.");
             Assert.AreSame(t1.Artist, t1.Album.Artist, "Album artist does not match track artist.");
             Assert.IsTrue(t1.Artist.Albums.Contains(t1.Album), "Artist does not contain album.");
+        }
+
+        [TestMethod]
+        [Description("Tests that lowering a track-number will affect sorting.")]
+        public void MoveLeftTest()
+        {
+            var t2 = addTrack(rawTrack2);
+            var t3 = addTrack(rawTrack3);
+
+            var track3Changed = new RawTrack(rawTrack3.Filepath, rawTrack3.TrackTitle, rawTrack3.AlbumTitle, 1, rawTrack3.ArtistName, rawTrack3.Year);
+            library.UpdateTrack(track3Changed);
+
+            assertCounts(1, 1, 2);
+
+            Assert.AreEqual(t3, library.Tracks[0]);
+            Assert.AreEqual(t2, library.Tracks[1]);
+
+            Assert.AreEqual(t3, library.Albums[0].Tracks[0]);
+            Assert.AreEqual(t2, library.Albums[0].Tracks[1]);
+
+            Assert.AreEqual(t3, library.Artists[0].Tracks[0]);
+            Assert.AreEqual(t2, library.Artists[0].Tracks[1]);
+        }
+
+        [TestMethod]
+        [Description("Tests that raising a track-number will affect sorting.")]
+        public void MoveRightTest()
+        {
+            var t1 = addTrack(rawTrack1);
+            var t2 = addTrack(rawTrack2);
+
+            var track1Changed = new RawTrack(rawTrack1.Filepath, rawTrack1.TrackTitle, rawTrack1.AlbumTitle, 3, rawTrack1.ArtistName, rawTrack1.Year);
+            library.UpdateTrack(track1Changed);
+
+            assertCounts(1, 1, 2);
+
+            Assert.AreEqual(t2, library.Tracks[0]);
+            Assert.AreEqual(t1, library.Tracks[1]);
+
+            Assert.AreEqual(t2, library.Albums[0].Tracks[0]);
+            Assert.AreEqual(t1, library.Albums[0].Tracks[1]);
+
+            Assert.AreEqual(t2, library.Artists[0].Tracks[0]);
+            Assert.AreEqual(t1, library.Artists[0].Tracks[1]);
         }
     }
 }
