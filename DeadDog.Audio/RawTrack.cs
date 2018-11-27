@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DeadDog.Audio
@@ -88,10 +89,7 @@ namespace DeadDog.Audio
         /// <param name="year">The year the track was released. Should be set to <c>null</c> if unknown.</param>
         public RawTrack(string filepath, string tracktitle, string albumtitle, int? tracknumber, string artistname, int? year)
         {
-            if (filepath == null)
-                throw new ArgumentNullException(nameof(filepath), "filepath cannot equal null");
-
-            Filepath = filepath;
+            Filepath = filepath ?? throw new ArgumentNullException(nameof(filepath), "filepath cannot equal null");
 
             TrackTitle = string.IsNullOrWhiteSpace(tracktitle) ? null : tracktitle.Trim();
             AlbumTitle = string.IsNullOrWhiteSpace(albumtitle) ? null : albumtitle.Trim();
@@ -167,21 +165,20 @@ namespace DeadDog.Audio
         }
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            else if (obj is RawTrack)
-                return this.Equals(obj as RawTrack);
-            else
-                return false;
+            return Equals(obj as RawTrack);
         }
         public bool Equals(RawTrack other)
         {
-            return Filepath.Equals(other.Filepath) &&
-                ArtistName == other.ArtistName &&
-                AlbumTitle == other.AlbumTitle &&
-                TrackTitle == other.TrackTitle &&
-                TrackNumber == other.TrackNumber &&
-                Year == other.Year;
+            return other != null &&
+                   Filepath == other.Filepath &&
+                   ArtistName == other.ArtistName &&
+                   AlbumTitle == other.AlbumTitle &&
+                   TrackTitle == other.TrackTitle &&
+                   TrackNumber == other.TrackNumber &&
+                   Year == other.Year;
         }
+
+        public static bool operator ==(RawTrack track1, RawTrack track2) => EqualityComparer<RawTrack>.Default.Equals(track1, track2);
+        public static bool operator !=(RawTrack track1, RawTrack track2) => !(track1 == track2);
     }
 }
