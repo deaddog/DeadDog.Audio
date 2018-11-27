@@ -16,9 +16,9 @@ namespace DeadDog.Audio.Libraries
 
         public Library()
         {
-            Artists = new LibraryCollection<Artist>(LibraryComparisons.CompareArtistNames);
-            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareArtistNamesAlbumTitles);
-            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareArtistNameAlbumTitlesTrackNumbers);
+            Artists = new LibraryCollection<Artist>(LibraryComparisons.CompareBy(LibraryComparisons.Name));
+            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareBy(LibraryComparisons.ArtistName).ThenBy(LibraryComparisons.Title));
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareBy(LibraryComparisons.Artist).ThenBy(LibraryComparisons.Album).ThenBy(LibraryComparisons.Number).ThenBy(LibraryComparisons.Title));
 
             _trackDict = new Dictionary<string, Track>();
         }

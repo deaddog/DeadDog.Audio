@@ -15,8 +15,8 @@ namespace DeadDog.Audio.Libraries
         {
             IsUnknown = name == null;
 
-            Albums = new LibraryCollection<Album>(LibraryComparisons.CompareAlbumTitles);
-            Tracks = new LibraryCollection<Track>(LibraryComparisons.CompareTrackNumbers);
+            Albums = new LibraryCollection<Album>(LibraryComparisons.Title);
+            Tracks = new LibraryCollection<Track>(LibraryComparisons.Number);
 
             Name = name ?? string.Empty;
         }
