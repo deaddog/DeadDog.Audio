@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DeadDog.Audio.Libraries;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DeadDog.Audio.Libraries.Tests
+namespace DeadDog.Audio.Tests.Libraries
 {
     [TestClass]
     public class LibraryTests
@@ -17,49 +18,12 @@ namespace DeadDog.Audio.Libraries.Tests
             library = new Library();
         }
 
-        private void assertTrack(RawTrack expected, Track actual)
-        {
-            Assert.IsTrue(library.Contains(expected), "Track path \"" + expected.Filepath + "\" not found in library.");
-            Assert.IsTrue(library.Tracks.Contains(actual), "Track instance not found in library.");
-
-            Assert.AreEqual(expected.Filepath, actual.FilePath, "Different file paths, probable error in test.");
-            Assert.AreEqual(expected.TrackTitle, actual.Title, "Title mismatch.");
-
-            if (actual.Album == null)
-                Assert.Fail("Track does not have an album.");
-            else if (expected.AlbumTitle == null)
-                Assert.IsTrue(actual.Album.IsUnknown, "Expected unknown album.");
-            else
-            {
-                Assert.IsTrue(library.Albums.Contains(actual.Album), "Album instance not found in library.");
-                Assert.AreEqual(expected.AlbumTitle, actual.Album.Title, "Album title mismatch.");
-            }
-
-            if (actual.Artist == null)
-                Assert.Fail("Track does not have an artist.");
-            else if (expected.ArtistName == null)
-                Assert.IsTrue(actual.Artist.IsUnknown, "Expected unknown artist.");
-            else
-            {
-                Assert.IsTrue(library.Artists.Contains(actual.Artist), "Artist instance not found in library.");
-                Assert.AreEqual(expected.ArtistName, actual.Artist.Name, "Artist name mismatch.");
-            }
-
-            Assert.AreEqual(expected.TrackNumber, actual.Tracknumber, "Track number mismatch.");
-        }
-        private void assertCounts(int artistCount, int albumCount, int trackCount)
-        {
-            Assert.AreEqual(artistCount, library.Artists.Count, "Artist count mismatch.");
-            Assert.AreEqual(albumCount, library.Albums.Count, "Album count mismatch.");
-            Assert.AreEqual(trackCount, library.Tracks.Count, "Track count mismatch.");
-        }
-
         [TestMethod]
         public void LibraryTest()
         {
             Library library = new Library();
 
-            assertCounts(0, 0, 0);
+            library.AssertSizes(0, 0, 0);
         }
 
         #region Adding
@@ -69,8 +33,8 @@ namespace DeadDog.Audio.Libraries.Tests
         {
             var track = library.AddTrack(rawTrack1);
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
 
         [TestMethod]
@@ -79,8 +43,8 @@ namespace DeadDog.Audio.Libraries.Tests
             var rawTrack = rawTrack1.WithoutTrackTitle();
             var track = library.AddTrack(rawTrack);
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack, track);
         }
 
         [TestMethod]
@@ -89,8 +53,8 @@ namespace DeadDog.Audio.Libraries.Tests
             var rawTrack = rawTrack1.WithoutAlbumTitle();
             var track = library.AddTrack(rawTrack);
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack, track);
         }
 
         [TestMethod]
@@ -99,8 +63,8 @@ namespace DeadDog.Audio.Libraries.Tests
             var rawTrack = rawTrack1.WithoutArtistName();
             var track = library.AddTrack(rawTrack);
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack, track);
         }
 
         #endregion
@@ -113,8 +77,8 @@ namespace DeadDog.Audio.Libraries.Tests
             var track = library.AddTrack(rawTrack1);
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
 
         [TestMethod]
@@ -125,8 +89,8 @@ namespace DeadDog.Audio.Libraries.Tests
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
         [TestMethod]
         public void UpdateTitleAddTest()
@@ -136,8 +100,8 @@ namespace DeadDog.Audio.Libraries.Tests
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
         [TestMethod]
         public void UpdateTitleRemoveTest()
@@ -147,8 +111,8 @@ namespace DeadDog.Audio.Libraries.Tests
             RawTrack rawTrack = rawTrack1.WithoutTrackTitle();
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack, track);
         }
 
         [TestMethod]
@@ -159,8 +123,8 @@ namespace DeadDog.Audio.Libraries.Tests
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
         [TestMethod]
         public void UpdateAlbumAddTest()
@@ -170,8 +134,8 @@ namespace DeadDog.Audio.Libraries.Tests
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
         [TestMethod]
         public void UpdateAlbumRemoveTest()
@@ -181,8 +145,8 @@ namespace DeadDog.Audio.Libraries.Tests
             RawTrack rawTrack = rawTrack1.WithoutAlbumTitle();
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack, track);
         }
 
         [TestMethod]
@@ -193,8 +157,8 @@ namespace DeadDog.Audio.Libraries.Tests
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
         [TestMethod]
         public void UpdateArtistAddTest()
@@ -204,8 +168,8 @@ namespace DeadDog.Audio.Libraries.Tests
 
             Assert.AreSame(track, library.UpdateTrack(rawTrack1));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, track);
         }
         [TestMethod]
         public void UpdateArtistRemoveTest()
@@ -215,8 +179,8 @@ namespace DeadDog.Audio.Libraries.Tests
             RawTrack rawTrack = rawTrack1.WithoutArtistName();
             Assert.AreSame(track, library.UpdateTrack(rawTrack));
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack, track);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack, track);
         }
 
         #endregion
@@ -230,8 +194,8 @@ namespace DeadDog.Audio.Libraries.Tests
 
             library.RemoveTrack(t2);
 
-            assertCounts(1, 1, 1);
-            assertTrack(rawTrack1, t1);
+            library.AssertSizes(1, 1, 1);
+            library.AssertTrack(rawTrack1, t1);
             Assert.AreEqual(1, t1.Artist.Albums.Count);
         }
 
@@ -261,7 +225,7 @@ namespace DeadDog.Audio.Libraries.Tests
 
             library.UpdateTrack(rawTrack2.WithTrackNumber(3));
 
-            assertCounts(1, 1, 2);
+            library.AssertSizes(1, 1, 2);
 
             Assert.AreEqual(t1, library.Tracks[0]);
             Assert.AreEqual(t2, library.Tracks[1]);
@@ -282,7 +246,7 @@ namespace DeadDog.Audio.Libraries.Tests
 
             library.UpdateTrack(rawTrack3.WithTrackNumber(1));
 
-            assertCounts(1, 1, 2);
+            library.AssertSizes(1, 1, 2);
 
             Assert.AreEqual(t3, library.Tracks[0]);
             Assert.AreEqual(t2, library.Tracks[1]);
@@ -303,7 +267,7 @@ namespace DeadDog.Audio.Libraries.Tests
 
             library.UpdateTrack(rawTrack1.WithTrackNumber(3));
 
-            assertCounts(1, 1, 2);
+            library.AssertSizes(1, 1, 2);
 
             Assert.AreEqual(t2, library.Tracks[0]);
             Assert.AreEqual(t1, library.Tracks[1]);
