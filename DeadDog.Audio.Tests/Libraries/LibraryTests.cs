@@ -276,6 +276,28 @@ namespace DeadDog.Audio.Libraries.Tests
         }
 
         [TestMethod]
+        [Description("Tests that changing a track-number will not affect sorting (1,2) -> (1,3).")]
+        public void NoMoveTest()
+        {
+            var t1 = addTrack(rawTrack1);
+            var t2 = addTrack(rawTrack2);
+
+            var track2Changed = new RawTrack(rawTrack2.Filepath, rawTrack2.TrackTitle, rawTrack2.AlbumTitle, 3, rawTrack2.ArtistName, rawTrack2.Year);
+            library.UpdateTrack(track2Changed);
+
+            assertCounts(1, 1, 2);
+
+            Assert.AreEqual(t1, library.Tracks[0]);
+            Assert.AreEqual(t2, library.Tracks[1]);
+
+            Assert.AreEqual(t1, library.Albums[0].Tracks[0]);
+            Assert.AreEqual(t2, library.Albums[0].Tracks[1]);
+
+            Assert.AreEqual(t1, library.Artists[0].Tracks[0]);
+            Assert.AreEqual(t2, library.Artists[0].Tracks[1]);
+        }
+
+        [TestMethod]
         [Description("Tests that lowering a track-number will affect sorting.")]
         public void MoveLeftTest()
         {
