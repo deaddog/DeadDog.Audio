@@ -1,6 +1,6 @@
 ﻿namespace DeadDog.Audio.Libraries
 {
-    internal static class LibraryComparisons
+    public static class LibraryComparisons
     {
         private static int CompareNullableStrings(string s1, string s2)
         {
