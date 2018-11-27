@@ -129,6 +129,10 @@ namespace DeadDog.Audio.Libraries
             lock (_lockObj)
                 return _trackDict.ContainsKey(track.Filepath);
         }
+        public bool TryGet(RawTrack rawTrack, out Track track)
+        {
+            return _trackDict.TryGetValue(rawTrack.Filepath, out track);
+        }
 
         public void RemoveTrack(Track track)
         {
