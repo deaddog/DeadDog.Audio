@@ -20,11 +20,11 @@ namespace DeadDog.Audio.Playback
         /// </summary>
         event PositionChangedEventHandler PositionChanged;
 
-        bool Seek(PlayerSeekOrigin origin, uint offset);
+        bool Seek(TimeSpan position);
 
         PlayerStatus Status { get; }
-        uint Position { get; }
-        uint Length { get; }
+        TimeSpan Position { get; }
+        TimeSpan Length { get; }
 
         /// <summary>
         /// Sets the volume of both the left and right channel in the range [0-1].

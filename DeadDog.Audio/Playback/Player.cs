@@ -107,7 +107,7 @@ namespace DeadDog.Audio.Playback
             switch (playback.Status)
             {
                 case PlayerStatus.Playing:
-                    playback.Seek(PlayerSeekOrigin.Begin, 0);
+                    playback.Seek(TimeSpan.Zero);
                     return true;
                 case PlayerStatus.Paused:
                     if (!playback.Play())
@@ -164,27 +164,24 @@ namespace DeadDog.Audio.Playback
                     throw new InvalidOperationException("Unknown playback state: " + playback.Status);
             }
         }
-        public bool Seek(PlayerSeekOrigin origin, uint offset)
+
+        public bool Seek(TimeSpan position)
         {
-            return playback.Seek(origin, offset);
+            return playback.Seek(position);
         }
 
         public PlayerStatus Status
         {
             get { return playback.Status; }
         }
-        public uint Position
+        public TimeSpan Position
         {
             get { return playback.Position; }
-            set { playback.Seek(PlayerSeekOrigin.Begin, value); }
+            set { playback.Seek(value); }
         }
-        public uint Length
+        public TimeSpan Length
         {
             get { return playback.Length; }
-        }
-        public double PercentPlayed
-        {
-            get { return (double)Position / (double)Length; }
         }
 
         void IDisposable.Dispose()

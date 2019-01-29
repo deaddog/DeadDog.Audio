@@ -89,7 +89,6 @@
     <Compile Include="Playback\IFilePlayback.cs" />
     <Compile Include="Playback\libZPlay.cs" />
     <Compile Include="Playback\mp3Control.cs" />
-    <Compile Include="Playback\PlayerSeekOrigin.cs" />
     <Compile Include="Playback\PlayerStatus.cs" />
     <Compile Include="Parsing\OggParser.cs" />
     <Compile Include="Playback\IPlayback.cs" />

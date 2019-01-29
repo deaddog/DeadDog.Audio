@@ -37,37 +37,25 @@ namespace DeadDog.Audio.Playback
         public bool ResumePlayback() => player.ResumePlayback();
         public bool StopPlayback() => player.StopPlayback();
 
-        public bool Seek(PlayerSeekOrigin origin, uint offset)
+        public bool Seek(TimeSpan position)
         {
-            TStreamTime seekTime = new TStreamTime() { ms = offset };
-            bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TranslateSeek(origin));
+            TStreamTime seekTime = new TStreamTime() { ms = (uint)position.TotalMilliseconds };
+            bool r = player.Seek(TTimeFormat.tfMillisecond, ref seekTime, TSeekMethod.smFromBeginning);
             return r;
 
         }
-        private TSeekMethod TranslateSeek(PlayerSeekOrigin s)
-        {
-            switch (s)
-            {
-                case PlayerSeekOrigin.Begin: return TSeekMethod.smFromBeginning;
-                case PlayerSeekOrigin.CurrentForwards: return TSeekMethod.smFromCurrentForward;
-                case PlayerSeekOrigin.CurrentBackwards: return TSeekMethod.smFromCurrentBackward;
-                case PlayerSeekOrigin.End: return TSeekMethod.smFromEnd;
-                default:
-                    return default(TSeekMethod);
-            }
-        }
 
-        public uint GetTrackLength()
+        public TimeSpan GetTrackLength()
         {
             TStreamInfo info = new TStreamInfo();
             player.GetStreamInfo(ref info);
-            return info.Length.ms;
+            return TimeSpan.FromMilliseconds(info.Length.ms);
         }
-        public uint GetTrackPosition()
+        public TimeSpan GetTrackPosition()
         {
             TStreamTime time = new TStreamTime();
             player.GetPosition(ref time);
-            return time.ms;
+            return TimeSpan.FromMilliseconds(time.ms);
         }
         public bool GetIsPlaying()
         {

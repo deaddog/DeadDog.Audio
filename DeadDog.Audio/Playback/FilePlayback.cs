@@ -9,8 +9,8 @@ namespace DeadDog.Audio.Playback
 
         private PlayerStatus status;
 
-        private uint trackLength;
-        private uint trackPosition;
+        private TimeSpan trackLength;
+        private TimeSpan trackPosition;
         private double volumeLeft = -1, volumeRight = -1;
 
         private const int TIMER_INTERVAL = 100;
@@ -29,8 +29,8 @@ namespace DeadDog.Audio.Playback
 
             this.status = PlayerStatus.NoFileOpen;
 
-            this.trackLength = 0;
-            this.trackPosition = 0;
+            this.trackLength = TimeSpan.Zero;
+            this.trackPosition = TimeSpan.Zero;
 
             this.timer = new System.Threading.Timer(obj => update(), null, 0, 0);
         }
@@ -96,7 +96,7 @@ namespace DeadDog.Audio.Playback
             switch (status)
             {
                 case PlayerStatus.Playing:
-                    Seek(PlayerSeekOrigin.Begin, 0);
+                    Seek(TimeSpan.Zero);
                     return true;
                 case PlayerStatus.Paused:
                     if (!playback.ResumePlayback())
@@ -156,14 +156,14 @@ namespace DeadDog.Audio.Playback
             }
         }
 
-        public bool Seek(PlayerSeekOrigin origin, uint offset)
+        public bool Seek(TimeSpan position)
         {
             switch (status)
             {
                 case PlayerStatus.Playing:
                 case PlayerStatus.Paused:
                     {
-                        bool r = playback.Seek(origin, offset);
+                        bool r = playback.Seek(position);
                         if (status == PlayerStatus.Paused)
                             update();
                         return r;
@@ -186,8 +186,8 @@ namespace DeadDog.Audio.Playback
                 StatusChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-        public uint Length => trackLength;
-        public uint Position => trackPosition;
+        public TimeSpan Length => trackLength;
+        public TimeSpan Position => trackPosition;
 
         void IPlayback<T>.SetVolume(double left, double right)
         {
@@ -242,8 +242,7 @@ namespace DeadDog.Audio.Playback
 
             bool endreached = false;
 
-            if (status == PlayerStatus.Playing && !isPlaying
-                && Position == 0 && Length > 0)
+            if (status == PlayerStatus.Playing && !isPlaying && Position == TimeSpan.Zero && Length > TimeSpan.Zero)
             {
                 Status = PlayerStatus.Stopped;
                 timer.Change(TIMER_INFINITE, TIMER_INFINITE);

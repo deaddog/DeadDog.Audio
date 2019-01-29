@@ -14,10 +14,10 @@ namespace DeadDog.Audio.Playback
         bool ResumePlayback();
         bool StopPlayback();
 
-        bool Seek(PlayerSeekOrigin origin, uint offset);
+        bool Seek(TimeSpan offset);
 
-        uint GetTrackLength();
-        uint GetTrackPosition();
+        TimeSpan GetTrackLength();
+        TimeSpan GetTrackPosition();
         bool GetIsPlaying();
 
         void SetVolume(double left, double right);
